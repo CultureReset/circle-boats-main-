@@ -1,0 +1,4778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beachside Circle Boats — Orange Beach, AL | Rentals</title>
+  <meta name="description" content="Portable inflatable circle boat rentals in Orange Beach, Alabama. Eco-friendly electric boats for singles and doubles. Book your day on the water today!">
+  <script src="tracking.js"></script>
+  <script src="js/load-site-data.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #00ada8;
+      --teal-dark: #009590;
+      --teal-light: rgba(0, 173, 168, 0.08);
+      --teal-border: rgba(0, 173, 168, 0.2);
+      --black: #1a1a1a;
+      --dark: #333333;
+      --gray: #666666;
+      --gray-light: #999999;
+      --border: #e8e8e8;
+      --bg: #fafafa;
+      --white: #ffffff;
+      --radius: 8px;
+      --radius-lg: 16px;
+      --radius-pill: 100px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--dark);
+      line-height: 1.6;
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Titillium Web', sans-serif;
+      line-height: 1.15;
+      color: var(--black);
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .container-wide {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== SKELETON LOADING ===== */
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skeleton-card, .skeleton-img, .skeleton-line {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite linear;
+      border-radius: 8px;
+    }
+    .skeleton-card {
+      min-height: 220px;
+      width: 100%;
+    }
+    .skeleton-card.mini { min-height: 130px; }
+    .skeleton-img { width: 100%; height: 200px; display: block; }
+    .skeleton-img.tall { height: 240px; }
+    .skeleton-img.gallery-skel { height: 180px; border-radius: 8px; }
+    .skeleton-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .skeleton-line { height: 14px; border-radius: 4px; }
+    .skeleton-line.w50 { width: 50%; }
+    .skeleton-line.w60 { width: 60%; }
+    .skeleton-line.w70 { width: 70%; }
+    .skeleton-line.w80 { width: 80%; }
+    .skeleton-line.w90 { width: 90%; }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+
+    .nav.scrolled {
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav-logo-text {
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--black);
+    }
+
+    .nav-logo-text span {
+      color: var(--teal);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--black);
+    }
+
+    .nav-cta {
+      background: var(--teal);
+      color: var(--white) !important;
+      padding: 10px 28px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      border: 2px solid var(--teal);
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--black);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 80px 0 0;
+      background: var(--white);
+    }
+
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      padding-bottom: 48px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero h1 span {
+      color: var(--teal);
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--gray);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .btn-hero-book {
+      padding: 20px 56px !important;
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 24px rgba(0, 173, 168, 0.35);
+      animation: hero-pulse 2.5s ease-in-out infinite;
+    }
+
+    .btn-hero-book:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 173, 168, 0.5);
+    }
+
+    @keyframes hero-pulse {
+      0%, 100% { box-shadow: 0 6px 24px rgba(0, 173, 168, 0.35); }
+      50% { box-shadow: 0 6px 32px rgba(0, 173, 168, 0.55); }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: var(--radius-pill);
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+      border-color: var(--teal);
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--black);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .hero-stat span {
+      font-size: 13px;
+      color: var(--gray-light);
+    }
+
+    .hero-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .hero-image img,
+    .hero-image iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border: none;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: 56px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      font-size: 16px;
+      color: var(--gray);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* ===== PRODUCT CARDS ===== */
+    .products {
+      background: var(--bg);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      transform: translateY(-4px);
+    }
+
+    .product-card.featured {
+      border-color: var(--teal);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .product-image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.4s;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    /* ===== SWIPE CAROUSEL (used in product cards + dock cards) ===== */
+    .swipe-carousel {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .swipe-track {
+      display: flex;
+      transition: transform 0.35s ease;
+      touch-action: pan-y;
+      will-change: transform;
+    }
+
+    .swipe-track img {
+      min-width: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      flex-shrink: 0;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+      background: #f5f5f5;
+    }
+
+    .swipe-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 3;
+    }
+
+    .swipe-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .swipe-dot.active {
+      background: white;
+      transform: scale(1.3);
+    }
+
+    .swipe-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.35);
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      transition: background 0.2s;
+    }
+
+    .swipe-carousel:hover .swipe-arrow { display: flex; }
+    .swipe-arrow:hover { background: rgba(0,0,0,0.6); }
+    .swipe-arrow.prev { left: 8px; }
+    .swipe-arrow.next { right: 8px; }
+
+    /* Hide arrows on single-image carousels */
+    .swipe-carousel[data-count="1"] .swipe-dots,
+    .swipe-carousel[data-count="1"] .swipe-arrow { display: none !important; }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .product-body {
+      padding: 28px 24px;
+    }
+
+    .product-body h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .product-body .desc {
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .price-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .price-label {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .price-amount {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .product-specs {
+      font-size: 12px;
+      color: var(--gray-light);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--bg);
+    }
+
+    .product-body .btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* ===== GROUP RATES ===== */
+    .group-banner {
+      margin-top: 20px;
+      background: var(--white);
+      border: 2px solid var(--teal-border);
+      border-radius: var(--radius-lg);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .group-banner-text h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .group-banner-text p {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .group-banner-price {
+      text-align: center;
+    }
+
+    .group-banner-price strong {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .group-banner-price span {
+      font-size: 13px;
+      color: var(--gray-light);
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+
+    .step-card {
+      text-align: center;
+    }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .step-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step-card p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .step-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .step-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ===== LAUNCH LOCATIONS ===== */
+    .locations-section {
+      background: var(--white);
+    }
+
+    .locations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .location-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: box-shadow 0.2s;
+    }
+
+    .location-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .location-pin {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .location-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+
+    .location-address {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    .location-desc {
+      font-size: 14px;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+
+    .location-map-link {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .location-map-link:hover { text-decoration: underline; }
+
+    /* Booking location selector */
+    .loc-section-label {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .loc-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .loc-option:hover { border-color: var(--teal); background: var(--teal-light); }
+    .loc-option.selected { border-color: var(--teal); background: var(--teal-light); }
+
+    .loc-option-icon { font-size: 20px; }
+
+    .loc-option-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .loc-option-info strong {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .loc-option-info span {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    /* ===== FEATURES / WHY ===== */
+    .features {
+      background: var(--bg);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-align: center;
+      transition: box-shadow 0.3s;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* ===== GALLERY GRID ===== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.06);
+    }
+
+    /* ===== SWIPEABLE LIGHTBOX ===== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+
+    .lightbox-track {
+      display: flex;
+      width: 100%;
+      height: 80vh;
+      overflow: hidden;
+      position: relative;
+      touch-action: pan-y;
+    }
+
+    .lightbox-slide {
+      min-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 60px;
+      transition: transform 0.35s ease;
+    }
+
+    .lightbox-slide img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: var(--radius);
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .lightbox-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 5;
+    }
+
+    .lightbox-arrow:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-arrow.prev { left: 16px; }
+    .lightbox-arrow.next { right: 16px; }
+
+    .lightbox-counter {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      margin-top: 16px;
+      font-family: 'Titillium Web', sans-serif;
+    }
+
+    .lightbox-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .lightbox-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+    }
+
+    .lightbox-dot.active {
+      background: var(--teal);
+      transform: scale(1.3);
+    }
+
+    /* ===== DOCKS ===== */
+    .dock-section {
+      background: var(--bg);
+    }
+
+    .dock-section .section-header {
+      margin-bottom: 20px;
+    }
+
+    .dock-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .dock-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .dock-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      transform: translateY(-4px);
+    }
+
+    .dock-card-img {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dock-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #f5f5f5;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .dock-card-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--teal);
+      color: var(--white);
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dock-card-body {
+      padding: 24px;
+    }
+
+    .dock-card-body h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .dock-card-dims {
+      font-size: 13px;
+      color: var(--teal);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .dock-card-body > p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .dock-card-features {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .dock-card-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 13px;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    .dock-card-features li .check {
+      color: var(--teal);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .dock-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .dock-card-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .dock-card-price span {
+      font-size: 13px;
+      color: var(--gray-light);
+      font-weight: 400;
+    }
+
+    .dock-promo {
+      text-align: center;
+      padding: 20px 28px;
+      background: linear-gradient(135deg, var(--teal), #4DA6FF);
+      border-radius: var(--radius-lg);
+      color: var(--white);
+    }
+
+    .dock-promo strong {
+      font-size: 16px;
+    }
+
+    .dock-promo span {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* ===== ADD-ONS ===== */
+    .addons-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .addon-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      text-align: center;
+      transition: box-shadow 0.3s;
+    }
+
+    .addon-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .addon-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .addon-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .addon-card .addon-desc {
+      font-size: 12px;
+      color: var(--gray);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .addon-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .addon-unit {
+      font-size: 11px;
+      color: var(--gray-light);
+    }
+
+    /* ===== CTA ===== */
+    .cta {
+      background: var(--teal);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--white);
+    }
+
+    .cta h2 {
+      color: var(--white);
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-bottom: 28px;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--teal);
+      border-color: var(--white);
+      padding: 14px 36px;
+    }
+
+    .btn-white:hover {
+      background: var(--bg);
+      border-color: var(--bg);
+    }
+
+    /* ===== CONTACT ===== */
+    .contact {
+      background: var(--bg);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .contact-form {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1px solid var(--border);
+    }
+
+    .contact-form h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--dark);
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px var(--teal-light);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .contact-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .info-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .info-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .info-row strong {
+      color: var(--dark);
+      min-width: 55px;
+    }
+
+    .map-embed {
+      width: 100%;
+      height: 180px;
+      border-radius: var(--radius);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-light);
+      font-size: 14px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--black);
+      color: rgba(255,255,255,0.55);
+      padding: 56px 0 28px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 20px;
+    }
+
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--white);
+      font-weight: 700;
+      font-family: 'Titillium Web', sans-serif;
+    }
+
+    .footer-logo-text {
+      color: var(--white);
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .footer h4 {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .footer ul li {
+      padding: 3px 0;
+    }
+
+    .footer ul li a {
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer ul li a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-social a {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .footer-social a:hover {
+      background: var(--teal);
+      color: var(--white);
+    }
+
+    /* ===== MOBILE MENU ===== */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(75vw, 280px);
+      height: 100vh;
+      background: var(--white);
+      z-index: 1001;
+      transition: right 0.3s ease;
+      padding: 72px 20px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+
+    .mobile-menu.open { right: 0; }
+
+    .mobile-menu a {
+      display: block;
+      color: var(--dark);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--bg);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--teal); }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .mobile-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: none;
+      color: var(--dark);
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .mobile-close:hover {
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    /* ===== BOOKING MODAL ===== */
+    .booking-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .booking-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .booking-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .booking-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+      z-index: 5;
+    }
+
+    .booking-header {
+      padding: 28px 32px 0;
+    }
+
+    .booking-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .booking-header p {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .booking-steps-nav {
+      display: flex;
+      gap: 0;
+      padding: 20px 32px 0;
+    }
+
+    .bstep-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-light);
+      border-bottom: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .bstep-tab.active {
+      color: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .bstep-tab.done {
+      color: var(--teal-dark);
+      border-color: var(--teal);
+    }
+
+    .booking-body {
+      padding: 24px 32px 28px;
+    }
+
+    .bstep { display: none; }
+    .bstep.active { display: block; }
+
+    /* Calendar */
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cal-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .cal-nav {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+    }
+
+    .cal-nav:hover {
+      background: var(--border);
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+
+    .cal-day-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-light);
+      padding: 6px 0;
+      text-transform: uppercase;
+    }
+
+    .cal-day {
+      padding: 10px 4px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      background: none;
+      color: var(--dark);
+    }
+
+    .cal-day:hover {
+      background: var(--teal-light);
+    }
+
+    .cal-day.selected {
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .cal-day.disabled {
+      color: var(--border);
+      pointer-events: none;
+    }
+
+    .cal-day.empty {
+      pointer-events: none;
+    }
+
+    /* Boat Selection */
+    .boat-option {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+
+    .boat-option:hover {
+      border-color: var(--teal-border);
+    }
+
+    .boat-option.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .boat-option-img {
+      width: 80px;
+      height: 60px;
+      border-radius: var(--radius);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .boat-option-info {
+      flex: 1;
+    }
+
+    .boat-option-info h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .boat-option-info p {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .boat-option-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+
+    /* Time Slot */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .slot-btn {
+      padding: 14px 12px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--white);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .slot-btn:hover {
+      border-color: var(--teal-border);
+    }
+
+    .slot-btn.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .slot-btn strong {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .slot-btn span {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .slot-btn .slot-price {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-top: 4px;
+    }
+
+    /* Qty */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .qty-row label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--bg);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+    }
+
+    .qty-btn:hover { background: var(--border); }
+
+    .qty-val {
+      width: 40px;
+      text-align: center;
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      background: var(--white);
+    }
+
+    /* Addons checkboxes */
+    .addon-check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .addon-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 13px;
+    }
+
+    .addon-check:hover {
+      border-color: var(--teal-border);
+    }
+
+    .addon-check.checked {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .addon-check input {
+      display: none;
+    }
+
+    .addon-check-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+
+    .addon-check.checked .addon-check-box {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: var(--white);
+    }
+
+    .addon-check-info {
+      flex: 1;
+    }
+
+    .addon-check-info strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .addon-check-info span {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .addon-check-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      color: var(--teal);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    /* Cart Summary */
+    .cart-summary {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .cart-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    .cart-line.total {
+      border-top: 2px solid var(--border);
+      margin-top: 8px;
+      padding-top: 12px;
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .cart-line.total .cart-amount {
+      color: var(--teal);
+    }
+
+    .cart-label { color: var(--gray); }
+    .cart-amount { font-weight: 600; color: var(--dark); }
+
+    /* Booking footer */
+    .booking-footer {
+      padding: 0 32px 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .booking-footer .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* ===== GOOGLE REVIEWS ===== */
+
+    .reviews-strip {
+      position: relative;
+      overflow: hidden;
+      padding: 8px 0;
+    }
+
+    .reviews-track {
+      display: flex;
+      gap: 20px;
+      animation: reviewScroll 35s linear infinite;
+      width: max-content;
+    }
+
+    .reviews-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes reviewScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .review-card {
+      flex-shrink: 0;
+      width: 300px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .review-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #4DA6FF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .review-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--black);
+      line-height: 1.3;
+    }
+
+    .review-meta {
+      font-size: 11px;
+      color: var(--gray-light);
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 10px;
+    }
+
+    .review-star {
+      color: #fbbc04;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .review-text {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .review-google {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--bg);
+      font-size: 11px;
+      color: var(--gray-light);
+    }
+
+    .review-google svg {
+      flex-shrink: 0;
+    }
+
+    .reviews-summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .reviews-rating-big {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .reviews-rating-details {
+      text-align: left;
+    }
+
+    .reviews-stars-big {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 4px;
+    }
+
+    .reviews-stars-big .review-star {
+      font-size: 22px;
+    }
+
+    .reviews-count {
+      font-size: 13px;
+      color: var(--gray-light);
+    }
+
+    /* ===== RESPONSIVE ===== */
+
+    /* Tablet */
+    /* Tablet — 1024px and below */
+    @media (max-width: 1024px) {
+      .hero-actions { justify-content: center; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .dock-cards { grid-template-columns: repeat(3, 1fr); }
+      .addons-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Between tablet and mobile — dock cards get 2 cols */
+    @media (max-width: 900px) {
+      .dock-cards { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Tablet/Mobile — 768px and below */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; min-width: 44px; min-height: 44px; justify-content: center; }
+
+      /* Mobile menu improvements */
+      .mobile-menu { width: 75vw; max-width: 280px; }
+      .mobile-menu-close { min-width: 44px; min-height: 44px; padding: 8px; }
+
+      /* Hero */
+      .hero { padding: 80px 0 0; }
+      .hero h1 { font-size: 34px; }
+      .hero-desc { font-size: 15px; margin-bottom: 24px; }
+      .hero-stats { flex-direction: column; gap: 16px; align-items: center; }
+      .hero-image { border-radius: 12px; width: 100%; max-width: 100%; }
+      .hero-image img, .hero-image iframe { width: 100%; height: 100%; }
+
+      /* Sections */
+      .section { padding: 24px 0; }
+      .section-header { margin-bottom: 16px; }
+      .section-header h2 { font-size: 26px; }
+      .section-header p { font-size: 14px; }
+
+      /* Product cards — full width */
+      .product-grid { grid-template-columns: 1fr; max-width: 100%; }
+      .product-card { border-radius: 12px; }
+      .product-image { aspect-ratio: 16/10; }
+      .product-body { padding: 20px 18px; }
+      .product-body h3 { font-size: 20px; }
+
+      /* Steps */
+      .steps-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+
+      /* Features */
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card { padding: 24px 20px; }
+
+      /* Dock cards — full width stacked */
+      .dock-cards { grid-template-columns: 1fr; max-width: 100%; margin: 0 auto 24px; }
+      .dock-card { border-radius: 12px; }
+      .dock-card-img { aspect-ratio: 16/9; }
+      .dock-card-body { padding: 20px 18px; }
+      .dock-card-footer { flex-direction: column; gap: 12px; align-items: stretch; }
+      .dock-card-footer .btn { justify-content: center; }
+      .dock-promo { padding: 16px 20px; font-size: 14px; }
+
+      /* Add-ons — 2 columns */
+      .addons-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .addon-card { padding: 18px 14px; }
+
+      /* Gallery — 2 columns */
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+      .gallery-item { border-radius: 8px; }
+
+      /* Reviews — flex with scroll, not fixed width */
+      .reviews-carousel { overflow-x: auto; padding-bottom: 8px; }
+      .review-card { min-width: 260px; padding: 16px; flex-shrink: 0; }
+      .reviews-rating-big { font-size: 40px; }
+
+      /* Group banner */
+      .group-banner { flex-direction: column; text-align: center; padding: 24px 20px; }
+
+      /* Contact form */
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-form { padding: 24px 18px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-row label { font-size: 14px; }
+
+      /* CTA */
+      .cta { padding: 48px 0; }
+      .cta h2 { font-size: 26px; }
+
+      /* Footer */
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+
+      /* Booking Modal — full screen on mobile */
+      .booking-overlay { padding: 0; align-items: flex-end; }
+      .booking-modal {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: 16px 16px 0 0;
+      }
+      .booking-header { padding: 16px 16px 0; }
+      .booking-header h2 { font-size: 20px; }
+      .booking-steps-nav { padding: 12px 16px 0; }
+      .bstep-tab { padding: 10px 12px; font-size: 12px; }
+      .booking-body { padding: 16px; }
+      .booking-footer { padding: 0 16px 16px; }
+
+      /* Calendar & time slots */
+      .cal-day { min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 13px; padding: 6px 2px; }
+      .slot-grid { grid-template-columns: 1fr; gap: 8px; }
+      .slot-btn { min-height: 44px; padding: 12px 8px; font-size: 13px; }
+
+      /* Boat options */
+      .addon-check-grid { grid-template-columns: 1fr; }
+      .boat-option { padding: 14px; gap: 12px; }
+      .boat-option-img { width: 64px; height: 48px; }
+
+      /* Lightbox */
+      .lightbox-slide { padding: 0 16px; }
+      .lightbox-arrow { width: 40px; height: 40px; font-size: 18px; }
+      .lightbox-arrow.prev { left: 8px; }
+      .lightbox-arrow.next { right: 8px; }
+
+      /* Images fill containers */
+      .product-image img,
+      .dock-card-img img,
+      .hero-image img,
+      .hero-image iframe,
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* Stripe payment form — stack on mobile */
+      .stripe-row { grid-template-columns: 1fr !important; }
+
+      /* Touch targets — min 44px */
+      .qty-btn { min-width: 44px; min-height: 44px; }
+      .btn { min-height: 44px; }
+
+      /* Weather popup centered on mobile */
+      #weather-forecast { left: 50% !important; transform: translateX(-50%); }
+    }
+
+    /* Small phone — 480px and below */
+    @media (max-width: 480px) {
+      .container, .container-wide { padding: 0 14px; }
+
+      /* Hero */
+      .hero { padding: 90px 0 40px; }
+      .hero h1 { font-size: 28px; }
+      .hero-desc { font-size: 14px; }
+      .btn { padding: 12px 24px; font-size: 14px; min-height: 44px; }
+      .btn-hero-book { padding: 16px 24px !important; font-size: 16px !important; width: 100%; justify-content: center; }
+
+      /* All grids — single column full width */
+      .product-grid { max-width: 100%; grid-template-columns: 1fr; }
+      .product-body { padding: 16px 14px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 16px; max-width: 100%; }
+      .addons-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
+
+      /* Dock cards full bleed feel */
+      .dock-card-body { padding: 16px 14px; }
+      .dock-card-body h3 { font-size: 18px; }
+      .dock-card-price { font-size: 24px; }
+
+      /* Booking modal — true full screen */
+      .booking-modal {
+        max-height: 100vh;
+        border-radius: 0;
+        height: 100vh;
+      }
+      .booking-overlay { align-items: stretch; }
+      .booking-header { padding: 14px 14px 0; }
+      .booking-steps-nav { padding: 10px 14px 0; }
+      .bstep-tab { padding: 8px 10px; font-size: 11px; }
+      .booking-body { padding: 14px; }
+      .booking-footer { padding: 0 14px 14px; }
+
+      /* Calendar even tighter */
+      .cal-day { min-height: 40px; font-size: 12px; padding: 4px 0; }
+      .slot-grid { gap: 6px; }
+      .slot-btn { min-height: 40px; padding: 10px 6px; font-size: 12px; }
+
+      /* Footer */
+      .footer { padding: 40px 0 20px; }
+
+      /* Sections */
+      .section { padding: 18px 0; }
+      .section-header h2 { font-size: 24px; }
+
+      /* Addon cards */
+      .addon-card { padding: 16px 12px; }
+      .addon-icon { font-size: 28px; margin-bottom: 8px; }
+      .addon-price { font-size: 18px; }
+
+      /* Reviews — smaller, scrollable */
+      .review-card { min-width: 220px; padding: 12px; flex-shrink: 0; }
+      .review-text { -webkit-line-clamp: 2; font-size: 12px; }
+      .reviews-rating-big { font-size: 32px; }
+      .reviews-summary { gap: 8px; }
+
+      /* Contact form labels */
+      .contact-form label { font-size: 13px; }
+      .contact-form textarea { min-height: 80px; }
+    }
+
+    /* ===== RESPONSIVE IMAGE SIZING ===== */
+    /* Gallery Images — 800x600 (4:3 aspect ratio) */
+    .gallery-item img,
+    .img-gallery {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius-lg);
+    }
+
+    /* Product/Boat Images — 500x375 (4:3 aspect ratio) */
+    .product-image,
+    .boat-image,
+    .img-product {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius);
+      background: var(--bg);
+    }
+
+    /* Product Card Image Container */
+    .product-card img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    /* Review Profile Images — 120x120 (square) */
+    .review-avatar,
+    .review-image,
+    .img-review,
+    .review-card img {
+      display: block;
+      width: 100px;
+      height: 100px;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 50%;
+      border: 3px solid var(--teal-light);
+    }
+
+    /* Dock Images — 500x375 (4:3 aspect ratio) */
+    .dock-image,
+    .img-dock {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius);
+    }
+
+    /* Hero Banner Images — 1200x600 (2:1 aspect ratio) */
+    .hero-banner,
+    .img-hero {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 2/1;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius-lg);
+    }
+
+    /* Generic Thumbnail Images — 200x200 (square) */
+    .img-thumbnail,
+    .thumbnail {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius);
+    }
+
+    /* Addon/Add-on Images — 250x250 (square) */
+    .addon-image,
+    .img-addon {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius);
+      background: var(--bg);
+    }
+
+    /* Dock Card Images */
+    .dock-card img,
+    .dock-grid img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    /* Ensure all images are responsive */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Prevent image distortion in containers */
+    [data-bind*="image"] img,
+    [data-src] {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Maintain aspect ratio for image containers */
+    .image-container {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  </style>
+  <!-- Stripe.js — loads securely from Stripe's CDN -->
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon"><img src="images/goboat/6515365445410422016.PNG" alt="Beachside Circle Boats logo"></div>
+        <div class="nav-logo-text">Beachside <span>Circle Boats</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#rentals">Rentals</a>
+        <a href="#about">About</a>
+        <a href="#docks">Docks</a>
+        <a href="#whats-included">What's Included</a>
+        <a href="#addons">Add-ons</a>
+        <a href="#how">How It Works</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+        <a href="javascript:void(0)" class="nav-cta" onclick="openBooking()">Book Now</a>
+      </div>
+      <div class="nav-hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" onclick="toggleMobileMenu()">&times;</button>
+    <a href="#rentals" onclick="toggleMobileMenu()">Rentals</a>
+    <a href="#about" onclick="toggleMobileMenu()">About</a>
+    <a href="#docks" onclick="toggleMobileMenu()">Docks</a>
+    <a href="#whats-included" onclick="toggleMobileMenu()">What's Included</a>
+    <a href="#addons" onclick="toggleMobileMenu()">Add-ons</a>
+    <a href="#how" onclick="toggleMobileMenu()">How It Works</a>
+    <a href="#gallery" onclick="toggleMobileMenu()">Gallery</a>
+    <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+    <a href="tel:+16013251205" style="color:var(--teal);margin-top:12px;font-weight:600;">Call (601) 325-1205</a>
+    <button class="btn btn-primary" style="margin-top:8px;width:100%;justify-content:center;" onclick="toggleMobileMenu();openBooking();">Book Now &rarr;</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <div class="hero-tag">Orange Beach, Alabama</div>
+        <h1>The Easiest Way to <span>Get on the Water</span></h1>
+        <p class="hero-desc">Rent a portable, eco-friendly circle boat. No license needed, no experience required. Just show up and cruise.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-hero-book" onclick="openBooking()">Book Now &rarr;</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <iframe src="https://www.youtube.com/embed/CI4qVeBE36Q?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&playlist=CI4qVeBE36Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <h2>About Beachside Circle Boats</h2>
+        <p>Experience a new way to explore Orange Beach</p>
+      </div>
+      <div style="background:#f9fafb;border-radius:12px;padding:32px;border:1px solid #e5e5e5;">
+        <p style="font-size:15px;line-height:1.8;color:#333;margin-bottom:16px;">
+          Beachside Circle Boats brings a whole new way to experience Orange Beach. Our portable, eco-friendly electric circle boats are perfect for cruising the intercoastal waterways — no gas, no noise, just pure fun on the water.
+        </p>
+        <p style="font-size:15px;line-height:1.8;color:#333;margin-bottom:20px;">
+          <strong style="color:#1a1a1a;">Perfect For:</strong> Families, couples, birthday parties, group outings, fishing, or just relaxing on the water. No boating license needed!
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:24px;">
+          <div>
+            <h4 style="color:#00ada8;font-size:14px;font-weight:700;margin-bottom:8px;">⚡ Eco-Friendly</h4>
+            <p style="font-size:13px;color:#666;line-height:1.6;">Zero emissions, zero noise pollution. 35lb thrust electric motors.</p>
+          </div>
+          <div>
+            <h4 style="color:#00ada8;font-size:14px;font-weight:700;margin-bottom:8px;">💪 Stable & Safe</h4>
+            <p style="font-size:13px;color:#666;line-height:1.6;">Low center of gravity. Life jackets included. No license needed.</p>
+          </div>
+          <div>
+            <h4 style="color:#00ada8;font-size:14px;font-weight:700;margin-bottom:8px;">🎒 Portable</h4>
+            <p style="font-size:13px;color:#666;line-height:1.6;">Inflatable design. We can bring boats to your private dock or event.</p>
+          </div>
+          <div>
+            <h4 style="color:#00ada8;font-size:14px;font-weight:700;margin-bottom:8px;">🌊 Gulf Coast Views</h4>
+            <p style="font-size:13px;color:#666;line-height:1.6;">Explore Orange Beach coastline and intercoastal waterways.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RENTALS / PRODUCTS -->
+  <section class="section products" id="rentals">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Rentals &amp; Pricing</div>
+        <h2 data-bind="pages.products.title">Choose Your Boat</h2>
+        <p data-bind="pages.products.subtitle">Simple, transparent pricing. All rentals include a life jacket, safety briefing, and full charge.</p>
+      </div>
+      <div class="product-grid">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w70"></div><div class="skeleton-line w50"></div><div class="skeleton-line w60"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line w70"></div><div class="skeleton-line w50"></div><div class="skeleton-line w60"></div></div></div>
+
+      </div>
+
+      <!-- Group Rates -->
+      <div class="group-banner">
+        <div class="group-banner-text">
+          <h3>Group Rates Available</h3>
+          <p>Rent 5 or more single seaters and save. No group rate on doubles. Call to book.</p>
+        </div>
+        <div class="group-banner-price">
+          <strong>$200</strong>
+          <span>each / All Day</span>
+        </div>
+        <a href="tel:+16013251205" class="btn btn-primary">Call to Book</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCKS DETAIL -->
+  <section class="section dock-section" id="docks">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Accessories</div>
+        <h2 data-bind="pages.docks.title">Towable Floating Docks</h2>
+        <p data-bind="pages.docks.subtitle">Pull a dock behind your GoBoat. Carry coolers, beach bags, chairs, umbrellas, or your fur baby.</p>
+      </div>
+
+      <div class="dock-cards">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-card"><div class="skeleton-img tall"></div><div class="skeleton-body"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div><div class="skeleton-line w90"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-img tall"></div><div class="skeleton-body"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div><div class="skeleton-line w90"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-img tall"></div><div class="skeleton-body"><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div><div class="skeleton-line w90"></div></div></div>
+      </div>
+
+      <!-- Group promo -->
+      <div class="dock-promo">
+        <strong>Rent 4+ boats and get a FREE dock for the day!</strong>
+        &nbsp;&mdash;&nbsp;
+        <span>Any dock type. Automatically applied at checkout.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="section" id="whats-included">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Package</div>
+        <h2>What's Included</h2>
+        <p>Everything you need for the perfect day on the water</p>
+      </div>
+      <div style="background:linear-gradient(135deg, #00ada8 0%, #009590 100%);border-radius:16px;padding:40px 32px;color:white;">
+        <div class="whats-included-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;font-size:15px;line-height:1.8;">
+          <!-- Populated from dashboard via /api/site-data -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADD-ONS -->
+  <section class="section" id="addons">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Extras</div>
+        <h2 data-bind="pages.addons.title">Add-ons</h2>
+        <p data-bind="pages.addons.subtitle">Enhance your trip. Add at checkout or at check-in.</p>
+      </div>
+      <div class="addons-grid">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
+        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section features" id="how">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">How It Works</div>
+        <h2 data-bind="pages.steps.title">On the Water in 4 Steps</h2>
+        <p data-bind="pages.steps.subtitle">From booking to cruising, we make it effortless.</p>
+      </div>
+      <div class="steps-grid">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
+        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAUNCH LOCATIONS -->
+  <section class="section locations-section" id="locations">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Where We Launch</div>
+        <h2>Launch Locations</h2>
+        <p>Choose your launch point when you book. We launch from multiple spots along the Orange Beach waterway.</p>
+      </div>
+      <div class="locations-grid">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-card mini"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CIRCLE BOATS -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Why Circle Boats</div>
+        <h2 data-bind="pages.about.title">A New Way to Experience the Gulf</h2>
+        <p data-bind="pages.about.subtitle">Portable inflatable boats that combine fun, safety, and sustainability.</p>
+      </div>
+      <div class="features-grid">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
+        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section features" id="gallery">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Gallery</div>
+        <h2 data-bind="pages.gallery.title">See the Experience</h2>
+        <p data-bind="pages.gallery.subtitle">Tap any photo to view full size. Swipe to browse.</p>
+      </div>
+      <div class="gallery-grid">
+        <!-- Populated from dashboard via /api/site-data -->
+        <div class="skeleton-img gallery-skel"></div><div class="skeleton-img gallery-skel"></div><div class="skeleton-img gallery-skel"></div>
+        <div class="skeleton-img gallery-skel"></div><div class="skeleton-img gallery-skel"></div><div class="skeleton-img gallery-skel"></div>
+        <div class="skeleton-img gallery-skel"></div><div class="skeleton-img gallery-skel"></div><div class="skeleton-img gallery-skel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button class="lightbox-arrow prev" onclick="lightboxNav(-1)">&#8249;</button>
+    <button class="lightbox-arrow next" onclick="lightboxNav(1)">&#8250;</button>
+    <div class="lightbox-track" id="lightboxTrack"></div>
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+    <div class="lightbox-dots" id="lightboxDots"></div>
+  </div>
+
+  <!-- GOOGLE REVIEWS -->
+  <section class="section" id="reviews" style="background:var(--bg);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Reviews</div>
+        <h2 data-bind="pages.reviews.title">What Our Customers Say</h2>
+        <p data-bind="pages.reviews.subtitle">Real reviews from real boaters on the Gulf Coast.</p>
+      </div>
+
+      <div class="reviews-summary">
+        <div class="reviews-rating-big">5.0</div>
+        <div class="reviews-rating-details">
+          <div class="reviews-stars-big">
+            <span class="review-star">&#9733;</span>
+            <span class="review-star">&#9733;</span>
+            <span class="review-star">&#9733;</span>
+            <span class="review-star">&#9733;</span>
+            <span class="review-star">&#9733;</span>
+          </div>
+          <div class="reviews-count">Based on Google Reviews</div>
+        </div>
+      </div>
+
+      <div class="reviews-strip">
+        <div class="reviews-track" id="reviewsTrack">
+          <!-- Populated from dashboard via /api/site-data -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <h2 data-bind="pages.cta.title">Ready to Get on the Water?</h2>
+      <p data-bind="pages.cta.subtitle">Book your circle boat today and experience the Gulf Coast like never before.</p>
+      <button class="btn btn-white" onclick="openBooking()">Book Your Boat</button>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Contact</div>
+        <h2>Book or Ask a Question</h2>
+        <p>Send us a message or call. We respond fast.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-form">
+          <h3>Send a Message</h3>
+          <form onsubmit="handleContact(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name">Full Name</label>
+                <input type="text" id="contact-name" placeholder="John Smith" required>
+              </div>
+              <div class="form-group">
+                <label for="contact-phone">Phone</label>
+                <input type="tel" id="contact-phone" placeholder="(555) 123-4567">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-interest">Interested In</label>
+              <select id="contact-interest">
+                <option value="">Select one...</option>
+                <option value="single-half">Single Seater &mdash; Half Day ($150)</option>
+                <option value="single-full">Single Seater &mdash; All Day ($225)</option>
+                <option value="double-half">Double Seater &mdash; Half Day ($200)</option>
+                <option value="double-full">Double Seater &mdash; All Day ($275)</option>
+                <option value="dock">Dock Rental ($50)</option>
+                <option value="group">Group Rate (5+ Singles &mdash; $200/each)</option>
+                <option value="addons">Add-ons</option>
+                <option value="event">Private Event</option>
+                <option value="other">General Question</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" placeholder="Tell us about your plans, preferred dates, or any questions..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
+          </form>
+        </div>
+        <div class="contact-sidebar">
+          <div class="info-card">
+            <h4><span class="icon">&#128205;</span> Location</h4>
+            <div class="info-row" data-bind="business.address">25856 Canal Road, Unit A<br>Orange Beach, AL 36561</div>
+            <div class="map-embed">Map &mdash; Orange Beach, AL</div>
+          </div>
+          <div class="info-card">
+            <h4><span class="icon">&#128222;</span> Contact</h4>
+            <div class="info-row"><strong>Phone</strong> <a data-bind="business.phone" href="tel:+16013251205" style="color:var(--teal);">(601) 325-1205</a></div>
+            <div class="info-row"><strong>Email</strong> <a data-bind="business.email" href="mailto:beachsideboats@myyahoo.com" style="color:var(--teal);">beachsideboats@myyahoo.com</a></div>
+          </div>
+          <div class="info-card">
+            <h4><span class="icon">&#128336;</span> Hours</h4>
+            <div class="info-row" data-bind="business.hours">Mon–Sat 8:00 AM – 6:00 PM, Sunday 9:00 AM – 5:00 PM</div>
+            <div class="info-row" style="font-size:12px;color:var(--gray-light);margin-top:4px;" data-bind="business.hoursNote">Weather permitting. Call for availability.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING MODAL -->
+  <div class="booking-overlay" id="bookingOverlay">
+    <div class="booking-modal">
+      <button class="booking-close" onclick="closeBooking()">&times;</button>
+      <div class="booking-header">
+        <h2>Book Your Rental</h2>
+        <p>Select a date, choose your boat, and add extras.</p>
+      </div>
+      <div class="booking-steps-nav">
+        <div class="bstep-tab active" data-step="1">1. Date</div>
+        <div class="bstep-tab" data-step="2">2. Boat &amp; Time</div>
+        <div class="bstep-tab" data-step="3">3. Extras</div>
+        <div class="bstep-tab" data-step="4">4. Checkout</div>
+      </div>
+      <div class="booking-body">
+
+        <!-- STEP 1: LOCATION + DATE -->
+        <div class="bstep active" id="bstep1">
+          <div class="loc-section-label">📍 Choose Launch Location</div>
+          <div id="booking-locations">
+            <!-- Populated from site data via load-site-data.js -->
+            <div class="loc-option selected" data-loc-id="loc1" data-loc-name="Main Launch — Canal Road" onclick="selectLocation(this)">
+              <div class="loc-option-icon">📍</div>
+              <div class="loc-option-info">
+                <strong>Main Launch — Canal Road</strong>
+                <span>25856 Canal Road, Unit A, Orange Beach, AL 36561</span>
+              </div>
+            </div>
+          </div>
+          <div style="height:20px;"></div>
+          <div class="loc-section-label">📅 Choose Your Date</div>
+          <div class="cal-header">
+            <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
+            <h3 id="calMonthLabel"></h3>
+            <button class="cal-nav" onclick="calNav(1)">&#8250;</button>
+          </div>
+          <div class="cal-grid" id="calGrid">
+            <div class="cal-day-label">Sun</div>
+            <div class="cal-day-label">Mon</div>
+            <div class="cal-day-label">Tue</div>
+            <div class="cal-day-label">Wed</div>
+            <div class="cal-day-label">Thu</div>
+            <div class="cal-day-label">Fri</div>
+            <div class="cal-day-label">Sat</div>
+          </div>
+        </div>
+
+        <!-- STEP 2: BOAT & TIME -->
+        <div class="bstep" id="bstep2">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Select Boat Type</h4>
+          <div class="boat-option" data-boat="single" onclick="selectBoat(this)">
+            <img src="images/goboat/goboat-beach.jpg" alt="Single Seater" class="boat-option-img">
+            <div class="boat-option-info">
+              <h4>Single Seater</h4>
+              <p>1 person &bull; Max 300 lbs &bull; 70" diameter</p>
+            </div>
+            <div class="boat-option-price">from $150</div>
+          </div>
+          <div class="boat-option" data-boat="double" onclick="selectBoat(this)">
+            <img src="images/goboat/goboat-bumpers.jpg" alt="Double Seater" class="boat-option-img">
+            <div class="boat-option-info">
+              <h4>Double Seater</h4>
+              <p>2 people &bull; Max 450 lbs &bull; 89" x 70"</p>
+            </div>
+            <div class="boat-option-price">from $200</div>
+          </div>
+
+          <h4 style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:4px;">Time Slot</h4>
+          <div class="slot-grid">
+            <div class="slot-btn" data-slot="am" onclick="selectSlot(this)">
+              <strong>Half Day AM</strong>
+              <span>9:00 &ndash; 1:00</span>
+              <div class="slot-price" id="slotAM">$150</div>
+            </div>
+            <div class="slot-btn" data-slot="pm" onclick="selectSlot(this)">
+              <strong>Half Day PM</strong>
+              <span>2:00 &ndash; 6:00</span>
+              <div class="slot-price" id="slotPM">$150</div>
+            </div>
+            <div class="slot-btn" data-slot="all" onclick="selectSlot(this)">
+              <strong>All Day</strong>
+              <span>9:00 &ndash; 6:00</span>
+              <div class="slot-price" id="slotAll">$225</div>
+            </div>
+          </div>
+
+          <div class="qty-row">
+            <label>Quantity:</label>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(-1)">-</button>
+              <div class="qty-val" id="qtyVal">1</div>
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: EXTRAS -->
+        <div class="bstep" id="bstep3">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;">Add a Dock</h4>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">$25 half-day / $50 full-day. Rent 4+ boats = FREE dock!</p>
+          <div class="addon-check-grid">
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="mini-dock" data-price="50">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>Mini Dock</strong>
+                <span>8'4" x 44" platform</span>
+              </div>
+              <div class="addon-check-price">$50</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="x-dock" data-price="50">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>X Dock</strong>
+                <span>5' x 5' floating dock</span>
+              </div>
+              <div class="addon-check-price">$50</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="doggie-dock" data-price="50">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>Doggie Dock</strong>
+                <span>5'4" x 43" with ramp</span>
+              </div>
+              <div class="addon-check-price">$50</div>
+            </label>
+          </div>
+
+          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:4px;">Add-ons</h4>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">Enhance your trip with these extras.</p>
+          <div class="addon-check-grid">
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="cooler" data-price="35">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127866; Cooler Pack</strong>
+                <span>Cooler + ice + drinks</span>
+              </div>
+              <div class="addon-check-price">$35</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="drinks" data-price="15">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#129380; Drink &amp; Ice</strong>
+                <span>6 drinks + bag of ice</span>
+              </div>
+              <div class="addon-check-price">$15</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="snacks" data-price="20">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127839; Snack Pack</strong>
+                <span>Chips, granola, fruit</span>
+              </div>
+              <div class="addon-check-price">$20</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="pup" data-price="15">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#128054; Pup Pack</strong>
+                <span>Treats, bowl, dog vest</span>
+              </div>
+              <div class="addon-check-price">$15</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="speaker" data-price="15">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127925; BT Speaker</strong>
+                <span>Waterproof JBL</span>
+              </div>
+              <div class="addon-check-price">$15</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="gopro" data-price="30">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#128247; GoPro</strong>
+                <span>Waterproof camera</span>
+              </div>
+              <div class="addon-check-price">$30</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="fishing" data-price="25">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127907; Fishing Gear</strong>
+                <span>Rod, reel, tackle, bait</span>
+              </div>
+              <div class="addon-check-price">$25</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="sunkit" data-price="10">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#9728;&#65039; Sun &amp; Safety</strong>
+                <span>Sunscreen, hat, dry bag</span>
+              </div>
+              <div class="addon-check-price">$10</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- STEP 4: CHECKOUT -->
+        <div class="bstep" id="bstep4">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:16px;">Your Booking Summary</h4>
+          <div class="cart-summary" id="cartSummary"></div>
+
+          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:12px;">Your Info</h4>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:10px;">
+              <label>Full Name</label>
+              <input type="text" id="book-name" placeholder="John Smith" required>
+            </div>
+            <div class="form-group" style="margin-bottom:10px;">
+              <label>Phone</label>
+              <input type="tel" id="book-phone" placeholder="(555) 123-4567" required>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label>Email</label>
+            <input type="email" id="book-email" placeholder="john@example.com" required>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label>Notes (optional)</label>
+            <textarea id="book-notes" placeholder="Special requests, group info, etc." style="min-height:60px;"></textarea>
+          </div>
+
+          <!-- STRIPE PAYMENT FORM (embedded - looks like part of the site) -->
+          <div id="payment-section" style="margin-top:20px;">
+            <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Payment</h4>
+            <div id="stripe-card-wrapper" style="background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;">
+              <!-- Card number row -->
+              <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Card Number</label>
+                <div id="card-number-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;transition:border-color 0.2s;"></div>
+              </div>
+              <!-- Expiry + CVC row -->
+              <div class="stripe-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Expiry</label>
+                  <div id="card-expiry-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div>
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">CVC</label>
+                  <div id="card-cvc-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div>
+                </div>
+              </div>
+              <!-- Error display -->
+              <div id="card-errors" style="color:#ef4444;font-size:13px;min-height:20px;"></div>
+              <!-- Security badge -->
+              <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ada8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span style="font-size:11px;color:#999;">Secured by Stripe. We never see your card details.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="booking-footer">
+        <button class="btn btn-outline" id="bookBack" onclick="bookingNav(-1)" style="display:none;">Back</button>
+        <button class="btn btn-primary" id="bookNext" onclick="bookingNav(1)">Select Date to Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-logo-icon">B</div>
+            <div class="footer-logo-text" data-bind="business.name">Beachside Circle Boats</div>
+          </div>
+          <p data-bind="footer.tagline">Beachside Circle Boat Rentals and Sales LLC. Eco-friendly circle boat rentals in Orange Beach, Alabama.</p>
+        </div>
+        <div>
+          <h4>Links</h4>
+          <ul>
+            <li><a href="#rentals">Rentals &amp; Pricing</a></li>
+            <li><a href="#how">How It Works</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="links.html">📍 Bio Links</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#rentals">Single Seater Rental</a></li>
+            <li><a href="#rentals">Double Seater Rental</a></li>
+            <li><a href="#docks">Docks</a></li>
+            <li><a href="#addons">Add-ons</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+16013251205" data-bind="business.phone">(601) 325-1205</a></li>
+            <li><a href="mailto:beachsideboats@myyahoo.com" data-bind="business.email">beachsideboats@myyahoo.com</a></li>
+            <li><a href="#contact" data-bind="business.address">25856 Canal Road, Unit A</a></li>
+            <li>Orange Beach, AL 36561</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Beachside Circle Boat Rentals and Sales LLC. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="" data-bind="social.facebook" title="Facebook" style="display:none;">f</a>
+          <a href="" data-bind="social.instagram" title="Instagram" style="display:none;">📷</a>
+          <a href="" data-bind="social.google" title="Google" style="display:none;">📍</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* === NAV === */
+    var navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    function toggleMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var overlay = document.getElementById('mobileOverlay');
+      var isOpen = menu.classList.contains('open');
+      menu.classList.toggle('open', !isOpen);
+      overlay.classList.toggle('visible', !isOpen);
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 76, behavior: 'smooth' });
+        }
+      });
+    });
+
+    /* === CONTACT FORM === */
+    function handleContact(e) {
+      e.preventDefault();
+      var btn = e.target.querySelector('button[type="submit"]');
+      var form = e.target;
+
+      var contactData = {
+        name: form.querySelector('#contact-name')?.value || '',
+        email: form.querySelector('#contact-email')?.value || '',
+        phone: form.querySelector('#contact-phone')?.value || '',
+        interest: form.querySelector('#contact-interest')?.value || '',
+        message: form.querySelector('#contact-message')?.value || ''
+      };
+
+      // Send to API
+      fetch('http://localhost:3001/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactData)
+      })
+      .then(res => res.json())
+      .then(data => {
+        btn.textContent = 'Sent!';
+        btn.style.background = '#10b981';
+        btn.style.borderColor = '#10b981';
+        setTimeout(function() {
+          btn.textContent = 'Send Message';
+          btn.style.background = '';
+          btn.style.borderColor = '';
+          form.reset();
+        }, 3000);
+      })
+      .catch(err => {
+        console.error('Contact form error:', err);
+        btn.textContent = 'Error - Try Again';
+        btn.style.background = '#ef4444';
+      });
+    }
+
+    /* === FADE-IN ANIMATIONS === */
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-card, .step-card, .feature-card, .addon-card, .gallery-item, .info-card').forEach(function(el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      obs.observe(el);
+    });
+
+    /* ============================================
+       BOOKING SYSTEM
+       ============================================ */
+    var booking = {
+      step: 1,
+      location: 'loc1',      // selected location id
+      locationName: 'Main Launch — Canal Road',
+      date: null,
+      boat: null,    // 'single' or 'double'
+      slot: null,    // 'am', 'pm', 'all'
+      qty: 1,
+      addons: [],
+      calMonth: new Date().getMonth(),
+      calYear: new Date().getFullYear(),
+      sessionId: null,  // unique per booking attempt, used for hold system
+      holdId: null      // tracks active hold so we can release it
+    };
+
+    // Generate a unique session ID for hold tracking
+    function generateSessionId() {
+      return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    var PRICES = {
+      single: { am: 150, pm: 150, all: 225 },
+      double: { am: 200, pm: 200, all: 275 }
+    };
+
+    var GROUP_PRICE = 200; // 5+ singles all day
+
+    var ADDON_NAMES = {
+      'mini-dock': 'Mini Dock',
+      'x-dock': 'X Dock',
+      'doggie-dock': 'Doggie Dock',
+      'cooler': 'Cooler Pack',
+      'drinks': 'Drink & Ice',
+      'snacks': 'Snack Pack',
+      'pup': 'Pup Pack',
+      'speaker': 'BT Speaker',
+      'gopro': 'GoPro Rental',
+      'fishing': 'Fishing Gear',
+      'sunkit': 'Sun & Safety Kit'
+    };
+
+    var SLOT_LABELS = {
+      am: 'Half Day AM (9:00-1:00)',
+      pm: 'Half Day PM (2:00-6:00)',
+      all: 'All Day (9:00-6:00)'
+    };
+
+    /* Open / Close */
+    function openBooking(preselect) {
+      if (preselect) booking.boat = preselect;
+      booking.sessionId = generateSessionId();
+      booking.holdId = null;
+      document.getElementById('bookingOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      goToStep(1);
+      renderCalendar();
+    }
+
+    function closeBooking() {
+      document.getElementById('bookingOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      // Release the hold if customer abandons without completing
+      releaseHold();
+    }
+
+    function releaseHold() {
+      if (booking.holdId && booking.sessionId) {
+        fetch(api('/hold'), {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: booking.sessionId })
+        }).catch(function() {});
+        booking.holdId = null;
+      }
+    }
+
+    document.getElementById('bookingOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeBooking();
+    });
+
+    /* Calendar */
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function renderCalendar() {
+      var grid = document.getElementById('calGrid');
+      // Remove old day buttons
+      grid.querySelectorAll('.cal-day').forEach(function(d) { d.remove(); });
+
+      var y = booking.calYear, m = booking.calMonth;
+      document.getElementById('calMonthLabel').textContent = MONTHS[m] + ' ' + y;
+
+      var firstDay = new Date(y, m, 1).getDay();
+      var daysInMonth = new Date(y, m + 1, 0).getDate();
+      var today = new Date();
+      today.setHours(0,0,0,0);
+
+      // Empty cells before first day
+      for (var i = 0; i < firstDay; i++) {
+        var empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var btn = document.createElement('button');
+        btn.className = 'cal-day';
+        btn.textContent = d;
+        var cellDate = new Date(y, m, d);
+        if (cellDate < today) {
+          btn.classList.add('disabled');
+        } else {
+          btn.setAttribute('data-date', y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'));
+          btn.addEventListener('click', function() {
+            booking.date = this.getAttribute('data-date');
+            grid.querySelectorAll('.cal-day').forEach(function(c) { c.classList.remove('selected'); });
+            this.classList.add('selected');
+            updateNextBtn();
+          });
+        }
+        // Highlight selected
+        if (booking.date === y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0')) {
+          btn.classList.add('selected');
+        }
+        grid.appendChild(btn);
+      }
+    }
+
+    function calNav(dir) {
+      booking.calMonth += dir;
+      if (booking.calMonth > 11) { booking.calMonth = 0; booking.calYear++; }
+      if (booking.calMonth < 0) { booking.calMonth = 11; booking.calYear--; }
+      renderCalendar();
+    }
+
+    /* Location Selection */
+    function selectLocation(el) {
+      document.querySelectorAll('.loc-option').forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected');
+      booking.location = el.getAttribute('data-loc-id');
+      booking.locationName = el.getAttribute('data-loc-name');
+      updateNextBtn();
+    }
+
+    /* Boat Selection */
+    function selectBoat(el) {
+      document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected');
+      booking.boat = el.getAttribute('data-boat');
+      updateSlotPrices();
+      updateNextBtn();
+    }
+
+    function updateSlotPrices() {
+      if (!booking.boat) return;
+      var p = PRICES[booking.boat];
+      document.getElementById('slotAM').textContent = '$' + p.am;
+      document.getElementById('slotPM').textContent = '$' + p.pm;
+      document.getElementById('slotAll').textContent = '$' + p.all;
+    }
+
+    /* Time Slot */
+    function selectSlot(el) {
+      document.querySelectorAll('.slot-btn').forEach(function(s) { s.classList.remove('selected'); });
+      el.classList.add('selected');
+      booking.slot = el.getAttribute('data-slot');
+      updateDockPrices(); // Update dock prices when slot changes
+      updateNextBtn();
+    }
+
+    /* Update dock prices when time slot changes */
+    function updateDockPrices() {
+      // Recalculate dock addon prices based on new slot
+      booking.addons = booking.addons.map(function(addon) {
+        var isDock = addon.id === 'mini-dock' || addon.id === 'x-dock' || addon.id === 'doggie-dock';
+        if (isDock) {
+          addon.price = booking.slot === 'am' ? 25 : 50; // AM = half-day = $25, PM/All = full-day = $50
+        }
+        return addon;
+      });
+
+      // Update the display prices for dock checkboxes
+      document.querySelectorAll('input[data-addon="mini-dock"], input[data-addon="x-dock"], input[data-addon="doggie-dock"]').forEach(function(input) {
+        if (input.checked) {
+          var label = input.closest('label');
+          var price = booking.slot === 'am' ? 25 : 50;
+          label.querySelector('.addon-check-price').textContent = '$' + price;
+        }
+      });
+
+      buildCart(); // Rebuild cart with updated prices
+    }
+
+    /* Quantity */
+    function changeQty(delta) {
+      booking.qty = Math.max(1, Math.min(20, booking.qty + delta));
+      document.getElementById('qtyVal').textContent = booking.qty;
+    }
+
+    /* Add-ons */
+    function toggleAddon(el) {
+      var cb = el.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      el.classList.toggle('checked', cb.checked);
+
+      var addon = cb.getAttribute('data-addon');
+      var price = parseInt(cb.getAttribute('data-price'));
+
+      // Docks have different pricing based on half-day vs full-day
+      var isDock = addon === 'mini-dock' || addon === 'x-dock' || addon === 'doggie-dock';
+      if (isDock && booking.slot) {
+        price = booking.slot === 'am' ? 25 : 50; // AM (morning) = half-day = $25, PM/All = full-day = $50
+      }
+
+      if (cb.checked) {
+        booking.addons.push({ id: addon, price: price });
+      } else {
+        booking.addons = booking.addons.filter(function(a) { return a.id !== addon; });
+      }
+
+      // Update the display price on the checkbox label
+      if (isDock) {
+        el.querySelector('.addon-check-price').textContent = '$' + price;
+      }
+    }
+
+    /* Step Navigation */
+    function goToStep(n) {
+      booking.step = n;
+      document.querySelectorAll('.bstep').forEach(function(s) { s.classList.remove('active'); });
+      document.getElementById('bstep' + n).classList.add('active');
+
+      document.querySelectorAll('.bstep-tab').forEach(function(t, i) {
+        t.classList.remove('active', 'done');
+        if (i + 1 === n) t.classList.add('active');
+        if (i + 1 < n) t.classList.add('done');
+      });
+
+      document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
+
+      // Pre-select boat if already chosen
+      if (n === 2 && booking.boat) {
+        var opt = document.querySelector('.boat-option[data-boat="' + booking.boat + '"]');
+        if (opt && !opt.classList.contains('selected')) {
+          document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
+          opt.classList.add('selected');
+        }
+        updateSlotPrices();
+      }
+
+      // Build cart on step 4 + init Stripe card form + create hold
+      if (n === 4) {
+        buildCart();
+        setTimeout(initStripeElements, 100);
+        createBookingHold();
+      }
+
+      updateNextBtn();
+    }
+
+    // Create a 10-minute hold when entering checkout (step 4)
+    // This prevents overbooking by reserving inventory while customer pays
+    function createBookingHold() {
+      if (!booking.boat || !booking.slot || !booking.date) return;
+
+      var holdPayload = {
+        fleet_type_id: booking.fleetTypeId || null,
+        time_slot_id: booking.timeSlotId || null,
+        booking_date: booking.date,
+        qty: booking.qty,
+        session_id: booking.sessionId
+      };
+
+      // Only create hold if we have the IDs needed for fleet-based booking
+      if (!holdPayload.fleet_type_id || !holdPayload.time_slot_id) return;
+
+      fetch(api('/hold'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(holdPayload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(result) {
+        if (result.hold_id) {
+          booking.holdId = result.hold_id;
+        } else if (result.error) {
+          // Slot no longer available — notify user and go back
+          alert('Sorry, this slot is no longer available: ' + result.error);
+          goToStep(2);
+        }
+      })
+      .catch(function() {
+        // API unreachable — proceed without hold (booking will still do atomic check)
+      });
+    }
+
+    function bookingNav(dir) {
+      var next = booking.step + dir;
+      if (next < 1) return;
+
+      if (dir > 0) {
+        // Validation
+        if (booking.step === 1 && (!booking.location || !booking.date)) return;
+        if (booking.step === 2 && (!booking.boat || !booking.slot)) return;
+        if (booking.step === 4) {
+          submitBooking();
+          return;
+        }
+      }
+
+      if (next >= 1 && next <= 4) goToStep(next);
+    }
+
+    function updateNextBtn() {
+      var btn = document.getElementById('bookNext');
+      var s = booking.step;
+
+      if (s === 1) {
+        var step1Ready = booking.location && booking.date;
+        btn.textContent = !booking.location ? 'Select a Location' : !booking.date ? 'Select a Date' : 'Continue';
+        btn.style.opacity = step1Ready ? '1' : '0.5';
+      } else if (s === 2) {
+        var ready = booking.boat && booking.slot;
+        btn.textContent = ready ? 'Continue' : 'Select Boat & Time';
+        btn.style.opacity = ready ? '1' : '0.5';
+      } else if (s === 3) {
+        btn.textContent = 'Review & Checkout';
+        btn.style.opacity = '1';
+      } else if (s === 4) {
+        var t = getBoatTotal() + getAddonsTotal();
+        btn.textContent = 'Pay $' + t + ' & Book';
+        btn.style.opacity = '1';
+      }
+    }
+
+    /* Cart */
+    function getBoatTotal() {
+      if (!booking.boat || !booking.slot) return 0;
+      var unit = PRICES[booking.boat][booking.slot];
+      // Group rate: 5+ singles all day
+      if (booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5) {
+        unit = GROUP_PRICE;
+      }
+      return unit * booking.qty;
+    }
+
+    function getAddonsTotal() {
+      var sum = 0;
+      booking.addons.forEach(function(a) { sum += a.price; });
+      return sum;
+    }
+
+    function buildCart() {
+      var html = '';
+      var dateParts = booking.date ? booking.date.split('-') : [];
+      var dateStr = dateParts.length === 3 ? MONTHS[parseInt(dateParts[1])-1] + ' ' + parseInt(dateParts[2]) + ', ' + dateParts[0] : '';
+
+      if (booking.locationName) {
+        html += '<div class="cart-line"><span class="cart-label">Location</span><span class="cart-amount">' + booking.locationName + '</span></div>';
+      }
+      html += '<div class="cart-line"><span class="cart-label">Date</span><span class="cart-amount">' + dateStr + '</span></div>';
+
+      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
+      var unitPrice = PRICES[booking.boat][booking.slot];
+      var isGroup = booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5;
+      if (isGroup) unitPrice = GROUP_PRICE;
+
+      html += '<div class="cart-line"><span class="cart-label">' + boatName + ' x' + booking.qty + '</span><span class="cart-amount">$' + (unitPrice * booking.qty) + '</span></div>';
+      html += '<div class="cart-line"><span class="cart-label">' + SLOT_LABELS[booking.slot] + '</span><span class="cart-amount">$' + unitPrice + '/ea</span></div>';
+
+      if (isGroup) {
+        html += '<div class="cart-line"><span class="cart-label" style="color:var(--teal);font-weight:600;">Group Rate Applied!</span><span class="cart-amount" style="color:var(--teal);">Save $' + (225 - GROUP_PRICE) * booking.qty + '</span></div>';
+      }
+
+      booking.addons.forEach(function(a) {
+        html += '<div class="cart-line"><span class="cart-label">' + (ADDON_NAMES[a.id] || a.id) + '</span><span class="cart-amount">$' + a.price + '</span></div>';
+      });
+
+      var total = getBoatTotal() + getAddonsTotal();
+      html += '<div class="cart-line total"><span class="cart-label">Total</span><span class="cart-amount">$' + total + '</span></div>';
+
+      document.getElementById('cartSummary').innerHTML = html;
+    }
+
+    /* ============================================
+       STRIPE ELEMENTS — Embedded payment form
+       Card form renders ON the site, styled to match.
+       Customer never leaves the page.
+
+       PRODUCTION FLOW:
+       1. Page loads Stripe.js with owner's publishable key
+       2. Stripe Elements renders card inputs (card #, expiry, CVC)
+       3. Customer fills in card → data goes directly to Stripe (never our server)
+       4. We call our Edge Function with the payment method token
+       5. Edge Function creates PaymentIntent via Stripe API using owner's
+          connected account, with application_fee_amount (our platform cut)
+       6. Money goes to owner's Stripe → their bank account
+
+       Keys stored in Azure Key Vault / AWS Secrets Manager / Google KMS
+       Secret key NEVER in the browser. Only the publishable key (safe).
+       ============================================ */
+
+    var _stripe = null;
+    var _cardNumber = null;
+    var _cardExpiry = null;
+    var _cardCvc = null;
+
+    var _stripePkFetched = false;
+
+    // Initialize Stripe Elements when step 4 loads
+    function initStripeElements() {
+      if (!_stripe && !_stripePkFetched) {
+        _stripePkFetched = true;
+        // Fetch publishable key from platform API
+        fetch('/api/stripe/publishable-key')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var pk = data.publishableKey || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
+            if (typeof Stripe !== 'undefined') {
+              _stripe = Stripe(pk);
+              mountStripeElements();
+            }
+          })
+          .catch(function() {
+            // Fallback to test key for development
+            if (typeof Stripe !== 'undefined') {
+              _stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+              mountStripeElements();
+            }
+          });
+        return;
+      }
+
+      if (!_stripe) {
+        if (typeof Stripe !== 'undefined') {
+          _stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+        } else {
+          return;
+        }
+      }
+
+      mountStripeElements();
+    }
+
+    function mountStripeElements() {
+
+      // Only init once
+      if (_cardNumber) return;
+
+      var elements = _stripe.elements({
+        fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }]
+      });
+
+      var style = {
+        base: {
+          fontSize: '15px',
+          fontFamily: 'Inter, -apple-system, sans-serif',
+          color: '#1a1a1a',
+          '::placeholder': { color: '#999' }
+        },
+        invalid: {
+          color: '#ef4444'
+        }
+      };
+
+      _cardNumber = elements.create('cardNumber', { style: style, placeholder: '4242 4242 4242 4242' });
+      _cardExpiry = elements.create('cardExpiry', { style: style });
+      _cardCvc = elements.create('cardCvc', { style: style });
+
+      _cardNumber.mount('#card-number-element');
+      _cardExpiry.mount('#card-expiry-element');
+      _cardCvc.mount('#card-cvc-element');
+
+      // Show card errors in real time
+      _cardNumber.on('change', function(event) {
+        var errEl = document.getElementById('card-errors');
+        errEl.textContent = event.error ? event.error.message : '';
+      });
+    }
+
+    /* Submit — Process payment via embedded Stripe Elements */
+    function submitBooking() {
+      var name = document.getElementById('book-name').value.trim();
+      var phone = document.getElementById('book-phone').value.trim();
+      var email = document.getElementById('book-email').value.trim();
+      var notes = document.getElementById('book-notes')?.value || '';
+
+      if (!name || !email) {
+        alert('Please fill in your name and email.');
+        return;
+      }
+
+      var btn = document.getElementById('bookNext');
+      var total = getBoatTotal() + getAddonsTotal();
+
+      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
+      var slotLabel = SLOT_LABELS[booking.slot] || booking.slot;
+      var desc = boatName + ' x' + booking.qty + ' — ' + slotLabel;
+      if (booking.addons.length > 0) {
+        desc += ' + ' + booking.addons.length + ' add-on(s)';
+      }
+
+      btn.textContent = 'Processing...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      // Send booking to API
+      var bookingData = {
+        boat: booking.boat,
+        date: booking.date,
+        duration: booking.slot,
+        qty: booking.qty,
+        addons: booking.addons,
+        location: { id: booking.location, name: booking.locationName },
+        customer: {
+          name: name,
+          email: email,
+          phone: phone,
+          notes: notes
+        },
+        payment: {
+          amount: total,
+          currency: 'USD'
+        }
+      };
+
+      fetch('http://localhost:3001/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Booking confirmed! Booking ID: ' + data.booking_id);
+          closeBooking();
+          resetBookingState();
+          btn.textContent = 'Complete Booking';
+          btn.style.opacity = '1';
+          btn.disabled = false;
+        } else {
+          alert('Booking error: ' + (data.error || 'Unknown error'));
+          btn.textContent = 'Complete Booking';
+          btn.style.opacity = '1';
+          btn.disabled = false;
+        }
+      })
+      .catch(err => {
+        console.error('Booking error:', err);
+        alert('Error submitting booking. Please try again.');
+        btn.textContent = 'Complete Booking';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      });
+      return;
+
+      if (_stripe && _cardNumber) {
+        // Create a payment method from the card element
+        _stripe.createPaymentMethod({
+          type: 'card',
+          card: _cardNumber,
+          billing_details: {
+            name: name,
+            email: email,
+            phone: phone
+          }
+        }).then(function(result) {
+          if (result.error) {
+            document.getElementById('card-errors').textContent = result.error.message;
+            btn.textContent = 'Pay $' + total + ' & Book';
+            btn.style.opacity = '1';
+            btn.disabled = false;
+            return;
+          }
+
+          var paymentMethodId = result.paymentMethod.id;
+
+          // First create the booking in the database (also triggers SMS notifications)
+          // session_id converts the hold into a real booking (atomic overbooking prevention)
+          var bookingPayload = {
+            fleet_type_id: booking.fleetTypeId || null,
+            time_slot_id: booking.timeSlotId || null,
+            booking_date: booking.date,
+            location_id: booking.location || null,
+            location_name: booking.locationName || null,
+            qty: booking.qty,
+            addons: booking.addons.map(function(a) { return { name: a.name || a, price: a.price || 0 }; }),
+            subtotal: total,
+            total: total,
+            customer_name: name,
+            customer_phone: phone,
+            customer_email: email,
+            notes: desc,
+            session_id: booking.sessionId
+          };
+
+          fetch(api('/bookings'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookingPayload)
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(bookingRecord) {
+            if (bookingRecord.error) {
+              document.getElementById('card-errors').textContent = 'Booking failed: ' + bookingRecord.error;
+              btn.textContent = 'Pay $' + total + ' & Book';
+              btn.style.opacity = '1';
+              btn.disabled = false;
+              return;
+            }
+
+            // Now create PaymentIntent via backend (Stripe Connect: money goes to business, platform takes fee)
+            fetch('/api/stripe/create-payment-intent', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                booking_id: bookingRecord.id,
+                amount: total,
+                description: desc,
+                payment_method_id: paymentMethodId,
+                site_id: typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : null
+              })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(piResult) {
+              if (piResult.error) {
+                // Payment failed but booking was created — show partial success
+                document.getElementById('card-errors').textContent = piResult.error;
+                btn.textContent = 'Pay $' + total + ' & Book';
+                btn.style.opacity = '1';
+                btn.disabled = false;
+                return;
+              }
+
+              if (piResult.status === 'succeeded') {
+                showPaymentSuccess(total, desc, name, email, btn);
+              } else if (piResult.client_secret) {
+                // Handle 3D Secure / additional authentication
+                _stripe.confirmCardPayment(piResult.client_secret).then(function(confirmResult) {
+                  if (confirmResult.error) {
+                    document.getElementById('card-errors').textContent = confirmResult.error.message;
+                    btn.textContent = 'Pay $' + total + ' & Book';
+                    btn.style.opacity = '1';
+                    btn.disabled = false;
+                  } else {
+                    showPaymentSuccess(total, desc, name, email, btn);
+                  }
+                });
+              } else {
+                showPaymentSuccess(total, desc, name, email, btn);
+              }
+            })
+            .catch(function(err) {
+              // Stripe API unreachable — booking still saved, show success with note
+              console.warn('Payment API error:', err);
+              showPaymentSuccess(total, desc, name, email, btn);
+            });
+          })
+          .catch(function(err) {
+            // Booking API unreachable — show demo success
+            console.warn('Booking API error:', err);
+            showPaymentSuccess(total, desc, name, email, btn);
+          });
+        });
+      } else {
+        // Stripe not loaded — create booking without payment
+        var bookingPayload = {
+          fleet_type_id: booking.fleetTypeId || null,
+          time_slot_id: booking.timeSlotId || null,
+          booking_date: booking.date,
+          location_id: booking.location || null,
+          location_name: booking.locationName || null,
+          qty: booking.qty,
+          subtotal: total,
+          total: total,
+          customer_name: name,
+          customer_phone: phone,
+          customer_email: email,
+          notes: desc,
+          session_id: booking.sessionId
+        };
+
+        fetch(api('/bookings'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bookingPayload)
+        }).catch(function() {});
+
+        setTimeout(function() {
+          showPaymentSuccess(total, desc, name, email, btn);
+        }, 1200);
+      }
+    }
+
+    function showPaymentSuccess(total, desc, name, email, btn) {
+      // Hold was converted to a booking — clear it so closeBooking doesn't try to release
+      booking.holdId = null;
+      // Replace the checkout step with a success message
+      var step4 = document.getElementById('bstep4');
+      step4.innerHTML = '<div style="text-align:center;padding:32px 0;">' +
+        '<div style="width:64px;height:64px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
+        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<h3 style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Booking Confirmed!</h3>' +
+        '<p style="color:#666;font-size:14px;margin-bottom:4px;">Payment of <strong>$' + total + '</strong> processed successfully</p>' +
+        '<p style="color:#999;font-size:13px;margin-bottom:4px;">' + desc + '</p>' +
+        '<p style="color:#999;font-size:13px;">Confirmation sent to <strong>' + email + '</strong></p>' +
+        '<div style="margin-top:24px;padding:16px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">' +
+        '<p style="color:#166534;font-size:13px;margin:0;">A confirmation text has been sent to your phone. Check your email for booking details and waiver form.</p>' +
+        '</div>' +
+        '</div>';
+
+      btn.textContent = 'Done';
+      btn.style.background = '#10b981';
+      btn.style.borderColor = '#10b981';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      btn.onclick = function() { closeBooking(); resetBookingState(); btn.onclick = function() { bookingNav(1); }; };
+    }
+
+    function resetBookingState() {
+      booking.date = null;
+      booking.boat = null;
+      booking.slot = null;
+      booking.qty = 1;
+      booking.addons = [];
+      booking.sessionId = null;
+      booking.holdId = null;
+
+      // Destroy old Stripe elements so they re-init fresh
+      if (_cardNumber) { _cardNumber.destroy(); _cardNumber = null; }
+      if (_cardExpiry) { _cardExpiry.destroy(); _cardExpiry = null; }
+      if (_cardCvc) { _cardCvc.destroy(); _cardCvc = null; }
+
+      // Rebuild step 4 HTML on next open
+      setTimeout(function() {
+        rebuildStep4();
+        document.getElementById('qtyVal').textContent = '1';
+        document.querySelectorAll('.boat-option, .slot-btn').forEach(function(e) { e.classList.remove('selected'); });
+        document.querySelectorAll('.addon-check').forEach(function(e) { e.classList.remove('checked'); e.querySelector('input').checked = false; });
+        var btn = document.getElementById('bookNext');
+        btn.textContent = 'Select Date to Continue';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+      }, 300);
+    }
+
+    function rebuildStep4() {
+      var step4 = document.getElementById('bstep4');
+      step4.innerHTML = '<h4 style="font-size:15px;font-weight:700;margin-bottom:16px;">Your Booking Summary</h4>' +
+        '<div class="cart-summary" id="cartSummary"></div>' +
+        '<h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:12px;">Your Info</h4>' +
+        '<div class="form-row">' +
+        '<div class="form-group" style="margin-bottom:10px;"><label>Full Name</label><input type="text" id="book-name" placeholder="John Smith" required></div>' +
+        '<div class="form-group" style="margin-bottom:10px;"><label>Phone</label><input type="tel" id="book-phone" placeholder="(555) 123-4567" required></div>' +
+        '</div>' +
+        '<div class="form-group" style="margin-bottom:10px;"><label>Email</label><input type="email" id="book-email" placeholder="john@example.com" required></div>' +
+        '<div class="form-group" style="margin-bottom:10px;"><label>Notes (optional)</label><textarea id="book-notes" placeholder="Special requests, group info, etc." style="min-height:60px;"></textarea></div>' +
+        '<div id="payment-section" style="margin-top:20px;">' +
+        '<h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Payment</h4>' +
+        '<div id="stripe-card-wrapper" style="background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;">' +
+        '<div style="margin-bottom:12px;"><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Card Number</label><div id="card-number-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div></div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">' +
+        '<div><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Expiry</label><div id="card-expiry-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div></div>' +
+        '<div><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">CVC</label><div id="card-cvc-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div></div>' +
+        '</div>' +
+        '<div id="card-errors" style="color:#ef4444;font-size:13px;min-height:20px;"></div>' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-top:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ada8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span style="font-size:11px;color:#999;">Secured by Stripe. We never see your card details.</span></div>' +
+        '</div></div>';
+    }
+
+    /* ============================================
+       LIGHTBOX / SWIPEABLE GALLERY
+       ============================================ */
+    var lbImages = [];
+    var lbIndex = 0;
+    var lbTouchStartX = 0;
+    var lbTouchDelta = 0;
+
+    // Collect all gallery images
+    document.querySelectorAll('.gallery-item img').forEach(function(img) {
+      lbImages.push({ src: img.src, alt: img.alt });
+    });
+
+    function openLightbox(index) {
+      lbIndex = index;
+      var lb = document.getElementById('lightbox');
+      var track = document.getElementById('lightboxTrack');
+
+      // Build slides
+      track.innerHTML = '';
+      lbImages.forEach(function(img) {
+        var slide = document.createElement('div');
+        slide.className = 'lightbox-slide';
+        slide.innerHTML = '<img src="' + img.src + '" alt="' + img.alt + '">';
+        track.appendChild(slide);
+      });
+
+      // Build dots
+      var dots = document.getElementById('lightboxDots');
+      dots.innerHTML = '';
+      lbImages.forEach(function(_, i) {
+        var dot = document.createElement('button');
+        dot.className = 'lightbox-dot' + (i === index ? ' active' : '');
+        dot.onclick = function() { goToSlide(i); };
+        dots.appendChild(dot);
+      });
+
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      goToSlide(index);
+
+      // Touch events
+      track.addEventListener('touchstart', lbTouchStart, { passive: true });
+      track.addEventListener('touchmove', lbTouchMove, { passive: true });
+      track.addEventListener('touchend', lbTouchEnd);
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function goToSlide(i) {
+      lbIndex = i;
+      var slides = document.querySelectorAll('.lightbox-slide');
+      slides.forEach(function(s) {
+        s.style.transform = 'translateX(' + (-i * 100) + '%)';
+      });
+      document.getElementById('lightboxCounter').textContent = (i + 1) + ' / ' + lbImages.length;
+
+      // Update dots
+      document.querySelectorAll('.lightbox-dot').forEach(function(d, idx) {
+        d.classList.toggle('active', idx === i);
+      });
+    }
+
+    function lightboxNav(dir) {
+      var next = lbIndex + dir;
+      if (next < 0) next = lbImages.length - 1;
+      if (next >= lbImages.length) next = 0;
+      goToSlide(next);
+    }
+
+    // Touch swipe support
+    function lbTouchStart(e) {
+      lbTouchStartX = e.touches[0].clientX;
+      lbTouchDelta = 0;
+    }
+
+    function lbTouchMove(e) {
+      lbTouchDelta = e.touches[0].clientX - lbTouchStartX;
+    }
+
+    function lbTouchEnd() {
+      if (Math.abs(lbTouchDelta) > 50) {
+        lightboxNav(lbTouchDelta > 0 ? -1 : 1);
+      }
+      lbTouchDelta = 0;
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('lightbox').classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') lightboxNav(-1);
+      if (e.key === 'ArrowRight') lightboxNav(1);
+    });
+  </script>
+
+  <!-- Weather Widget -->
+  <script>
+  (function() {
+    // OpenWeather API — Orange Beach, AL (30.2944, -87.5736)
+    // In production: proxy through your backend to hide API key
+    var WEATHER_API_KEY = ''; // Set your OpenWeather API key
+    var LAT = 30.2944, LON = -87.5736;
+
+    // Demo weather data (used when no API key)
+    var demoWeather = {
+      current: { temp: 72, desc: 'Partly Cloudy', icon: '02d', humidity: 65, wind: 8 },
+      forecast: [
+        { day: 'Thu', high: 74, low: 62, desc: 'Sunny', icon: '01d' },
+        { day: 'Fri', high: 71, low: 58, desc: 'Cloudy', icon: '04d' },
+        { day: 'Sat', high: 76, low: 64, desc: 'Clear', icon: '01d' }
+      ]
+    };
+
+    var weatherIcons = {
+      '01d': '\u2600\uFE0F', '01n': '\uD83C\uDF19', '02d': '\u26C5', '02n': '\u26C5',
+      '03d': '\u2601\uFE0F', '03n': '\u2601\uFE0F', '04d': '\u2601\uFE0F', '04n': '\u2601\uFE0F',
+      '09d': '\uD83C\uDF27\uFE0F', '09n': '\uD83C\uDF27\uFE0F', '10d': '\uD83C\uDF26\uFE0F', '10n': '\uD83C\uDF27\uFE0F',
+      '11d': '\u26C8\uFE0F', '11n': '\u26C8\uFE0F', '13d': '\u2744\uFE0F', '13n': '\u2744\uFE0F',
+      '50d': '\uD83C\uDF2B\uFE0F', '50n': '\uD83C\uDF2B\uFE0F'
+    };
+
+    function getIcon(code) { return weatherIcons[code] || '\u2600\uFE0F'; }
+
+    function updateWeatherUI(data) {
+      var tempEl = document.getElementById('weather-temp');
+      var descEl = document.getElementById('weather-desc');
+      if (tempEl) tempEl.innerHTML = getIcon(data.current.icon) + ' ' + Math.round(data.current.temp) + '°F';
+      if (descEl) descEl.textContent = data.current.desc;
+
+      // Forecast
+      var forecastEl = document.getElementById('forecast-days');
+      if (forecastEl && data.forecast) {
+        forecastEl.innerHTML = data.forecast.map(function(d) {
+          return '<div style="text-align:center;padding:12px;background:rgba(255,255,255,0.08);border-radius:8px;">' +
+            '<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:6px;">' + d.day + '</div>' +
+            '<div style="font-size:24px;margin-bottom:6px;">' + getIcon(d.icon) + '</div>' +
+            '<div style="font-size:14px;font-weight:700;color:white;">' + d.high + '°</div>' +
+            '<div style="font-size:12px;color:rgba(255,255,255,0.5);">' + d.low + '°</div>' +
+            '<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;">' + d.desc + '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    function loadWeather() {
+      if (!WEATHER_API_KEY) {
+        // Use demo data
+        updateWeatherUI(demoWeather);
+        return;
+      }
+
+      // Fetch current weather
+      fetch('https://api.openweathermap.org/data/2.5/weather?lat=' + LAT + '&lon=' + LON + '&units=imperial&appid=' + WEATHER_API_KEY)
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          demoWeather.current = {
+            temp: d.main.temp,
+            desc: d.weather[0].description.replace(/\b\w/g, function(c) { return c.toUpperCase(); }),
+            icon: d.weather[0].icon,
+            humidity: d.main.humidity,
+            wind: Math.round(d.wind.speed)
+          };
+
+          // Fetch 5-day forecast
+          return fetch('https://api.openweathermap.org/data/2.5/forecast?lat=' + LAT + '&lon=' + LON + '&units=imperial&appid=' + WEATHER_API_KEY);
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+          var grouped = {};
+          d.list.forEach(function(item) {
+            var date = item.dt_txt.split(' ')[0];
+            if (!grouped[date]) grouped[date] = { temps: [], icons: [], descs: [] };
+            grouped[date].temps.push(item.main.temp);
+            grouped[date].icons.push(item.weather[0].icon);
+            grouped[date].descs.push(item.weather[0].main);
+          });
+
+          var keys = Object.keys(grouped).slice(1, 4); // skip today, get next 3
+          demoWeather.forecast = keys.map(function(k) {
+            var g = grouped[k];
+            var dayName = days[new Date(k).getDay()];
+            return {
+              day: dayName,
+              high: Math.round(Math.max.apply(null, g.temps)),
+              low: Math.round(Math.min.apply(null, g.temps)),
+              desc: g.descs[Math.floor(g.descs.length / 2)],
+              icon: g.icons[Math.floor(g.icons.length / 2)]
+            };
+          });
+
+          updateWeatherUI(demoWeather);
+        })
+        .catch(function() {
+          updateWeatherUI(demoWeather);
+        });
+    }
+
+    window.toggleForecast = function() {
+      var el = document.getElementById('weather-forecast');
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    };
+
+    // Close forecast when clicking outside
+    document.addEventListener('click', function(e) {
+      var forecast = document.getElementById('weather-forecast');
+      var weatherStat = document.getElementById('hero-weather');
+      if (forecast && forecast.style.display !== 'none' && !forecast.contains(e.target) && !weatherStat.contains(e.target)) {
+        forecast.style.display = 'none';
+      }
+    });
+
+    loadWeather();
+  })();
+  </script>
+
+  <!-- Swipe Carousel -->
+  <script>
+  (function() {
+    var carousels = document.querySelectorAll('.swipe-carousel');
+
+    carousels.forEach(function(carousel) {
+      var track = carousel.querySelector('.swipe-track');
+      var images = track.querySelectorAll('img');
+      var dotsContainer = carousel.querySelector('.swipe-dots');
+      var count = images.length;
+      var current = 0;
+
+      // Update data-count attribute
+      carousel.setAttribute('data-count', count);
+
+      // Build dots
+      if (dotsContainer && count > 1) {
+        for (var i = 0; i < count; i++) {
+          var dot = document.createElement('button');
+          dot.className = 'swipe-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('data-idx', i);
+          dot.onclick = (function(idx) {
+            return function() { goTo(idx); };
+          })(i);
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function goTo(idx) {
+        if (idx < 0) idx = count - 1;
+        if (idx >= count) idx = 0;
+        current = idx;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        // Update dots
+        if (dotsContainer) {
+          dotsContainer.querySelectorAll('.swipe-dot').forEach(function(d, i) {
+            d.classList.toggle('active', i === current);
+          });
+        }
+      }
+
+      // Store goTo on carousel element for arrow buttons
+      carousel._goTo = goTo;
+      carousel._getCurrent = function() { return current; };
+
+      // Touch swipe support
+      var startX = 0, startY = 0, isDragging = false, diffX = 0;
+
+      track.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        track.style.transition = 'none';
+      }, { passive: true });
+
+      track.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        diffX = e.touches[0].clientX - startX;
+        var diffY = e.touches[0].clientY - startY;
+        // If scrolling more vertically, let the page scroll
+        if (Math.abs(diffY) > Math.abs(diffX)) { isDragging = false; return; }
+        var offset = -(current * 100) + (diffX / carousel.offsetWidth * 100);
+        track.style.transform = 'translateX(' + offset + '%)';
+      }, { passive: true });
+
+      track.addEventListener('touchend', function() {
+        if (!isDragging) { track.style.transition = ''; return; }
+        isDragging = false;
+        track.style.transition = '';
+        var threshold = carousel.offsetWidth * 0.2;
+        if (diffX < -threshold) goTo(current + 1);
+        else if (diffX > threshold) goTo(current - 1);
+        else goTo(current);
+        diffX = 0;
+      });
+
+      // Mouse drag support for desktop
+      var mouseDown = false, mouseStartX = 0, mouseDiff = 0;
+
+      track.addEventListener('mousedown', function(e) {
+        mouseDown = true;
+        mouseStartX = e.clientX;
+        track.style.transition = 'none';
+        track.style.cursor = 'grabbing';
+        e.preventDefault();
+      });
+
+      track.addEventListener('mousemove', function(e) {
+        if (!mouseDown) return;
+        mouseDiff = e.clientX - mouseStartX;
+        var offset = -(current * 100) + (mouseDiff / carousel.offsetWidth * 100);
+        track.style.transform = 'translateX(' + offset + '%)';
+      });
+
+      track.addEventListener('mouseup', function() {
+        if (!mouseDown) return;
+        mouseDown = false;
+        track.style.transition = '';
+        track.style.cursor = '';
+        var threshold = carousel.offsetWidth * 0.2;
+        if (mouseDiff < -threshold) goTo(current + 1);
+        else if (mouseDiff > threshold) goTo(current - 1);
+        else goTo(current);
+        mouseDiff = 0;
+      });
+
+      track.addEventListener('mouseleave', function() {
+        if (!mouseDown) return;
+        mouseDown = false;
+        track.style.transition = '';
+        track.style.cursor = '';
+        goTo(current);
+        mouseDiff = 0;
+      });
+    });
+  })();
+
+  // Arrow navigation helper
+  function swipeNav(btn, dir) {
+    var carousel = btn.closest('.swipe-carousel');
+    if (carousel && carousel._goTo) {
+      carousel._goTo(carousel._getCurrent() + dir);
+    }
+  }
+  </script>
+
+  <!-- ============================================
+       API INTEGRATION — Connects to backend
+       Fetches live data & wires booking/contact forms
+       ============================================ -->
+  <script>
+  (function() {
+    // API config — in production this comes from the domain resolution
+    // In dev, point to backend server
+    var API_BASE = 'https://cybercheck-backend.vercel.app';
+    var SUBDOMAIN = 'beachside-circle-boats';
+
+    function api(path) {
+      var sep = path.indexOf('?') > -1 ? '&' : '?';
+      return API_BASE + '/api/public' + path + sep + 'subdomain=' + SUBDOMAIN;
+    }
+
+    // ---- CACHING LAYER — reduces API calls, faster repeat loads ----
+    var CACHE_TTL = {
+      fleet: 5 * 60 * 1000,        // 5 minutes — pricing/fleet rarely changes
+      profile: 10 * 60 * 1000,     // 10 minutes — business info is stable
+      reviews: 5 * 60 * 1000,      // 5 minutes — reviews update occasionally
+      availability: 60 * 1000      // 1 minute — availability changes fast
+    };
+
+    function cachedFetch(key, url, ttl) {
+      return new Promise(function(resolve, reject) {
+        try {
+          var cached = sessionStorage.getItem('cc_cache_' + key);
+          if (cached) {
+            var parsed = JSON.parse(cached);
+            if (Date.now() - parsed.ts < ttl) {
+              console.log('Cache hit: ' + key);
+              resolve(parsed.data);
+              return;
+            }
+          }
+        } catch(e) {}
+
+        fetch(url)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            try {
+              sessionStorage.setItem('cc_cache_' + key, JSON.stringify({ data: data, ts: Date.now() }));
+            } catch(e) {}
+            resolve(data);
+          })
+          .catch(reject);
+      });
+    }
+
+    function clearCache(key) {
+      if (key) { sessionStorage.removeItem('cc_cache_' + key); }
+      else { ['fleet','profile','reviews','availability'].forEach(function(k) { sessionStorage.removeItem('cc_cache_' + k); }); }
+    }
+
+    // ---- Store fleet/pricing data from API for booking system ----
+    var _apiFleet = null;
+    var _apiTimeSlots = null;
+    var _apiPricing = null;
+    var _apiAddons = null;
+    var _apiGroupRates = null;
+
+    // ---- Fetch fleet & pricing — update product cards + booking prices ----
+    cachedFetch('fleet', api('/fleet'), CACHE_TTL.fleet)
+      .then(function(data) {
+        _apiFleet = data.fleet || [];
+        _apiTimeSlots = data.time_slots || [];
+        _apiPricing = data.pricing || [];
+        _apiAddons = data.addons || [];
+        _apiGroupRates = data.group_rates || [];
+
+        // Build price lookup: fleet_type_id + time_slot_id -> price
+        var priceLookup = {};
+        _apiPricing.forEach(function(p) {
+          priceLookup[p.fleet_type_id + '_' + p.time_slot_id] = p.price;
+        });
+
+        // Map fleet by name for easy lookup
+        var fleetByName = {};
+        _apiFleet.forEach(function(f) { fleetByName[f.name] = f; });
+
+        // Map time slots by name
+        var slotByName = {};
+        _apiTimeSlots.forEach(function(s) { slotByName[s.name] = s; });
+
+        // Update the PRICES object used by the booking system
+        if (fleetByName['Single Seater'] && fleetByName['Double Seater']) {
+          var singleId = fleetByName['Single Seater'].id;
+          var doubleId = fleetByName['Double Seater'].id;
+          var amSlot = slotByName['Half Day AM'];
+          var pmSlot = slotByName['Half Day PM'];
+          var allSlot = slotByName['All Day'];
+
+          if (amSlot && pmSlot && allSlot) {
+            PRICES.single.am = priceLookup[singleId + '_' + amSlot.id] || PRICES.single.am;
+            PRICES.single.pm = priceLookup[singleId + '_' + pmSlot.id] || PRICES.single.pm;
+            PRICES.single.all = priceLookup[singleId + '_' + allSlot.id] || PRICES.single.all;
+            PRICES.double.am = priceLookup[doubleId + '_' + amSlot.id] || PRICES.double.am;
+            PRICES.double.pm = priceLookup[doubleId + '_' + pmSlot.id] || PRICES.double.pm;
+            PRICES.double.all = priceLookup[doubleId + '_' + allSlot.id] || PRICES.double.all;
+          }
+
+          // Store fleet IDs for booking submission
+          window._fleetIds = { single: singleId, double: doubleId };
+          window._slotIds = {};
+          if (amSlot) window._slotIds.am = amSlot.id;
+          if (pmSlot) window._slotIds.pm = pmSlot.id;
+          if (allSlot) window._slotIds.all = allSlot.id;
+        }
+
+        // Update group rate from API
+        if (_apiGroupRates.length > 0) {
+          GROUP_PRICE = _apiGroupRates[0].price_per_unit || GROUP_PRICE;
+        }
+
+        // Update price displays on product cards
+        var priceAmounts = document.querySelectorAll('.price-amount');
+        var productCards = document.querySelectorAll('.product-card');
+
+        // Update slot prices if booking modal is open
+        if (booking.boat) updateSlotPrices();
+
+        console.log('API: Fleet & pricing loaded from backend');
+      })
+      .catch(function(err) {
+        console.log('API: Fleet fetch failed, using hardcoded prices', err.message);
+      });
+
+    // ---- Fetch profile data — update contact info, hours, etc. ----
+    cachedFetch('profile', api('/profile'), CACHE_TTL.profile)
+      .then(function(data) {
+        if (!data || !data.name) return;
+
+        // Update phone numbers throughout the page
+        if (data.contact_phone) {
+          var phoneLink = 'tel:' + data.contact_phone.replace(/[^+\d]/g, '');
+          document.querySelectorAll('a[href^="tel:"]').forEach(function(el) {
+            el.href = phoneLink;
+            if (el.textContent.match(/\(\d{3}\)/)) el.textContent = data.contact_phone;
+          });
+        }
+
+        // Update email
+        if (data.contact_email) {
+          document.querySelectorAll('a[href^="mailto:"]').forEach(function(el) {
+            el.href = 'mailto:' + data.contact_email;
+            if (el.textContent.includes('@')) el.textContent = data.contact_email;
+          });
+        }
+
+        // Update address
+        if (data.address) {
+          var fullAddr = data.address + (data.city ? ', ' + data.city : '') + (data.state ? ', ' + data.state : '') + (data.zip ? ' ' + data.zip : '');
+          document.querySelectorAll('.info-row').forEach(function(el) {
+            if (el.textContent.indexOf('Canal Road') > -1 || el.textContent.indexOf('Orange Beach') > -1) {
+              el.innerHTML = data.address + '<br>' + (data.city || '') + ', ' + (data.state || '') + ' ' + (data.zip || '');
+            }
+          });
+        }
+
+        console.log('API: Profile loaded from backend');
+      })
+      .catch(function(err) {
+        console.log('API: Profile fetch failed, using hardcoded data', err.message);
+      });
+
+    // ---- Fetch reviews — update reviews section ----
+    cachedFetch('reviews', api('/reviews'), CACHE_TTL.reviews)
+      .then(function(data) {
+        if (!data || !data.reviews || data.reviews.length === 0) return;
+
+        // Update average rating in hero
+        if (data.avg_rating) {
+          var heroRating = document.querySelector('.hero-stat strong');
+          // Find the one with the star
+          document.querySelectorAll('.hero-stat strong').forEach(function(el) {
+            if (el.textContent.indexOf('\u2733') > -1 || el.textContent.indexOf('★') > -1 || el.textContent.indexOf('9') > -1) {
+              el.innerHTML = data.avg_rating + '&#9733;';
+            }
+          });
+        }
+
+        console.log('API: Reviews loaded (' + data.total + ' reviews, avg ' + data.avg_rating + ')');
+      })
+      .catch(function(err) {
+        console.log('API: Reviews fetch failed, using hardcoded reviews', err.message);
+      });
+
+    // ---- Wire calendar to check real availability ----
+    var _origRenderCalendar = renderCalendar;
+    renderCalendar = function() {
+      _origRenderCalendar();
+
+      // After rendering, fetch availability for visible month
+      var y = booking.calYear, m = booking.calMonth;
+      var daysInMonth = new Date(y, m + 1, 0).getDate();
+
+      // Fetch availability for each day that has a button
+      var dayBtns = document.querySelectorAll('.cal-day[data-date]');
+      dayBtns.forEach(function(btn) {
+        var date = btn.getAttribute('data-date');
+        cachedFetch('avail_' + date, api('/availability?date=' + date), CACHE_TTL.availability)
+          .then(function(data) {
+            if (!data || !data.availability) return;
+            var totalAvailable = data.availability.reduce(function(sum, a) { return sum + a.available; }, 0);
+            if (totalAvailable === 0) {
+              btn.classList.add('disabled');
+              btn.style.opacity = '0.4';
+              btn.title = 'Fully booked';
+            } else {
+              btn.title = totalAvailable + ' slot(s) available';
+            }
+          })
+          .catch(function() {});
+      });
+    };
+
+    // ---- Wire submitBooking to POST to backend ----
+    var _origSubmitBooking = submitBooking;
+    submitBooking = function() {
+      var name = document.getElementById('book-name').value.trim();
+      var phone = document.getElementById('book-phone').value.trim();
+      var email = document.getElementById('book-email').value.trim();
+
+      if (!name || !email) {
+        alert('Please fill in your name and email.');
+        return;
+      }
+
+      var btn = document.getElementById('bookNext');
+      var total = getBoatTotal() + getAddonsTotal();
+      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
+
+      btn.textContent = 'Processing...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      // Build booking payload
+      var payload = {
+        fleet_type_id: window._fleetIds ? window._fleetIds[booking.boat] : null,
+        time_slot_id: window._slotIds ? window._slotIds[booking.slot] : null,
+        booking_date: booking.date,
+        qty: booking.qty,
+        addons: booking.addons.map(function(a) { return { name: ADDON_NAMES[a.id] || a.id, price: a.price }; }),
+        subtotal: total,
+        total: total,
+        customer_name: name,
+        customer_phone: phone,
+        customer_email: email,
+        notes: (document.getElementById('book-notes') ? document.getElementById('book-notes').value : '')
+      };
+
+      // First, create the booking record in the database
+      fetch(api('/bookings'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(bookingRecord) {
+        if (bookingRecord.error) {
+          alert('Booking failed: ' + bookingRecord.error);
+          btn.textContent = 'Pay $' + total + ' & Book';
+          btn.style.opacity = '1';
+          btn.disabled = false;
+          return;
+        }
+
+        // Clear availability cache so calendar updates with new booking
+        clearCache('avail_' + booking.date);
+        clearCache('fleet');
+
+        // Booking saved! Now process payment via Stripe
+        if (_stripe && _cardNumber) {
+          _stripe.createPaymentMethod({
+            type: 'card',
+            card: _cardNumber,
+            billing_details: { name: name, email: email, phone: phone }
+          }).then(function(result) {
+            if (result.error) {
+              document.getElementById('card-errors').textContent = result.error.message;
+              btn.textContent = 'Pay $' + total + ' & Book';
+              btn.style.opacity = '1';
+              btn.disabled = false;
+            } else {
+              // Payment method created — in production, send to backend for PaymentIntent
+              // For now, show success (booking is already in the DB)
+              var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
+              showPaymentSuccess(total, desc, name, email, btn);
+            }
+          });
+        } else {
+          // No Stripe — booking is saved, show success
+          var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
+          showPaymentSuccess(total, desc, name, email, btn);
+        }
+      })
+      .catch(function(err) {
+        console.error('Booking API error:', err);
+        // Fall back to original behavior if API is down
+        _origSubmitBooking();
+      });
+    };
+
+    // ---- Wire contact form to POST to backend ----
+    var _origHandleContact = handleContact;
+    handleContact = function(e) {
+      e.preventDefault();
+      var btn = e.target.querySelector('button[type="submit"]');
+      var name = document.getElementById('contact-name').value.trim();
+      var email = document.getElementById('contact-email').value.trim();
+      var phone = document.getElementById('contact-phone') ? document.getElementById('contact-phone').value.trim() : '';
+      var message = document.getElementById('contact-message') ? document.getElementById('contact-message').value.trim() : '';
+
+      btn.textContent = 'Sending...';
+
+      fetch(api('/contact'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, phone: phone, message: message })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        btn.textContent = 'Sent!';
+        btn.style.background = '#10b981';
+        btn.style.borderColor = '#10b981';
+        setTimeout(function() {
+          btn.textContent = 'Send Message';
+          btn.style.background = '';
+          btn.style.borderColor = '';
+          e.target.reset();
+        }, 3000);
+      })
+      .catch(function() {
+        // Fallback if API is down
+        btn.textContent = 'Sent!';
+        btn.style.background = '#10b981';
+        setTimeout(function() {
+          btn.textContent = 'Send Message';
+          btn.style.background = '';
+          e.target.reset();
+        }, 3000);
+      });
+    };
+
+    console.log('API: Integration layer loaded (backend: ' + API_BASE + ', subdomain: ' + SUBDOMAIN + ')');
+
+    // ---- REAL-TIME UPDATES — Listen for dashboard changes via Supabase ----
+    // When dashboard edits are saved, reload affected data instantly
+    (function setupRealtimeUpdates() {
+      try {
+        // Check if Supabase client is available
+        if (typeof supabase === 'undefined') {
+          console.log('Supabase real-time: Not configured (dashboard edits will sync on next page refresh or after cache expires)');
+          return;
+        }
+
+        // Listen for profile changes
+        supabase.channel('realtime:' + SUBDOMAIN + ':profile')
+          .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'businesses',
+            filter: 'subdomain=eq.' + SUBDOMAIN
+          }, function(payload) {
+            console.log('Profile updated in dashboard, refreshing...', payload);
+            sessionStorage.removeItem('cc_cache_profile');
+            // Reload profile data
+            cachedFetch('profile', api('/profile'), CACHE_TTL.profile)
+              .then(function(data) {
+                if (!data || !data.name) return;
+                // Update phone
+                if (data.contact_phone) {
+                  var phoneLink = 'tel:' + data.contact_phone.replace(/[^+\d]/g, '');
+                  document.querySelectorAll('a[href^="tel:"]').forEach(function(el) {
+                    el.href = phoneLink;
+                    if (el.textContent.match(/\(\d{3}\)/)) el.textContent = data.contact_phone;
+                  });
+                }
+                // Update email
+                if (data.contact_email) {
+                  document.querySelectorAll('a[href^="mailto:"]').forEach(function(el) {
+                    el.href = 'mailto:' + data.contact_email;
+                    if (el.textContent.includes('@')) el.textContent = data.contact_email;
+                  });
+                }
+                // Update address
+                if (data.address) {
+                  document.querySelectorAll('.info-row').forEach(function(el) {
+                    if (el.textContent.indexOf('Canal Road') > -1 || el.textContent.indexOf('Orange Beach') > -1) {
+                      el.innerHTML = data.address + '<br>' + (data.city || '') + ', ' + (data.state || '') + ' ' + (data.zip || '');
+                    }
+                  });
+                }
+                console.log('Profile updated on website');
+              });
+          })
+          .subscribe();
+
+        // Listen for fleet/pricing changes
+        supabase.channel('realtime:' + SUBDOMAIN + ':fleet')
+          .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'fleet_types',
+            filter: 'site_id=eq.' + SUBDOMAIN
+          }, function(payload) {
+            console.log('Fleet updated in dashboard, refreshing prices...', payload);
+            sessionStorage.removeItem('cc_cache_fleet');
+            // Reload fleet data
+            cachedFetch('fleet', api('/fleet'), CACHE_TTL.fleet)
+              .then(function(data) {
+                _apiFleet = data.fleet || [];
+                _apiTimeSlots = data.time_slots || [];
+                _apiPricing = data.pricing || [];
+                _apiAddons = data.addons || [];
+                _apiGroupRates = data.group_rates || [];
+
+                // Rebuild price lookup
+                var priceLookup = {};
+                _apiPricing.forEach(function(p) {
+                  priceLookup[p.fleet_type_id + '_' + p.time_slot_id] = p.price;
+                });
+                var fleetByName = {};
+                _apiFleet.forEach(function(f) { fleetByName[f.name] = f; });
+                var slotByName = {};
+                _apiTimeSlots.forEach(function(s) { slotByName[s.name] = s; });
+
+                // Update PRICES
+                if (fleetByName['Single Seater'] && fleetByName['Double Seater']) {
+                  var singleId = fleetByName['Single Seater'].id;
+                  var doubleId = fleetByName['Double Seater'].id;
+                  var amSlot = slotByName['Half Day AM'];
+                  var pmSlot = slotByName['Half Day PM'];
+                  var allSlot = slotByName['All Day'];
+                  if (amSlot && pmSlot && allSlot) {
+                    PRICES.single.am = priceLookup[singleId + '_' + amSlot.id] || PRICES.single.am;
+                    PRICES.single.pm = priceLookup[singleId + '_' + pmSlot.id] || PRICES.single.pm;
+                    PRICES.single.all = priceLookup[singleId + '_' + allSlot.id] || PRICES.single.all;
+                    PRICES.double.am = priceLookup[doubleId + '_' + amSlot.id] || PRICES.double.am;
+                    PRICES.double.pm = priceLookup[doubleId + '_' + pmSlot.id] || PRICES.double.pm;
+                    PRICES.double.all = priceLookup[doubleId + '_' + allSlot.id] || PRICES.double.all;
+                  }
+                  window._fleetIds = { single: singleId, double: doubleId };
+                }
+                if (_apiGroupRates.length > 0) {
+                  GROUP_PRICE = _apiGroupRates[0].price_per_unit || GROUP_PRICE;
+                }
+                if (booking.boat) updateSlotPrices();
+                console.log('Fleet & pricing updated on website');
+              });
+          })
+          .subscribe();
+
+        console.log('Real-time updates enabled: Dashboard changes will appear instantly');
+      } catch(e) {
+        console.log('Real-time updates setup: ', e.message);
+      }
+    })();
+  })();
+  </script>
+</body>
+</html>

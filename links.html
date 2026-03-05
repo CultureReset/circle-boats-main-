@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beachside Circle Boats — Links</title>
+  <!-- Loads all data from /api/site-data (same source as main website) -->
+  <script src="js/load-site-data.js"></script>
+  <style>
+    /* ====== THEME COLORS — Change these to switch light/dark ====== */
+    :root {
+      --bg: #ffffff;              /* page background */
+      --card-bg: #ffffff;         /* main card */
+      --text: #1a1a1a;            /* headings */
+      --text-muted: #555555;      /* secondary text */
+      --text-light: #777777;      /* subtle text */
+      --link-bg: #f1f5f9;         /* link button background */
+      --link-text: #1a1a1a;       /* link button text */
+      --social-bg: #f1f5f9;       /* social icon circles */
+      --social-fill: #555555;     /* social icon color */
+      --accent: #00ada8;          /* brand color */
+      --footer-text: #999999;     /* footer */
+    }
+    /* ============================================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 173, 168, 0.4);
+      border: 3px solid #00ada8;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-name {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .profile-tagline {
+      font-size: 14px;
+      color: #00ada8;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .info-icon { font-size: 18px; }
+    .call-btn {
+      display: inline-block;
+      padding: 14px 36px;
+      background: #25D366;
+      color: white;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 16px;
+      transition: all 0.3s ease;
+    }
+    .call-btn:hover {
+      background: #1da851;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #00ada8;
+      color: white;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* Social Icons */
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--social-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .social-icon:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+    .social-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--social-fill);
+    }
+    .social-icon:hover svg { fill: #ffffff; }
+
+    /* Links */
+    .links-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: var(--link-bg);
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--link-text);
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .link-item:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 173, 168, 0.5);
+    }
+    .link-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .link-text { flex: 1; }
+    .link-sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .link-item:hover .link-sub { color: rgba(255,255,255,0.7); }
+    .link-arrow {
+      font-size: 18px;
+      color: #666;
+      flex-shrink: 0;
+    }
+    .link-item:hover .link-arrow { color: white; }
+
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      color: var(--footer-text);
+      font-size: 14px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #1a1a1a;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 32px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #999;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: #2a2a2a;
+      color: #ffffff;
+    }
+    .modal-header {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      padding-right: 40px;
+      color: #ffffff;
+    }
+
+    /* Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .gallery-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 12px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #f5f5f5;
+    }
+    .gallery-image:hover {
+      transform: scale(1.05);
+    }
+
+    /* Package items */
+    .pkg-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      background: #2a2a2a;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      align-items: center;
+      text-align: center;
+    }
+    .pkg-item:hover {
+      background: #333333;
+      transform: translateY(-2px);
+    }
+    .pkg-image {
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: transparent;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .pkg-info {
+      flex: 1;
+      width: 100%;
+    }
+    .pkg-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .pkg-desc {
+      font-size: 13px;
+      color: #cccccc;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .pkg-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: #00ada8;
+      flex-shrink: 0;
+      align-self: center;
+      width: 100%;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .pkg-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #00ada8;
+      color: white;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Calendar Navigation */
+    .calendar-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 12px 0;
+      border-bottom: 1px solid #333;
+    }
+    .calendar-nav-btn {
+      background: #00ada8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .calendar-nav-btn:hover {
+      background: #009590;
+      transform: translateY(-1px);
+    }
+    .calendar-nav-btn:active {
+      transform: translateY(0);
+    }
+    .calendar-month-display {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* Calendar */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 0 0 8px 0;
+      border-bottom: 1px solid #333;
+    }
+    .calendar-weekday {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #00ada8;
+      padding: 8px 0;
+    }
+    .day-slot {
+      padding: 12px 8px;
+      background: #2a2a2a;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #444;
+      min-height: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .day-slot.available {
+      border-color: #00ada8;
+    }
+    .day-slot.available:hover {
+      background: #00ada8;
+      color: white;
+    }
+    .day-slot.booked {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #444;
+    }
+    .day-slot.empty {
+      background: transparent;
+      border: none;
+      cursor: default;
+    }
+    .day-slot.today {
+      background: #00ada8;
+      border-color: #00ada8;
+    }
+    .day-slot.today .day-date {
+      color: white;
+      font-weight: 700;
+    }
+    .day-slot.today .day-status {
+      color: white;
+    }
+    .day-date {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+    .day-status {
+      font-size: 10px;
+      color: #00ada8;
+    }
+    .day-slot.booked .day-status { color: #999; }
+    .day-slot.available:hover .day-status { color: white; }
+
+    /* Hours row */
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #333;
+      color: #cccccc;
+      font-size: 15px;
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-time {
+      color: #00ada8;
+      font-weight: 600;
+    }
+
+    /* Review card */
+    .review-item {
+      background: #2a2a2a;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .review-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00ada8, #4DA6FF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .review-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .review-stars {
+      color: #fbbc04;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .review-text {
+      font-size: 13px;
+      color: #cccccc;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 20px 12px; }
+      .container { padding: 32px 24px; }
+      .profile-name { font-size: 26px; }
+      .modal-content { padding: 24px; }
+      .modal-header { font-size: 24px; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .calendar-nav { gap: 8px; }
+      .calendar-nav-btn { padding: 6px 12px; font-size: 12px; }
+      .calendar-month-display { font-size: 14px; }
+      .calendar-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+      .calendar-header { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+      .day-slot { padding: 8px 4px; font-size: 12px; min-height: 50px; }
+      .day-date { font-size: 11px; }
+      .day-status { font-size: 9px; }
+      .back-button { padding: 10px 14px; font-size: 14px; }
+      .pkg-item { flex-direction: column; }
+      .pkg-price { align-self: center; width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img src="images/goboat/6515365445410422016.PNG" alt="Beachside Circle Boats">
+      </div>
+      <div class="profile-name">Beachside Circle Boats</div>
+      <div class="profile-tagline">Portable Electric Circle Boat Rentals</div>
+      <div class="profile-info">
+        <div class="info-item">
+          <span class="info-icon">&#x1F4CD;</span>
+          <span>25856 Canal Road, Unit A, Orange Beach, AL 36561</span>
+        </div>
+        <div class="info-item" onclick="openModal('reviews')" style="cursor:pointer;">
+          <span class="info-icon">&#x2B50;</span>
+          <span>4.9 Rating &bull; Eco-Friendly Electric Boats</span>
+        </div>
+      </div>
+      <a href="tel:+16013251205" class="call-btn">&#x1F4DE; Call Now</a>
+      <div class="status-badge">&#x1F7E2; Open Daily &bull; 9am &ndash; 6pm</div>
+
+      <div class="social-icons">
+        <a href="#" class="social-icon" title="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" class="social-icon" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="#" class="social-icon" title="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="links-container">
+      <div class="link-item" onclick="openModal('about')">
+        <span class="link-icon">&#x2139;&#xFE0F;</span>
+        <div class="link-text">About Us<div class="link-sub">Our story &amp; what we offer</div></div>
+        <span class="link-arrow">&rsaquo;</span>
+      </div>
+
+      <div class="link-item" onclick="openModal('fleet')">
+        <span class="link-icon">&#x1F6A4;</span>
+        <div class="link-text">Rental Packages &amp; Pricing<div class="link-sub">Single, Double &amp; Dock Add-ons</div></div>
+        <span class="link-arrow">&rsaquo;</span>
+      </div>
+
+      <div class="link-item" onclick="openModal('booking')">
+        <span class="link-icon">&#x1F4C5;</span>
+        <div class="link-text">Book Now<div class="link-sub">Check availability &amp; reserve</div></div>
+        <span class="link-arrow">&rsaquo;</span>
+      </div>
+
+      <div class="link-item" onclick="openModal('gallery')">
+        <span class="link-icon">&#x1F4F8;</span>
+        <div class="link-text">View Photos<div class="link-sub">Our boats on the water</div></div>
+        <span class="link-arrow">&rsaquo;</span>
+      </div>
+
+      <div class="link-item" onclick="openModal('reviews')">
+        <span class="link-icon">&#x2B50;</span>
+        <div class="link-text">Reviews<div class="link-sub">See what customers say</div></div>
+        <span class="link-arrow">&rsaquo;</span>
+      </div>
+
+      <a href="index.html" class="link-item">
+        <span class="link-icon">&#x1F310;</span>
+        <div class="link-text">Visit Website<div class="link-sub">beachsidecircleboats.com</div></div>
+        <span class="link-arrow">&rsaquo;</span>
+      </a>
+    </div>
+
+    <div class="footer">
+      Powered by CyberCheck
+    </div>
+  </div>
+
+  <!-- ========== ABOUT MODAL ========== -->
+  <div class="modal" id="aboutModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('about')">&times;</button>
+      <div class="modal-header">&#x2139;&#xFE0F; About Us</div>
+
+      <div style="color: #cccccc; line-height: 1.8; margin-bottom: 24px;">
+        <p style="margin-bottom: 16px;">
+          Beachside Circle Boats brings a whole new way to experience Orange Beach. Our portable, eco-friendly electric circle boats are perfect for cruising the intercoastal waterways &mdash; no gas, no noise, just pure fun on the water.
+        </p>
+        <p style="margin-bottom: 16px;">
+          <strong style="color: #ffffff;">Perfect For:</strong> Families, couples, birthday parties, group outings, fishing, or just relaxing on the water. No boating license needed!
+        </p>
+      </div>
+
+      <div style="background: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+        <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 12px;">&#x2728; What&rsquo;s Included</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 14px; color: #cccccc;">
+          <div>&#x2705; Life jackets</div>
+          <div>&#x2705; Safety briefing</div>
+          <div>&#x2705; Full battery charge</div>
+          <div>&#x2705; 5-speed motor</div>
+          <div>&#x2705; Paddle</div>
+          <div>&#x2705; Whistle</div>
+          <div>&#x2705; No license needed</div>
+          <div>&#x2705; Dog friendly</div>
+        </div>
+      </div>
+
+      <div style="background: #2a2a2a; padding: 20px; border-radius: 12px;">
+        <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 12px;">&#x1F4CD; Contact Information</div>
+        <div style="color: #cccccc; font-size: 14px; line-height: 2;">
+          <strong style="color: #ffffff;">Address:</strong><br>
+          25856 Canal Road, Unit A<br>Orange Beach, AL 36561<br><br>
+          <strong style="color: #ffffff;">Phone:</strong><br>
+          <a href="tel:+16013251205" style="color: #00ada8;">(601) 325-1205</a><br><br>
+          <strong style="color: #ffffff;">Website:</strong><br>
+          <a href="index.html" style="color: #00ada8;">beachsidecircleboats.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FLEET / PACKAGES MODAL ========== -->
+  <div class="modal" id="fleetModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('fleet')">&times;</button>
+      <div class="modal-header">&#x1F6A4; Circle Boats &amp; Docks</div>
+
+      <div class="pkg-item" onclick="openModal('booking')">
+        <img src="images/goboat/goboat-main.jpg?v=3" alt="Single Seater" class="pkg-image">
+        <div class="pkg-info">
+          <div class="pkg-name">Single Seater</div>
+          <div class="pkg-desc">Solo cruiser. 57 lbs, 70&quot; diameter, max 300 lbs. Half Day $150 &bull; All Day $225</div>
+        </div>
+        <div class="pkg-price">$150–$225</div>
+      </div>
+
+      <div class="pkg-item" onclick="openModal('booking')">
+        <img src="images/goboat/goboat-bumpers.jpg?v=3" alt="Double Seater" class="pkg-image">
+        <div class="pkg-info">
+          <div class="pkg-name">Double Seater <span class="pkg-badge">Popular</span></div>
+          <div class="pkg-desc">Bring a friend. Extra-wide seats, enhanced stability. Max 450 lbs combined. Half Day $200 &bull; All Day $275</div>
+        </div>
+        <div class="pkg-price">$200–$275</div>
+      </div>
+
+      <div class="pkg-item" onclick="openModal('booking')">
+        <img src="images/goboat/mini-dock-tow.jpg?v=2" alt="Mini Dock" class="pkg-image">
+        <div class="pkg-info">
+          <div class="pkg-name">Mini Dock</div>
+          <div class="pkg-desc">8'4" × 44" • 100 lb capacity. Full-size platform for lounging, coolers &amp; gear.</div>
+        </div>
+        <div class="pkg-price">$25–$50</div>
+      </div>
+
+      <div class="pkg-item" onclick="openModal('booking')">
+        <img src="images/goboat/goboat-accessories.jpg?v=2" alt="X Dock" class="pkg-image">
+        <div class="pkg-info">
+          <div class="pkg-name">X Dock</div>
+          <div class="pkg-desc">5' × 5' • 75 lb capacity. Compact square dock, holds full coolers &amp; gear.</div>
+        </div>
+        <div class="pkg-price">$25–$50</div>
+      </div>
+
+      <div class="pkg-item" onclick="openModal('booking')">
+        <img src="images/goboat/goboat-bumpers.jpg?v=2" alt="Doggie Dock" class="pkg-image">
+        <div class="pkg-info">
+          <div class="pkg-name">Doggie Dock</div>
+          <div class="pkg-desc">5'4" × 43" • 85 lb capacity. Pet-friendly with ramp for safe water entry.</div>
+        </div>
+        <div class="pkg-price">$25–$50</div>
+      </div>
+
+      <div style="margin-top: 16px; padding: 16px; background: #2a2a2a; border-radius: 12px;">
+        <div style="font-size: 14px; color: #cccccc; line-height: 1.8;">
+          <strong style="color: #ffffff;">&#x1F389; Group Rate:</strong><br>
+          Rent 5+ single seaters &mdash; <span style="color: #00ada8; font-weight: 700;">$200 each All Day</span><br><br>
+          <strong style="color: #ffffff;">⏰ Time Slots &amp; Pricing:</strong><br>
+          &bull; <strong style="color: #ffffff;">Half Day AM:</strong> 9:00 &ndash; 1:00<br>
+          &bull; <strong style="color: #ffffff;">Half Day PM:</strong> 2:00 &ndash; 6:00<br>
+          &bull; <strong style="color: #ffffff;">All Day:</strong> 9:00 &ndash; 6:00<br>
+          &bull; <strong style="color: #ffffff;">Docks:</strong> $25 half-day / $50 full-day<br><br>
+          <strong style="color: #ffffff;">✓ All Rentals Include:</strong><br>
+          &bull; Life jackets &bull; Safety briefing &bull; Full battery charge &bull; 5-speed motor &bull; Paddle &bull; Whistle
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== BOOKING MODAL ========== -->
+  <div class="modal" id="bookingModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('booking')">&times;</button>
+      <div class="modal-header">&#x1F4C5; Available Dates &mdash; March 2026</div>
+
+      <!-- Calendar Navigation -->
+      <div class="calendar-nav">
+        <button class="calendar-nav-btn" onclick="calendarPrevMonth()">&laquo; Previous</button>
+        <div class="calendar-month-display" id="monthDisplay">March 2026</div>
+        <button class="calendar-nav-btn" onclick="calendarNextMonth()">Next &raquo;</button>
+      </div>
+
+      <div class="calendar-header" id="calendarHeader"></div>
+      <div class="calendar-grid" id="calendarContainer"></div>
+
+      <!-- Booking Form (appears after date select) -->
+      <div id="bookingForm" style="display:none; background: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+        <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 16px;">&#x1F4CB; Reserve Your Boat</div>
+        <div id="selectedDateDisplay" style="color: #00ada8; font-weight: 600; margin-bottom: 12px;"></div>
+        <div style="display: grid; gap: 12px;">
+          <input type="text" placeholder="Full Name" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+          <input type="tel" placeholder="Phone Number" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+          <input type="email" placeholder="Email" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+          <select style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+            <option value="">Select Boat Type</option>
+            <option value="single">Single Seater ($150 Half / $225 All Day)</option>
+            <option value="double">Double Seater ($200 Half / $275 All Day)</option>
+          </select>
+          <select style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+            <option value="">Select Time Slot</option>
+            <option value="am">Half Day AM (9:00 - 1:00)</option>
+            <option value="pm">Half Day PM (2:00 - 6:00)</option>
+            <option value="all">All Day (9:00 - 6:00)</option>
+          </select>
+          <select style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+            <option value="">Dock Add-on? (Optional)</option>
+            <option value="none">No Dock</option>
+            <option value="mini">Mini Dock (+$50)</option>
+            <option value="x">X Dock (+$50)</option>
+            <option value="doggie">Doggie Dock (+$50)</option>
+          </select>
+          <input type="number" placeholder="How many boats?" min="1" max="20" value="1" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
+          <button onclick="submitBooking()" style="padding: 14px; background: #00ada8; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Reserve Now</button>
+        </div>
+      </div>
+
+      <div style="padding: 16px; background: #2a2a2a; border-radius: 12px; text-align: center;">
+        <div style="font-size: 14px; color: #00ada8; font-weight: 600; margin-bottom: 8px;">
+          &#x1F4DE; Call to Book: (601) 325-1205
+        </div>
+        <div style="font-size: 12px; color: #999;">
+          Weekends book fast! Reserve 1&ndash;2 weeks in advance.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== GALLERY MODAL ========== -->
+  <div class="modal" id="galleryModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('gallery')">&times;</button>
+      <div class="modal-header">&#x1F4F8; Photo Gallery</div>
+
+      <div class="gallery-grid">
+        <img src="images/goboat/goboat-hero.jpg" alt="GoBoat on the water" class="gallery-image">
+        <img src="images/goboat/goboat-onwater1.jpg" alt="Cruising the bay" class="gallery-image">
+        <img src="images/goboat/goboat-bumpers.jpg" alt="Double seater" class="gallery-image">
+        <img src="images/goboat/goboat-woody.jpg" alt="Woody edition" class="gallery-image">
+        <img src="images/goboat/goboat-onwater2.jpg" alt="On the water" class="gallery-image">
+        <img src="images/goboat/goboat-onwater3.jpg" alt="Family fun" class="gallery-image">
+        <img src="images/goboat/goboat-setup1.jpg" alt="Setup at the beach" class="gallery-image">
+        <img src="images/goboat/goboat-fishing.jpg" alt="Fishing from GoBoat" class="gallery-image">
+      </div>
+
+      <div style="padding: 16px; background: #2a2a2a; border-radius: 12px; text-align: center;">
+        <div style="font-size: 14px; color: #00ada8; font-weight: 600;">
+          &#x1F6A4; Eco-friendly electric boats &bull; No license needed &bull; Dog friendly
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== REVIEWS MODAL ========== -->
+  <div class="modal" id="reviewsModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('reviews')">&times;</button>
+      <div class="modal-header">&#x2B50; Customer Reviews</div>
+
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 48px; font-weight: 800; color: #ffffff;">4.9</div>
+        <div style="color: #fbbc04; font-size: 24px; letter-spacing: 2px;">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <div style="font-size: 13px; color: #999; margin-top: 4px;">Based on Google Reviews</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-top">
+          <div class="review-avatar">M</div>
+          <div><div class="review-name">Marcus T.</div><div class="review-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div></div>
+        </div>
+        <div class="review-text">Best boat rental experience in Orange Beach! The circle boats are so unique and fun. My kids absolutely loved it. Staff was super friendly and helpful getting us set up. Will definitely be back next summer!</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-top">
+          <div class="review-avatar">S</div>
+          <div><div class="review-name">Sarah K.</div><div class="review-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div></div>
+        </div>
+        <div class="review-text">We rented the double seater and a mini dock for our cooler. Spent the whole day cruising the intercoastal. So relaxing and the electric motor is whisper quiet. 10/10 recommend!</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-top">
+          <div class="review-avatar">J</div>
+          <div><div class="review-name">Jake R.</div><div class="review-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div></div>
+        </div>
+        <div class="review-text">Took my dog out on the doggie dock &mdash; he had the time of his life! The boats are super easy to operate, no license needed. Great concept and great people running it.</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-top">
+          <div class="review-avatar">A</div>
+          <div><div class="review-name">Amanda L.</div><div class="review-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2606;</div></div>
+        </div>
+        <div class="review-text">Such a fun experience! We rented 4 boats for a birthday party. The group rate was a great deal. Only wish they had evening hours for sunset cruises.</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-top">
+          <div class="review-avatar">D</div>
+          <div><div class="review-name">Derek W.</div><div class="review-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div></div>
+        </div>
+        <div class="review-text">These circle boats are genius. Portable, electric, eco-friendly, and an absolute blast. My family rented three and we had a flotilla going down the canal. Staff was awesome!</div>
+      </div>
+
+      <div style="padding: 16px; background: #2a2a2a; border-radius: 12px; text-align: center; margin-top: 12px;">
+        <div style="font-size: 14px; color: #00ada8; font-weight: 600;">
+          &#x1F4AC; Leave a review on Google
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== HOURS MODAL ========== -->
+  <div class="modal" id="hoursModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('hours')">&times;</button>
+      <div class="modal-header">&#x1F551; Business Hours</div>
+
+      <div style="background: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+        <div style="font-size: 15px;">
+          <div class="hours-row"><span>Monday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+          <div class="hours-row"><span>Tuesday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+          <div class="hours-row"><span>Wednesday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+          <div class="hours-row"><span>Thursday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+          <div class="hours-row"><span>Friday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+          <div class="hours-row"><span>Saturday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+          <div class="hours-row"><span>Sunday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+        </div>
+      </div>
+
+      <div style="background: #2a2a2a; padding: 20px; border-radius: 12px;">
+        <div style="font-size: 14px; color: #cccccc; line-height: 1.8;">
+          <strong style="color: #ffffff;">&#x26C5; Weather Policy:</strong><br>
+          Rentals may be cancelled or rescheduled due to severe weather. Full refund or reschedule offered.<br><br>
+          <strong style="color: #ffffff;">&#x1F4CD; Launch Location:</strong><br>
+          25856 Canal Road, Unit A<br>
+          Orange Beach, AL 36561
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(name) {
+      var modal = document.getElementById(name + 'Modal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Force refresh product images when fleet modal opens
+      if (name === 'fleet') {
+        var timestamp = new Date().getTime();
+        modal.querySelectorAll('.pkg-image').forEach(function(img) {
+          var src = img.getAttribute('src');
+          if (src) {
+            // Remove old cache buster and add new timestamp
+            src = src.replace(/\?[^&]*/g, '');
+            img.setAttribute('src', src + '?t=' + timestamp);
+          }
+        });
+      }
+    }
+
+    function closeModal(name) {
+      document.getElementById(name + 'Modal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function selectDate(date) {
+      document.getElementById('bookingForm').style.display = 'block';
+      document.getElementById('selectedDateDisplay').textContent = 'Selected: ' + date;
+      document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    var _linkSelectedDate = null;
+
+    function submitBooking() {
+      var form = document.getElementById('bookingForm');
+      var inputs = form.querySelectorAll('input, select');
+      var name = inputs[0].value.trim();
+      var phone = inputs[1].value.trim();
+      var email = inputs[2].value.trim();
+      var boatType = inputs[3].value;
+      var timeSlot = inputs[4].value;
+      var dock = inputs[5].value;
+      var qty = parseInt(inputs[6].value) || 1;
+
+      if (!name || !phone || !email || !boatType || !timeSlot) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      var btn = form.querySelector('button');
+      btn.textContent = 'Submitting...';
+      btn.disabled = true;
+
+      var fleetTypeId = window._linkFleetIds ? window._linkFleetIds[boatType] : null;
+      var timeSlotId = window._linkSlotIds ? window._linkSlotIds[timeSlot] : null;
+
+      var addons = [];
+      if (dock && dock !== 'none' && dock !== '') {
+        var dockNames = { mini: 'Mini Dock', x: 'X Dock', doggie: 'Doggie Dock' };
+        addons.push({ name: dockNames[dock] || dock, price: 50 });
+      }
+
+      var payload = {
+        fleet_type_id: fleetTypeId,
+        time_slot_id: timeSlotId,
+        booking_date: _linkSelectedDate,
+        qty: qty,
+        addons: addons,
+        customer_name: name,
+        customer_phone: phone,
+        customer_email: email
+      };
+
+      fetch(API_BASE + '/api/public/bookings?subdomain=' + SUBDOMAIN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) {
+          alert('Booking failed: ' + data.error);
+          btn.textContent = 'Reserve Now';
+          btn.disabled = false;
+          return;
+        }
+        btn.textContent = 'Booked!';
+        btn.style.background = '#10b981';
+        document.getElementById('selectedDateDisplay').innerHTML =
+          '<div style="text-align:center;padding:16px 0;">' +
+          '<div style="font-size:32px;margin-bottom:8px;">&#x2705;</div>' +
+          '<div style="color:#10b981;font-weight:700;font-size:16px;">Booking Confirmed!</div>' +
+          '<div style="color:#999;font-size:13px;margin-top:4px;">Confirmation sent to ' + email + '</div>' +
+          '</div>';
+      })
+      .catch(function(err) {
+        alert('Booking request submitted! We will call you to confirm. Call us at (601) 325-1205.');
+        btn.textContent = 'Reserve Now';
+        btn.disabled = false;
+      });
+    }
+
+    // Close modals on outside click
+    var modals = ['about', 'fleet', 'booking', 'gallery', 'reviews', 'hours'];
+    modals.forEach(function(name) {
+      document.getElementById(name + 'Modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal(name);
+      });
+    });
+
+    // Keyboard close
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        modals.forEach(function(name) { closeModal(name); });
+      }
+    });
+
+    // Force reload all product images with cache buster
+    document.addEventListener('DOMContentLoaded', function() {
+      var timestamp = new Date().getTime();
+
+      // Force reload product package images with dynamic cache buster
+      document.querySelectorAll('.pkg-image').forEach(function(img) {
+        var src = img.getAttribute('src');
+        if (src && src.indexOf('?') === -1) {
+          img.setAttribute('src', src + '?t=' + timestamp);
+        } else if (src && src.indexOf('v=2') > -1) {
+          img.setAttribute('src', src.replace('?v=2', '?t=' + timestamp));
+        }
+      });
+
+      // Image fallback
+      document.querySelectorAll('img').forEach(function(img) {
+        img.onerror = function() {
+          this.style.background = 'linear-gradient(135deg, #00ada8 0%, #009590 100%)';
+        };
+      });
+    });
+  </script>
+
+  <!-- ============================================
+       API INTEGRATION — Connects to backend
+       Fetches live data, wires booking, dynamic calendar
+       ============================================ -->
+  <script>
+  (function() {
+    var API_BASE = window.location.origin;
+    var SUBDOMAIN = 'beachside-circle-boats';
+    // Expose for submitBooking
+    window.API_BASE = API_BASE;
+    window.SUBDOMAIN = SUBDOMAIN;
+
+    function api(path) {
+      var sep = path.indexOf('?') > -1 ? '&' : '?';
+      return API_BASE + '/api/public' + path + sep + 'subdomain=' + SUBDOMAIN;
+    }
+
+    // ---- Fetch profile — update name, phone, address, hours ----
+    fetch(api('/profile'))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.name) return;
+
+        // Update business name
+        var nameEl = document.querySelector('.profile-name');
+        if (nameEl) nameEl.textContent = data.name;
+
+        // Update tagline/about
+        if (data.hero_subtext) {
+          var tagline = document.querySelector('.profile-tagline');
+          if (tagline) tagline.textContent = data.hero_subtext;
+        }
+
+        // Update phone links
+        if (data.contact_phone) {
+          var phoneLink = 'tel:' + data.contact_phone.replace(/[^+\d]/g, '');
+          document.querySelectorAll('a[href^="tel:"]').forEach(function(el) {
+            el.href = phoneLink;
+          });
+          // Update phone text in call button
+          var callBtn = document.querySelector('.call-btn');
+          if (callBtn) callBtn.innerHTML = '&#x1F4DE; Call Now';
+        }
+
+        // Update address
+        if (data.address) {
+          var addrText = data.address + ', ' + (data.city || '') + ', ' + (data.state || '') + ' ' + (data.zip || '');
+          document.querySelectorAll('.info-item span').forEach(function(el) {
+            if (el.textContent.indexOf('Canal Road') > -1) {
+              el.textContent = addrText;
+            }
+          });
+          // Update About modal address
+          document.querySelectorAll('.modal-content').forEach(function(mc) {
+            var addrEls = mc.querySelectorAll('div');
+            addrEls.forEach(function(d) {
+              if (d.textContent.indexOf('Canal Road') > -1 && d.querySelector('br')) {
+                d.innerHTML = d.innerHTML.replace(/25856 Canal Road, Unit A/, data.address)
+                  .replace(/Orange Beach, AL 36561/, (data.city || '') + ', ' + (data.state || '') + ' ' + (data.zip || ''));
+              }
+            });
+          });
+        }
+
+        // Update hours modal
+        if (data.hours) {
+          var hoursContainer = document.querySelector('#hoursModal .modal-content');
+          if (hoursContainer) {
+            var daysOfWeek = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+            var dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+            var hoursRows = hoursContainer.querySelectorAll('.hours-row');
+            hoursRows.forEach(function(row, i) {
+              if (i < daysOfWeek.length && data.hours[daysOfWeek[i]]) {
+                var dayData = data.hours[daysOfWeek[i]];
+                var timeEl = row.querySelector('.hours-time');
+                if (timeEl) {
+                  if (dayData.closed) {
+                    timeEl.textContent = 'Closed';
+                  } else {
+                    timeEl.textContent = formatTime(dayData.open) + ' \u2013 ' + formatTime(dayData.close);
+                  }
+                }
+              }
+            });
+          }
+        }
+
+        console.log('API: Profile loaded');
+      })
+      .catch(function(err) {
+        console.log('API: Profile fetch failed, using hardcoded', err.message);
+      });
+
+    function formatTime(t) {
+      if (!t) return '';
+      var parts = t.split(':');
+      var h = parseInt(parts[0]);
+      var m = parts[1] || '00';
+      var ampm = h >= 12 ? 'PM' : 'AM';
+      if (h > 12) h -= 12;
+      if (h === 0) h = 12;
+      return h + ':' + m + ' ' + ampm;
+    }
+
+    // ---- Fetch fleet — store IDs for booking form, update prices ----
+    fetch(api('/fleet'))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.fleet) return;
+
+        var fleetByName = {};
+        (data.fleet || []).forEach(function(f) { fleetByName[f.name.toLowerCase().indexOf('single') > -1 ? 'single' : 'double'] = f; });
+
+        var slotByName = {};
+        (data.time_slots || []).forEach(function(s) {
+          if (s.name.indexOf('AM') > -1) slotByName['am'] = s;
+          else if (s.name.indexOf('PM') > -1) slotByName['pm'] = s;
+          else slotByName['all'] = s;
+        });
+
+        window._linkFleetIds = {};
+        window._linkSlotIds = {};
+        if (fleetByName.single) window._linkFleetIds.single = fleetByName.single.id;
+        if (fleetByName.double) window._linkFleetIds.double = fleetByName.double.id;
+        if (slotByName.am) window._linkSlotIds.am = slotByName.am.id;
+        if (slotByName.pm) window._linkSlotIds.pm = slotByName.pm.id;
+        if (slotByName.all) window._linkSlotIds.all = slotByName.all.id;
+
+        // Update pricing displays on fleet cards
+        var priceLookup = {};
+        (data.pricing || []).forEach(function(p) {
+          priceLookup[p.fleet_type_id + '_' + p.time_slot_id] = p.price;
+        });
+
+        // Update package prices if they differ
+        document.querySelectorAll('.pkg-item').forEach(function(pkg) {
+          var nameEl = pkg.querySelector('.pkg-name');
+          var priceEl = pkg.querySelector('.pkg-price');
+          if (!nameEl || !priceEl) return;
+          var name = nameEl.textContent.toLowerCase();
+
+          if (name.indexOf('single') > -1 && fleetByName.single && slotByName.am) {
+            var p = priceLookup[fleetByName.single.id + '_' + slotByName.am.id];
+            if (p) priceEl.textContent = '$' + Math.round(p);
+          } else if (name.indexOf('double') > -1 && fleetByName.double && slotByName.am) {
+            var p = priceLookup[fleetByName.double.id + '_' + slotByName.am.id];
+            if (p) priceEl.textContent = '$' + Math.round(p);
+          }
+        });
+
+        console.log('API: Fleet loaded');
+      })
+      .catch(function(err) {
+        console.log('API: Fleet fetch failed, using hardcoded', err.message);
+      });
+
+    // ---- Fetch reviews — update reviews modal ----
+    fetch(api('/reviews'))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.reviews || data.reviews.length === 0) return;
+
+        // Update the rating display
+        var ratingEl = document.querySelector('#reviewsModal .modal-content');
+        if (ratingEl) {
+          var bigRating = ratingEl.querySelector('div[style*="font-size: 48px"]');
+          if (bigRating) bigRating.textContent = data.avg_rating;
+
+          var countEl = ratingEl.querySelector('div[style*="color: #999"]');
+          if (countEl) countEl.textContent = 'Based on ' + data.total + ' reviews';
+        }
+
+        // Update rating on profile
+        document.querySelectorAll('.info-item span').forEach(function(el) {
+          if (el.textContent.indexOf('Rating') > -1) {
+            el.textContent = data.avg_rating + ' Rating \u2022 Eco-Friendly Electric Boats';
+          }
+        });
+
+        // Replace review items if we have API reviews
+        if (data.reviews.length > 0) {
+          var reviewsContainer = document.querySelector('#reviewsModal .modal-content');
+          var existingReviews = reviewsContainer.querySelectorAll('.review-item');
+          existingReviews.forEach(function(r) { r.remove(); });
+
+          // Insert new reviews before the footer
+          var footer = reviewsContainer.querySelector('div[style*="padding: 16px"]');
+          data.reviews.forEach(function(rev) {
+            var div = document.createElement('div');
+            div.className = 'review-item';
+            var stars = '';
+            for (var i = 0; i < 5; i++) {
+              stars += i < rev.rating ? '&#x2605;' : '&#x2606;';
+            }
+            div.innerHTML =
+              '<div class="review-top">' +
+              '<div class="review-avatar">' + (rev.customer_name ? rev.customer_name.charAt(0).toUpperCase() : '?') + '</div>' +
+              '<div><div class="review-name">' + (rev.customer_name || 'Anonymous') + '</div><div class="review-stars">' + stars + '</div></div>' +
+              '</div>' +
+              '<div class="review-text">' + (rev.text || '') + '</div>';
+            reviewsContainer.insertBefore(div, footer);
+          });
+        }
+
+        console.log('API: Reviews loaded (' + data.total + ')');
+      })
+      .catch(function(err) {
+        console.log('API: Reviews fetch failed, using hardcoded', err.message);
+      });
+
+    // ---- Calendar with month navigation ----
+    var _currentMonth = new Date();
+    var _calendarMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var _days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    function renderCalendar(targetMonth) {
+      var calHeader = document.getElementById('calendarHeader');
+      var calGrid = document.getElementById('calendarContainer');
+      var monthDisplay = document.getElementById('monthDisplay');
+
+      if (!calGrid || !calHeader || !monthDisplay) return;
+
+      // Show loading state
+      calGrid.innerHTML = '<div style="text-align: center; color: #999; padding: 20px; width: 100%;">Loading availability...</div>';
+
+      // Build header with weekdays
+      calHeader.innerHTML = '';
+      _days.forEach(function(day) {
+        var dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-weekday';
+        dayHeader.textContent = day;
+        calHeader.appendChild(dayHeader);
+      });
+
+      // Get first and last day of the month
+      var firstDay = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1);
+      var lastDay = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0);
+      var startDayOfWeek = firstDay.getDay();
+      var daysInMonth = lastDay.getDate();
+
+      // Create array of all dates to display
+      var dateSlots = [];
+
+      // Add empty slots for days before month starts
+      for (var i = 0; i < startDayOfWeek; i++) {
+        dateSlots.push(null); // null = empty slot
+      }
+
+      // Add all days of the month
+      for (var i = 1; i <= daysInMonth; i++) {
+        var d = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), i);
+        dateSlots.push(d);
+      }
+
+      // Update month display
+      monthDisplay.textContent = _calendarMonths[targetMonth.getMonth()] + ' ' + targetMonth.getFullYear();
+
+      // Fetch availability for all dates in month
+      var fetchPromises = dateSlots.map(function(d) {
+        if (!d) return Promise.resolve(null); // null for empty slots
+
+        var dateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        var label = _days[d.getDay()] + ', ' + _calendarMonths[d.getMonth()] + ' ' + d.getDate();
+
+        return fetch(api('/availability?date=' + dateStr))
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var totalAvailable = (data.availability || []).reduce(function(sum, a) { return sum + a.available; }, 0);
+            return { date: dateStr, label: label, available: totalAvailable > 0, slots: totalAvailable, day: d };
+          })
+          .catch(function(err) {
+            return { date: dateStr, label: label, available: true, slots: -1, day: d };
+          });
+      });
+
+      // Render calendar once all availability is fetched
+      Promise.all(fetchPromises).then(function(results) {
+        calGrid.innerHTML = '';
+
+        results.forEach(function(r) {
+          if (!r) {
+            // Empty slot before month starts
+            var emptySlot = document.createElement('div');
+            emptySlot.className = 'day-slot empty';
+            calGrid.appendChild(emptySlot);
+            return;
+          }
+
+          var div = document.createElement('div');
+          var dateNum = r.date.split('-')[2];
+          var isToday = r.day.toDateString() === new Date().toDateString();
+
+          div.className = 'day-slot ' + (r.available ? 'available' : 'booked');
+          if (isToday) div.className += ' today';
+
+          if (r.available) {
+            div.onclick = function() {
+              _linkSelectedDate = r.date;
+              selectDate(r.label);
+            };
+          }
+
+          div.innerHTML =
+            '<div class="day-date">' + dateNum + '</div>' +
+            '<div class="day-status">' + (r.available ? '✓' : '✗') + '</div>';
+          calGrid.appendChild(div);
+        });
+      });
+    }
+
+    // Navigation functions
+    window.calendarPrevMonth = function() {
+      _currentMonth.setMonth(_currentMonth.getMonth() - 1);
+      renderCalendar(_currentMonth);
+    };
+
+    window.calendarNextMonth = function() {
+      _currentMonth.setMonth(_currentMonth.getMonth() + 1);
+      renderCalendar(_currentMonth);
+    };
+
+    // Initial render
+    renderCalendar(_currentMonth);
+
+    console.log('API: Linktree integration loaded');
+  })();
+  </script>
+</body>
+</html>

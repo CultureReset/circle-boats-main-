@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beachside Circle Boats — Orange Beach, AL | Rentals</title>
+  <meta name="description" content="Portable inflatable circle boat rentals in Orange Beach, Alabama. Eco-friendly electric boats for singles and doubles. Book your day on the water today!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #00ada8;
+      --teal-dark: #009590;
+      --teal-light: rgba(0, 173, 168, 0.08);
+      --teal-border: rgba(0, 173, 168, 0.2);
+      --black: #1a1a1a;
+      --dark: #333333;
+      --gray: #666666;
+      --gray-light: #999999;
+      --border: #e8e8e8;
+      --bg: #fafafa;
+      --white: #ffffff;
+      --radius: 8px;
+      --radius-lg: 16px;
+      --radius-pill: 100px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--dark);
+      line-height: 1.6;
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Titillium Web', sans-serif;
+      line-height: 1.15;
+      color: var(--black);
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .container-wide {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+
+    .nav.scrolled {
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--white);
+      font-weight: 700;
+      font-family: 'Titillium Web', sans-serif;
+    }
+
+    .nav-logo-text {
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--black);
+    }
+
+    .nav-logo-text span {
+      color: var(--teal);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--black);
+    }
+
+    .nav-cta {
+      background: var(--teal);
+      color: var(--white) !important;
+      padding: 10px 28px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      border: 2px solid var(--teal);
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--black);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 140px 0 80px;
+      background: var(--white);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 520px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero h1 span {
+      color: var(--teal);
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--gray);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: var(--radius-pill);
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+      border-color: var(--teal);
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--black);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .hero-stat span {
+      font-size: 13px;
+      color: var(--gray-light);
+    }
+
+    .hero-image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      font-size: 16px;
+      color: var(--gray);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* ===== PRODUCT CARDS ===== */
+    .products {
+      background: var(--bg);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      transform: translateY(-4px);
+    }
+
+    .product-card.featured {
+      border-color: var(--teal);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .product-image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .product-body {
+      padding: 28px 24px;
+    }
+
+    .product-body h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .product-body .desc {
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .price-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .price-label {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .price-amount {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .product-specs {
+      font-size: 12px;
+      color: var(--gray-light);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--bg);
+    }
+
+    .product-body .btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* ===== GROUP RATES ===== */
+    .group-banner {
+      margin-top: 40px;
+      background: var(--white);
+      border: 2px solid var(--teal-border);
+      border-radius: var(--radius-lg);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .group-banner-text h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .group-banner-text p {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .group-banner-price {
+      text-align: center;
+    }
+
+    .group-banner-price strong {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .group-banner-price span {
+      font-size: 13px;
+      color: var(--gray-light);
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+
+    .step-card {
+      text-align: center;
+    }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .step-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step-card p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* ===== FEATURES / WHY ===== */
+    .features {
+      background: var(--bg);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-align: center;
+      transition: box-shadow 0.3s;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .feature-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* ===== GALLERY ===== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.06);
+    }
+
+    /* ===== DOCKS ===== */
+    .dock-section {
+      background: var(--bg);
+    }
+
+    .dock-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .dock-image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+
+    .dock-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dock-info h2 {
+      font-size: 34px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .dock-info > p {
+      font-size: 15px;
+      color: var(--gray);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .dock-price-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+
+    .dock-price-tag strong {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .dock-price-tag span {
+      font-size: 15px;
+      color: var(--gray-light);
+    }
+
+    .dock-list {
+      margin-bottom: 28px;
+    }
+
+    .dock-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    .dock-list li .check {
+      color: var(--teal);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ===== ADD-ONS ===== */
+    .addons-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .addon-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      text-align: center;
+      transition: box-shadow 0.3s;
+    }
+
+    .addon-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .addon-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .addon-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .addon-card .addon-desc {
+      font-size: 12px;
+      color: var(--gray);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .addon-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .addon-unit {
+      font-size: 11px;
+      color: var(--gray-light);
+    }
+
+    /* ===== CTA ===== */
+    .cta {
+      background: var(--teal);
+      padding: 72px 0;
+      text-align: center;
+      color: var(--white);
+    }
+
+    .cta h2 {
+      color: var(--white);
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-bottom: 28px;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--teal);
+      border-color: var(--white);
+      padding: 14px 36px;
+    }
+
+    .btn-white:hover {
+      background: var(--bg);
+      border-color: var(--bg);
+    }
+
+    /* ===== CONTACT ===== */
+    .contact {
+      background: var(--bg);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .contact-form {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1px solid var(--border);
+    }
+
+    .contact-form h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--dark);
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px var(--teal-light);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .contact-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .info-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .info-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .info-row strong {
+      color: var(--dark);
+      min-width: 55px;
+    }
+
+    .map-embed {
+      width: 100%;
+      height: 180px;
+      border-radius: var(--radius);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-light);
+      font-size: 14px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--black);
+      color: rgba(255,255,255,0.55);
+      padding: 56px 0 28px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--white);
+      font-weight: 700;
+      font-family: 'Titillium Web', sans-serif;
+    }
+
+    .footer-logo-text {
+      color: var(--white);
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .footer h4 {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .footer ul li {
+      padding: 3px 0;
+    }
+
+    .footer ul li a {
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer ul li a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-social a {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .footer-social a:hover {
+      background: var(--teal);
+      color: var(--white);
+    }
+
+    /* ===== MOBILE MENU ===== */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100vh;
+      background: var(--white);
+      z-index: 1001;
+      transition: right 0.3s ease;
+      padding: 72px 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open { right: 0; }
+
+    .mobile-menu a {
+      display: block;
+      color: var(--dark);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--bg);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--teal); }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .mobile-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: none;
+      color: var(--dark);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== BOOKING MODAL ===== */
+    .booking-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .booking-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .booking-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .booking-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+      z-index: 5;
+    }
+
+    .booking-header {
+      padding: 28px 32px 0;
+    }
+
+    .booking-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .booking-header p {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .booking-steps-nav {
+      display: flex;
+      gap: 0;
+      padding: 20px 32px 0;
+    }
+
+    .bstep-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-light);
+      border-bottom: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .bstep-tab.active {
+      color: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .bstep-tab.done {
+      color: var(--teal-dark);
+      border-color: var(--teal);
+    }
+
+    .booking-body {
+      padding: 24px 32px 28px;
+    }
+
+    .bstep { display: none; }
+    .bstep.active { display: block; }
+
+    /* Calendar */
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cal-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .cal-nav {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+    }
+
+    .cal-nav:hover {
+      background: var(--border);
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+
+    .cal-day-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-light);
+      padding: 6px 0;
+      text-transform: uppercase;
+    }
+
+    .cal-day {
+      padding: 10px 4px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      background: none;
+      color: var(--dark);
+    }
+
+    .cal-day:hover {
+      background: var(--teal-light);
+    }
+
+    .cal-day.selected {
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .cal-day.disabled {
+      color: var(--border);
+      pointer-events: none;
+    }
+
+    .cal-day.empty {
+      pointer-events: none;
+    }
+
+    /* Boat Selection */
+    .boat-option {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+
+    .boat-option:hover {
+      border-color: var(--teal-border);
+    }
+
+    .boat-option.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .boat-option-img {
+      width: 80px;
+      height: 60px;
+      border-radius: var(--radius);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .boat-option-info {
+      flex: 1;
+    }
+
+    .boat-option-info h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .boat-option-info p {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .boat-option-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+
+    /* Time Slot */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .slot-btn {
+      padding: 14px 12px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--white);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .slot-btn:hover {
+      border-color: var(--teal-border);
+    }
+
+    .slot-btn.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .slot-btn strong {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .slot-btn span {
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    .slot-btn .slot-price {
+      display: block;
+      font-family: 'Titillium Web', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-top: 4px;
+    }
+
+    /* Qty */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .qty-row label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--bg);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+    }
+
+    .qty-btn:hover { background: var(--border); }
+
+    .qty-val {
+      width: 40px;
+      text-align: center;
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      background: var(--white);
+    }
+
+    /* Addons checkboxes */
+    .addon-check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .addon-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 13px;
+    }
+
+    .addon-check:hover {
+      border-color: var(--teal-border);
+    }
+
+    .addon-check.checked {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+
+    .addon-check input {
+      display: none;
+    }
+
+    .addon-check-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+
+    .addon-check.checked .addon-check-box {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: var(--white);
+    }
+
+    .addon-check-info {
+      flex: 1;
+    }
+
+    .addon-check-info strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .addon-check-info span {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .addon-check-price {
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      color: var(--teal);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    /* Cart Summary */
+    .cart-summary {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .cart-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    .cart-line.total {
+      border-top: 2px solid var(--border);
+      margin-top: 8px;
+      padding-top: 12px;
+      font-family: 'Titillium Web', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .cart-line.total .cart-amount {
+      color: var(--teal);
+    }
+
+    .cart-label { color: var(--gray); }
+    .cart-amount { font-weight: 600; color: var(--dark); }
+
+    /* Booking footer */
+    .booking-footer {
+      padding: 0 32px 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .booking-footer .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-content { max-width: 100%; margin: 0 auto; }
+      .hero-image { max-width: 600px; margin: 0 auto; }
+      .hero-stats { justify-content: center; }
+      .hero-actions { justify-content: center; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .dock-layout { grid-template-columns: 1fr; }
+      .addons-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .hero { padding: 110px 0 60px; }
+      .hero h1 { font-size: 36px; }
+      .hero-desc { font-size: 15px; }
+      .hero-stats { flex-direction: column; gap: 16px; align-items: center; }
+      .section { padding: 64px 0; }
+      .section-header h2 { font-size: 28px; }
+      .product-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+      .steps-grid { grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; }
+      .features-grid { grid-template-columns: 1fr; }
+      .addons-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .group-banner { flex-direction: column; text-align: center; }
+      .dock-info h2 { font-size: 28px; }
+      .cta h2 { font-size: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .container, .container-wide { padding: 0 16px; }
+      .hero h1 { font-size: 30px; }
+      .btn { padding: 12px 24px; font-size: 14px; }
+      .addons-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">B</div>
+        <div class="nav-logo-text">Beachside <span>Circle Boats</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#rentals">Rentals</a>
+        <a href="#docks">Docks</a>
+        <a href="#addons">Add-ons</a>
+        <a href="#how">How It Works</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+        <a href="javascript:void(0)" class="nav-cta" onclick="openBooking()">Book Now</a>
+      </div>
+      <div class="nav-hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" onclick="toggleMobileMenu()">&times;</button>
+    <a href="#rentals" onclick="toggleMobileMenu()">Rentals</a>
+    <a href="#docks" onclick="toggleMobileMenu()">Docks</a>
+    <a href="#addons" onclick="toggleMobileMenu()">Add-ons</a>
+    <a href="#how" onclick="toggleMobileMenu()">How It Works</a>
+    <a href="#gallery" onclick="toggleMobileMenu()">Gallery</a>
+    <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+    <a href="tel:+16013251205" style="color:var(--teal);margin-top:12px;font-weight:600;">Call (601) 325-1205</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <div class="hero-tag">Orange Beach, Alabama</div>
+        <h1>The Easiest Way to <span>Get on the Water</span></h1>
+        <p class="hero-desc">Rent a portable, eco-friendly circle boat. No license needed, no experience required. Just show up and cruise.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="openBooking()">Book Now</button>
+          <a href="tel:+16013251205" class="btn btn-outline">Call (601) 325-1205</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>500+</strong>
+            <span>Happy Customers</span>
+          </div>
+          <div class="hero-stat">
+            <strong>4.9&#9733;</strong>
+            <span>Google Rating</span>
+          </div>
+          <div class="hero-stat">
+            <strong>Electric</strong>
+            <span>Zero Emissions</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="images/goboat/goboat-hero.jpg" alt="GoBoat circle boat on the water">
+      </div>
+    </div>
+  </section>
+
+  <!-- RENTALS / PRODUCTS -->
+  <section class="section products" id="rentals">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Rentals &amp; Pricing</div>
+        <h2>Choose Your Boat</h2>
+        <p>Simple, transparent pricing. All rentals include a life jacket, safety briefing, and full charge.</p>
+      </div>
+      <div class="product-grid">
+        <!-- Single Seater -->
+        <div class="product-card">
+          <div class="product-image">
+            <img src="images/goboat/goboat-beach.jpg" alt="GoBoat Single Seater">
+          </div>
+          <div class="product-body">
+            <h3>Single Seater</h3>
+            <p class="desc">Solo cruiser. 57 lbs, portable, 35lb electric motor. Fits one adult up to 300 lbs.</p>
+            <div class="price-row">
+              <span class="price-label">Half Day 9:00 &ndash; 1:00</span>
+              <span class="price-amount">$150</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Half Day 2:00 &ndash; 6:00</span>
+              <span class="price-amount">$150</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">All Day 9:00 &ndash; 6:00</span>
+              <span class="price-amount">$225</span>
+            </div>
+            <div class="product-specs">70" diameter &bull; Max 300 lbs &bull; 5-speed motor</div>
+            <button class="btn btn-primary" onclick="openBooking()">Reserve</button>
+          </div>
+        </div>
+
+        <!-- Double Seater -->
+        <div class="product-card featured">
+          <div class="product-image">
+            <div class="product-badge">Popular</div>
+            <img src="images/goboat/goboat-bumpers.jpg" alt="GoBoat Double Seater">
+          </div>
+          <div class="product-body">
+            <h3>Double Seater</h3>
+            <p class="desc">Bring a friend. 65 lbs, extra-wide seats, enhanced stability. Fits two adults up to 450 lbs combined.</p>
+            <div class="price-row">
+              <span class="price-label">Half Day 9:00 &ndash; 1:00</span>
+              <span class="price-amount">$200</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Half Day 2:00 &ndash; 6:00</span>
+              <span class="price-amount">$200</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">All Day 9:00 &ndash; 6:00</span>
+              <span class="price-amount">$275</span>
+            </div>
+            <div class="product-specs">89" x 70" &bull; Max 450 lbs &bull; 5-speed motor</div>
+            <button class="btn btn-primary" onclick="openBooking()">Reserve</button>
+          </div>
+        </div>
+
+        <!-- Docks -->
+        <div class="product-card">
+          <div class="product-image">
+            <img src="images/goboat/mini-dock-tow.jpg" alt="GoBoat Dock Accessories">
+          </div>
+          <div class="product-body">
+            <h3>Dock Add-on</h3>
+            <p class="desc">Tow a floating dock for coolers, chairs, gear, or your fur baby. Three options available.</p>
+            <div class="price-row">
+              <span class="price-label">Mini Dock</span>
+              <span class="price-amount">$50</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">X Dock</span>
+              <span class="price-amount">$50</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Doggie Dock</span>
+              <span class="price-amount">$50</span>
+            </div>
+            <div class="product-specs">Rent 4+ boats = FREE dock for the day</div>
+            <button class="btn btn-primary" onclick="openBooking()">Add Dock</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group Rates -->
+      <div class="group-banner">
+        <div class="group-banner-text">
+          <h3>Group Rates Available</h3>
+          <p>Rent 5 or more single seaters and save. No group rate on doubles. Call to book.</p>
+        </div>
+        <div class="group-banner-price">
+          <strong>$200</strong>
+          <span>each / All Day</span>
+        </div>
+        <a href="tel:+16013251205" class="btn btn-primary">Call to Book</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCKS DETAIL -->
+  <section class="section dock-section" id="docks">
+    <div class="container">
+      <div class="dock-layout">
+        <div class="dock-image">
+          <img src="images/goboat/mini-dock-tow.jpg" alt="GoBoat floating dock">
+        </div>
+        <div class="dock-info">
+          <div class="section-tag">Accessories</div>
+          <h2>Towable Floating Docks</h2>
+          <div class="dock-price-tag">
+            <strong>$50</strong>
+            <span>/ day each</span>
+          </div>
+          <p>Pull a dock behind your GoBoat. Carry coolers, beach bags, chairs, umbrellas, or your fur baby.</p>
+          <ul class="dock-list">
+            <li><span class="check">&#10003;</span> <strong>Mini Dock</strong> &mdash; 8'4" x 44" platform for gear, yoga, sunbathing</li>
+            <li><span class="check">&#10003;</span> <strong>X Dock</strong> &mdash; 5' x 5' floating dock, holds a 58-qt cooler</li>
+            <li><span class="check">&#10003;</span> <strong>Doggie Dock</strong> &mdash; 5'4" x 43" with weighted mesh ramp for pets</li>
+            <li><span class="check">&#10003;</span> Rent 4+ boats and get a <strong>FREE dock</strong> for the day</li>
+          </ul>
+          <button class="btn btn-primary" onclick="openBooking()">Add a Dock</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADD-ONS -->
+  <section class="section" id="addons">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Extras</div>
+        <h2>Add-ons</h2>
+        <p>Enhance your trip. Add at checkout or at check-in.</p>
+      </div>
+      <div class="addons-grid">
+        <div class="addon-card">
+          <span class="addon-icon">&#127866;</span>
+          <h4>Cooler Pack</h4>
+          <p class="addon-desc">Loaded cooler with ice, water, and your choice of drinks.</p>
+          <div class="addon-price">$35</div>
+          <div class="addon-unit">per cooler</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#129380;</span>
+          <h4>Drink &amp; Ice</h4>
+          <p class="addon-desc">Water, Gatorade, sodas, juice. Bag of ice included.</p>
+          <div class="addon-price">$15</div>
+          <div class="addon-unit">6 drinks + ice</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#127839;</span>
+          <h4>Snack Pack</h4>
+          <p class="addon-desc">Chips, trail mix, granola bars, fruit snacks.</p>
+          <div class="addon-price">$20</div>
+          <div class="addon-unit">per pack</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#128054;</span>
+          <h4>Pup Pack</h4>
+          <p class="addon-desc">Dog treats, water bowl, and a doggie life vest.</p>
+          <div class="addon-price">$15</div>
+          <div class="addon-unit">per pup</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#127925;</span>
+          <h4>Bluetooth Speaker</h4>
+          <p class="addon-desc">Waterproof JBL speaker to set the vibe.</p>
+          <div class="addon-price">$15</div>
+          <div class="addon-unit">per trip</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#128247;</span>
+          <h4>GoPro Rental</h4>
+          <p class="addon-desc">GoPro Hero with waterproof mount.</p>
+          <div class="addon-price">$30</div>
+          <div class="addon-unit">per trip</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#127907;</span>
+          <h4>Fishing Gear</h4>
+          <p class="addon-desc">Rod, reel, tackle, and bait. Everything included.</p>
+          <div class="addon-price">$25</div>
+          <div class="addon-unit">per person</div>
+        </div>
+        <div class="addon-card">
+          <span class="addon-icon">&#9728;&#65039;</span>
+          <h4>Sun &amp; Safety Kit</h4>
+          <p class="addon-desc">Reef-safe sunscreen, hat, dry bag, first aid.</p>
+          <div class="addon-price">$10</div>
+          <div class="addon-unit">per kit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section features" id="how">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">How It Works</div>
+        <h2>On the Water in 4 Steps</h2>
+        <p>From booking to cruising, we make it effortless.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Book Online</h3>
+          <p>Choose your boat, pick your date, and reserve in seconds.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Show Up</h3>
+          <p>Head to our Orange Beach location on Canal Road.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Quick Briefing</h3>
+          <p>5-minute safety walkthrough. No license needed.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Hit the Water</h3>
+          <p>Cruise at your own pace and make memories.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CIRCLE BOATS -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Why Circle Boats</div>
+        <h2>A New Way to Experience the Gulf</h2>
+        <p>Portable inflatable boats that combine fun, safety, and sustainability.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">&#9889;</span>
+          <h3>Electric &amp; Eco-Friendly</h3>
+          <p>35lb thrust electric motors. Zero emissions, zero noise pollution.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">&#128170;</span>
+          <h3>Stable &amp; Safe</h3>
+          <p>Low center of gravity, incredibly stable. Life jackets included.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">&#128758;</span>
+          <h3>Portable</h3>
+          <p>Inflatable design. We can bring boats to your event or private dock.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">&#127947;</span>
+          <h3>No License Needed</h3>
+          <p>Anyone can drive. No boating license required. We teach you in 5 min.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">&#127754;</span>
+          <h3>Gulf Coast Views</h3>
+          <p>Explore Orange Beach coastline and intercoastal waterways.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">&#127881;</span>
+          <h3>Perfect for Events</h3>
+          <p>Birthdays, date nights, bachelor parties, team outings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section features" id="gallery">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Gallery</div>
+        <h2>See the Experience</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="images/goboat/goboat-hero.jpg" alt="GoBoat on the water"></div>
+        <div class="gallery-item"><img src="images/goboat/goboat-bumpers.jpg" alt="GoBoat Double Seater"></div>
+        <div class="gallery-item"><img src="images/goboat/goboat-onwater1.jpg" alt="GoBoat cruising"></div>
+        <div class="gallery-item"><img src="images/goboat/goboat-beach.jpg" alt="GoBoat at the beach"></div>
+        <div class="gallery-item"><img src="images/goboat/goboat-woody.jpg" alt="GoBoat woody edition"></div>
+        <div class="gallery-item"><img src="images/goboat/goboat-fishing.jpg" alt="Fishing from GoBoat"></div>
+        <div class="gallery-item"><img src="images/goboat/goboat-motor.jpg" alt="GoBoat electric motor"></div>
+        <div class="gallery-item"><img src="images/goboat/mini-dock-tow.jpg" alt="Mini Dock towing"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <h2>Ready to Get on the Water?</h2>
+      <p>Book your circle boat today and experience the Gulf Coast like never before.</p>
+      <button class="btn btn-white" onclick="openBooking()">Book Your Boat</button>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Contact</div>
+        <h2>Book or Ask a Question</h2>
+        <p>Send us a message or call. We respond fast.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-form">
+          <h3>Send a Message</h3>
+          <form onsubmit="handleContact(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name">Full Name</label>
+                <input type="text" id="contact-name" placeholder="John Smith" required>
+              </div>
+              <div class="form-group">
+                <label for="contact-phone">Phone</label>
+                <input type="tel" id="contact-phone" placeholder="(555) 123-4567">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-interest">Interested In</label>
+              <select id="contact-interest">
+                <option value="">Select one...</option>
+                <option value="single-half">Single Seater &mdash; Half Day ($150)</option>
+                <option value="single-full">Single Seater &mdash; All Day ($225)</option>
+                <option value="double-half">Double Seater &mdash; Half Day ($200)</option>
+                <option value="double-full">Double Seater &mdash; All Day ($275)</option>
+                <option value="dock">Dock Rental ($50)</option>
+                <option value="group">Group Rate (5+ Singles &mdash; $200/each)</option>
+                <option value="addons">Add-ons</option>
+                <option value="event">Private Event</option>
+                <option value="other">General Question</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" placeholder="Tell us about your plans, preferred dates, or any questions..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
+          </form>
+        </div>
+        <div class="contact-sidebar">
+          <div class="info-card">
+            <h4><span class="icon">&#128205;</span> Location</h4>
+            <div class="info-row">25856 Canal Road, Unit A<br>Orange Beach, AL 36561</div>
+            <div class="map-embed">Map &mdash; Orange Beach, AL</div>
+          </div>
+          <div class="info-card">
+            <h4><span class="icon">&#128222;</span> Contact</h4>
+            <div class="info-row"><strong>Phone</strong> <a href="tel:+16013251205" style="color:var(--teal);">(601) 325-1205</a></div>
+            <div class="info-row"><strong>Email</strong> <a href="mailto:beachsideboats@myyahoo.com" style="color:var(--teal);">beachsideboats@myyahoo.com</a></div>
+          </div>
+          <div class="info-card">
+            <h4><span class="icon">&#128336;</span> Hours</h4>
+            <div class="info-row"><strong>Mon&ndash;Sat</strong> 8:00 AM &ndash; 6:00 PM</div>
+            <div class="info-row"><strong>Sunday</strong> 9:00 AM &ndash; 5:00 PM</div>
+            <div class="info-row" style="font-size:12px;color:var(--gray-light);margin-top:4px;">Weather permitting. Call for availability.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING MODAL -->
+  <div class="booking-overlay" id="bookingOverlay">
+    <div class="booking-modal">
+      <button class="booking-close" onclick="closeBooking()">&times;</button>
+      <div class="booking-header">
+        <h2>Book Your Rental</h2>
+        <p>Select a date, choose your boat, and add extras.</p>
+      </div>
+      <div class="booking-steps-nav">
+        <div class="bstep-tab active" data-step="1">1. Date</div>
+        <div class="bstep-tab" data-step="2">2. Boat &amp; Time</div>
+        <div class="bstep-tab" data-step="3">3. Extras</div>
+        <div class="bstep-tab" data-step="4">4. Checkout</div>
+      </div>
+      <div class="booking-body">
+
+        <!-- STEP 1: DATE -->
+        <div class="bstep active" id="bstep1">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
+            <h3 id="calMonthLabel"></h3>
+            <button class="cal-nav" onclick="calNav(1)">&#8250;</button>
+          </div>
+          <div class="cal-grid" id="calGrid">
+            <div class="cal-day-label">Sun</div>
+            <div class="cal-day-label">Mon</div>
+            <div class="cal-day-label">Tue</div>
+            <div class="cal-day-label">Wed</div>
+            <div class="cal-day-label">Thu</div>
+            <div class="cal-day-label">Fri</div>
+            <div class="cal-day-label">Sat</div>
+          </div>
+        </div>
+
+        <!-- STEP 2: BOAT & TIME -->
+        <div class="bstep" id="bstep2">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Select Boat Type</h4>
+          <div class="boat-option" data-boat="single" onclick="selectBoat(this)">
+            <img src="images/goboat/goboat-beach.jpg" alt="Single Seater" class="boat-option-img">
+            <div class="boat-option-info">
+              <h4>Single Seater</h4>
+              <p>1 person &bull; Max 300 lbs &bull; 70" diameter</p>
+            </div>
+            <div class="boat-option-price">from $150</div>
+          </div>
+          <div class="boat-option" data-boat="double" onclick="selectBoat(this)">
+            <img src="images/goboat/goboat-bumpers.jpg" alt="Double Seater" class="boat-option-img">
+            <div class="boat-option-info">
+              <h4>Double Seater</h4>
+              <p>2 people &bull; Max 450 lbs &bull; 89" x 70"</p>
+            </div>
+            <div class="boat-option-price">from $200</div>
+          </div>
+
+          <h4 style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:4px;">Time Slot</h4>
+          <div class="slot-grid">
+            <div class="slot-btn" data-slot="am" onclick="selectSlot(this)">
+              <strong>Half Day AM</strong>
+              <span>9:00 &ndash; 1:00</span>
+              <div class="slot-price" id="slotAM">$150</div>
+            </div>
+            <div class="slot-btn" data-slot="pm" onclick="selectSlot(this)">
+              <strong>Half Day PM</strong>
+              <span>2:00 &ndash; 6:00</span>
+              <div class="slot-price" id="slotPM">$150</div>
+            </div>
+            <div class="slot-btn" data-slot="all" onclick="selectSlot(this)">
+              <strong>All Day</strong>
+              <span>9:00 &ndash; 6:00</span>
+              <div class="slot-price" id="slotAll">$225</div>
+            </div>
+          </div>
+
+          <div class="qty-row">
+            <label>Quantity:</label>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(-1)">-</button>
+              <div class="qty-val" id="qtyVal">1</div>
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: EXTRAS -->
+        <div class="bstep" id="bstep3">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;">Add a Dock</h4>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">$50/day each. Rent 4+ boats = FREE dock!</p>
+          <div class="addon-check-grid">
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="mini-dock" data-price="50">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>Mini Dock</strong>
+                <span>8'4" x 44" platform</span>
+              </div>
+              <div class="addon-check-price">$50</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="x-dock" data-price="50">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>X Dock</strong>
+                <span>5' x 5' floating dock</span>
+              </div>
+              <div class="addon-check-price">$50</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="doggie-dock" data-price="50">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>Doggie Dock</strong>
+                <span>5'4" x 43" with ramp</span>
+              </div>
+              <div class="addon-check-price">$50</div>
+            </label>
+          </div>
+
+          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:4px;">Add-ons</h4>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">Enhance your trip with these extras.</p>
+          <div class="addon-check-grid">
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="cooler" data-price="35">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127866; Cooler Pack</strong>
+                <span>Cooler + ice + drinks</span>
+              </div>
+              <div class="addon-check-price">$35</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="drinks" data-price="15">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#129380; Drink &amp; Ice</strong>
+                <span>6 drinks + bag of ice</span>
+              </div>
+              <div class="addon-check-price">$15</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="snacks" data-price="20">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127839; Snack Pack</strong>
+                <span>Chips, granola, fruit</span>
+              </div>
+              <div class="addon-check-price">$20</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="pup" data-price="15">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#128054; Pup Pack</strong>
+                <span>Treats, bowl, dog vest</span>
+              </div>
+              <div class="addon-check-price">$15</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="speaker" data-price="15">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127925; BT Speaker</strong>
+                <span>Waterproof JBL</span>
+              </div>
+              <div class="addon-check-price">$15</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="gopro" data-price="30">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#128247; GoPro</strong>
+                <span>Waterproof camera</span>
+              </div>
+              <div class="addon-check-price">$30</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="fishing" data-price="25">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#127907; Fishing Gear</strong>
+                <span>Rod, reel, tackle, bait</span>
+              </div>
+              <div class="addon-check-price">$25</div>
+            </label>
+            <label class="addon-check" onclick="toggleAddon(this)">
+              <input type="checkbox" data-addon="sunkit" data-price="10">
+              <div class="addon-check-box">&#10003;</div>
+              <div class="addon-check-info">
+                <strong>&#9728;&#65039; Sun &amp; Safety</strong>
+                <span>Sunscreen, hat, dry bag</span>
+              </div>
+              <div class="addon-check-price">$10</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- STEP 4: CHECKOUT -->
+        <div class="bstep" id="bstep4">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:16px;">Your Booking Summary</h4>
+          <div class="cart-summary" id="cartSummary"></div>
+
+          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:12px;">Your Info</h4>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:10px;">
+              <label>Full Name</label>
+              <input type="text" id="book-name" placeholder="John Smith" required>
+            </div>
+            <div class="form-group" style="margin-bottom:10px;">
+              <label>Phone</label>
+              <input type="tel" id="book-phone" placeholder="(555) 123-4567" required>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label>Email</label>
+            <input type="email" id="book-email" placeholder="john@example.com" required>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Notes (optional)</label>
+            <textarea id="book-notes" placeholder="Special requests, group info, etc." style="min-height:60px;"></textarea>
+          </div>
+        </div>
+
+      </div>
+      <div class="booking-footer">
+        <button class="btn btn-outline" id="bookBack" onclick="bookingNav(-1)" style="display:none;">Back</button>
+        <button class="btn btn-primary" id="bookNext" onclick="bookingNav(1)">Select Date to Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-logo-icon">B</div>
+            <div class="footer-logo-text">Beachside Circle Boats</div>
+          </div>
+          <p>Beachside Circle Boat Rentals and Sales LLC. Eco-friendly circle boat rentals in Orange Beach, Alabama.</p>
+        </div>
+        <div>
+          <h4>Links</h4>
+          <ul>
+            <li><a href="#rentals">Rentals &amp; Pricing</a></li>
+            <li><a href="#how">How It Works</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#rentals">Single Seater Rental</a></li>
+            <li><a href="#rentals">Double Seater Rental</a></li>
+            <li><a href="#docks">Docks</a></li>
+            <li><a href="#addons">Add-ons</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+16013251205">(601) 325-1205</a></li>
+            <li><a href="mailto:beachsideboats@myyahoo.com">beachsideboats@myyahoo.com</a></li>
+            <li><a href="#contact">25856 Canal Road, Unit A</a></li>
+            <li><a href="#contact">Orange Beach, AL 36561</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 Beachside Circle Boat Rentals and Sales LLC. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" title="Facebook">f</a>
+          <a href="#" title="Instagram">ig</a>
+          <a href="#" title="TikTok">tt</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* === NAV === */
+    var navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    function toggleMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var overlay = document.getElementById('mobileOverlay');
+      var isOpen = menu.classList.contains('open');
+      menu.classList.toggle('open', !isOpen);
+      overlay.classList.toggle('visible', !isOpen);
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 76, behavior: 'smooth' });
+        }
+      });
+    });
+
+    /* === CONTACT FORM === */
+    function handleContact(e) {
+      e.preventDefault();
+      var btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = 'Sent!';
+      btn.style.background = '#10b981';
+      btn.style.borderColor = '#10b981';
+      setTimeout(function() {
+        btn.textContent = 'Send Message';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        e.target.reset();
+      }, 3000);
+    }
+
+    /* === FADE-IN ANIMATIONS === */
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-card, .step-card, .feature-card, .addon-card, .gallery-item, .info-card').forEach(function(el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      obs.observe(el);
+    });
+
+    /* ============================================
+       BOOKING SYSTEM
+       ============================================ */
+    var booking = {
+      step: 1,
+      date: null,
+      boat: null,    // 'single' or 'double'
+      slot: null,    // 'am', 'pm', 'all'
+      qty: 1,
+      addons: [],
+      calMonth: new Date().getMonth(),
+      calYear: new Date().getFullYear()
+    };
+
+    var PRICES = {
+      single: { am: 150, pm: 150, all: 225 },
+      double: { am: 200, pm: 200, all: 275 }
+    };
+
+    var GROUP_PRICE = 200; // 5+ singles all day
+
+    var ADDON_NAMES = {
+      'mini-dock': 'Mini Dock',
+      'x-dock': 'X Dock',
+      'doggie-dock': 'Doggie Dock',
+      'cooler': 'Cooler Pack',
+      'drinks': 'Drink & Ice',
+      'snacks': 'Snack Pack',
+      'pup': 'Pup Pack',
+      'speaker': 'BT Speaker',
+      'gopro': 'GoPro Rental',
+      'fishing': 'Fishing Gear',
+      'sunkit': 'Sun & Safety Kit'
+    };
+
+    var SLOT_LABELS = {
+      am: 'Half Day AM (9:00-1:00)',
+      pm: 'Half Day PM (2:00-6:00)',
+      all: 'All Day (9:00-6:00)'
+    };
+
+    /* Open / Close */
+    function openBooking(preselect) {
+      if (preselect) booking.boat = preselect;
+      document.getElementById('bookingOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      goToStep(1);
+      renderCalendar();
+    }
+
+    function closeBooking() {
+      document.getElementById('bookingOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('bookingOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeBooking();
+    });
+
+    /* Calendar */
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function renderCalendar() {
+      var grid = document.getElementById('calGrid');
+      // Remove old day buttons
+      grid.querySelectorAll('.cal-day').forEach(function(d) { d.remove(); });
+
+      var y = booking.calYear, m = booking.calMonth;
+      document.getElementById('calMonthLabel').textContent = MONTHS[m] + ' ' + y;
+
+      var firstDay = new Date(y, m, 1).getDay();
+      var daysInMonth = new Date(y, m + 1, 0).getDate();
+      var today = new Date();
+      today.setHours(0,0,0,0);
+
+      // Empty cells before first day
+      for (var i = 0; i < firstDay; i++) {
+        var empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var btn = document.createElement('button');
+        btn.className = 'cal-day';
+        btn.textContent = d;
+        var cellDate = new Date(y, m, d);
+        if (cellDate < today) {
+          btn.classList.add('disabled');
+        } else {
+          btn.setAttribute('data-date', y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'));
+          btn.addEventListener('click', function() {
+            booking.date = this.getAttribute('data-date');
+            grid.querySelectorAll('.cal-day').forEach(function(c) { c.classList.remove('selected'); });
+            this.classList.add('selected');
+            updateNextBtn();
+          });
+        }
+        // Highlight selected
+        if (booking.date === y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0')) {
+          btn.classList.add('selected');
+        }
+        grid.appendChild(btn);
+      }
+    }
+
+    function calNav(dir) {
+      booking.calMonth += dir;
+      if (booking.calMonth > 11) { booking.calMonth = 0; booking.calYear++; }
+      if (booking.calMonth < 0) { booking.calMonth = 11; booking.calYear--; }
+      renderCalendar();
+    }
+
+    /* Boat Selection */
+    function selectBoat(el) {
+      document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected');
+      booking.boat = el.getAttribute('data-boat');
+      updateSlotPrices();
+      updateNextBtn();
+    }
+
+    function updateSlotPrices() {
+      if (!booking.boat) return;
+      var p = PRICES[booking.boat];
+      document.getElementById('slotAM').textContent = '$' + p.am;
+      document.getElementById('slotPM').textContent = '$' + p.pm;
+      document.getElementById('slotAll').textContent = '$' + p.all;
+    }
+
+    /* Time Slot */
+    function selectSlot(el) {
+      document.querySelectorAll('.slot-btn').forEach(function(s) { s.classList.remove('selected'); });
+      el.classList.add('selected');
+      booking.slot = el.getAttribute('data-slot');
+      updateNextBtn();
+    }
+
+    /* Quantity */
+    function changeQty(delta) {
+      booking.qty = Math.max(1, Math.min(20, booking.qty + delta));
+      document.getElementById('qtyVal').textContent = booking.qty;
+    }
+
+    /* Add-ons */
+    function toggleAddon(el) {
+      var cb = el.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      el.classList.toggle('checked', cb.checked);
+
+      var addon = cb.getAttribute('data-addon');
+      var price = parseInt(cb.getAttribute('data-price'));
+
+      if (cb.checked) {
+        booking.addons.push({ id: addon, price: price });
+      } else {
+        booking.addons = booking.addons.filter(function(a) { return a.id !== addon; });
+      }
+    }
+
+    /* Step Navigation */
+    function goToStep(n) {
+      booking.step = n;
+      document.querySelectorAll('.bstep').forEach(function(s) { s.classList.remove('active'); });
+      document.getElementById('bstep' + n).classList.add('active');
+
+      document.querySelectorAll('.bstep-tab').forEach(function(t, i) {
+        t.classList.remove('active', 'done');
+        if (i + 1 === n) t.classList.add('active');
+        if (i + 1 < n) t.classList.add('done');
+      });
+
+      document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
+
+      // Pre-select boat if already chosen
+      if (n === 2 && booking.boat) {
+        var opt = document.querySelector('.boat-option[data-boat="' + booking.boat + '"]');
+        if (opt && !opt.classList.contains('selected')) {
+          document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
+          opt.classList.add('selected');
+        }
+        updateSlotPrices();
+      }
+
+      // Build cart on step 4
+      if (n === 4) buildCart();
+
+      updateNextBtn();
+    }
+
+    function bookingNav(dir) {
+      var next = booking.step + dir;
+      if (next < 1) return;
+
+      if (dir > 0) {
+        // Validation
+        if (booking.step === 1 && !booking.date) return;
+        if (booking.step === 2 && (!booking.boat || !booking.slot)) return;
+        if (booking.step === 4) {
+          submitBooking();
+          return;
+        }
+      }
+
+      if (next >= 1 && next <= 4) goToStep(next);
+    }
+
+    function updateNextBtn() {
+      var btn = document.getElementById('bookNext');
+      var s = booking.step;
+
+      if (s === 1) {
+        btn.textContent = booking.date ? 'Continue' : 'Select a Date';
+        btn.style.opacity = booking.date ? '1' : '0.5';
+      } else if (s === 2) {
+        var ready = booking.boat && booking.slot;
+        btn.textContent = ready ? 'Continue' : 'Select Boat & Time';
+        btn.style.opacity = ready ? '1' : '0.5';
+      } else if (s === 3) {
+        btn.textContent = 'Review & Checkout';
+        btn.style.opacity = '1';
+      } else if (s === 4) {
+        btn.textContent = 'Confirm Booking';
+        btn.style.opacity = '1';
+      }
+    }
+
+    /* Cart */
+    function getBoatTotal() {
+      if (!booking.boat || !booking.slot) return 0;
+      var unit = PRICES[booking.boat][booking.slot];
+      // Group rate: 5+ singles all day
+      if (booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5) {
+        unit = GROUP_PRICE;
+      }
+      return unit * booking.qty;
+    }
+
+    function getAddonsTotal() {
+      var sum = 0;
+      booking.addons.forEach(function(a) { sum += a.price; });
+      return sum;
+    }
+
+    function buildCart() {
+      var html = '';
+      var dateParts = booking.date ? booking.date.split('-') : [];
+      var dateStr = dateParts.length === 3 ? MONTHS[parseInt(dateParts[1])-1] + ' ' + parseInt(dateParts[2]) + ', ' + dateParts[0] : '';
+
+      html += '<div class="cart-line"><span class="cart-label">Date</span><span class="cart-amount">' + dateStr + '</span></div>';
+
+      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
+      var unitPrice = PRICES[booking.boat][booking.slot];
+      var isGroup = booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5;
+      if (isGroup) unitPrice = GROUP_PRICE;
+
+      html += '<div class="cart-line"><span class="cart-label">' + boatName + ' x' + booking.qty + '</span><span class="cart-amount">$' + (unitPrice * booking.qty) + '</span></div>';
+      html += '<div class="cart-line"><span class="cart-label">' + SLOT_LABELS[booking.slot] + '</span><span class="cart-amount">$' + unitPrice + '/ea</span></div>';
+
+      if (isGroup) {
+        html += '<div class="cart-line"><span class="cart-label" style="color:var(--teal);font-weight:600;">Group Rate Applied!</span><span class="cart-amount" style="color:var(--teal);">Save $' + (225 - GROUP_PRICE) * booking.qty + '</span></div>';
+      }
+
+      booking.addons.forEach(function(a) {
+        html += '<div class="cart-line"><span class="cart-label">' + (ADDON_NAMES[a.id] || a.id) + '</span><span class="cart-amount">$' + a.price + '</span></div>';
+      });
+
+      var total = getBoatTotal() + getAddonsTotal();
+      html += '<div class="cart-line total"><span class="cart-label">Total</span><span class="cart-amount">$' + total + '</span></div>';
+
+      document.getElementById('cartSummary').innerHTML = html;
+    }
+
+    /* Submit */
+    function submitBooking() {
+      var name = document.getElementById('book-name').value.trim();
+      var phone = document.getElementById('book-phone').value.trim();
+      var email = document.getElementById('book-email').value.trim();
+
+      if (!name || !email) {
+        alert('Please fill in your name and email.');
+        return;
+      }
+
+      var btn = document.getElementById('bookNext');
+      btn.textContent = 'Booking Confirmed!';
+      btn.style.background = '#10b981';
+      btn.style.borderColor = '#10b981';
+
+      setTimeout(function() {
+        closeBooking();
+        // Reset
+        booking.date = null;
+        booking.boat = null;
+        booking.slot = null;
+        booking.qty = 1;
+        booking.addons = [];
+        document.getElementById('qtyVal').textContent = '1';
+        document.querySelectorAll('.boat-option, .slot-btn').forEach(function(e) { e.classList.remove('selected'); });
+        document.querySelectorAll('.addon-check').forEach(function(e) { e.classList.remove('checked'); e.querySelector('input').checked = false; });
+        document.getElementById('book-name').value = '';
+        document.getElementById('book-phone').value = '';
+        document.getElementById('book-email').value = '';
+        document.getElementById('book-notes').value = '';
+        btn.textContent = 'Confirm Booking';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
