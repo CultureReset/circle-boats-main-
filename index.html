@@ -3610,7 +3610,7 @@
       if (!_stripe && !_stripePkFetched) {
         _stripePkFetched = true;
         // Fetch publishable key from platform API
-        fetch('/api/stripe/publishable-key')
+        fetch(API_BASE + '/api/stripe/publishable-key')
           .then(function(r) { return r.json(); })
           .then(function(data) {
             var pk = data.publishableKey || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
@@ -3808,7 +3808,7 @@
             }
 
             // Now create PaymentIntent via backend (Stripe Connect: money goes to business, platform takes fee)
-            fetch('/api/stripe/create-payment-intent', {
+            fetch(API_BASE + '/api/stripe/create-payment-intent', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
