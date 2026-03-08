@@ -3559,6 +3559,7 @@
       }
       html += '<div class="cart-line"><span class="cart-label">Date</span><span class="cart-amount">' + dateStr + '</span></div>';
 
+      if (!booking.boat || !PRICES[booking.boat] || !booking.slot) return;
       var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
       var unitPrice = PRICES[booking.boat][booking.slot];
       var isGroup = booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5;
@@ -3615,7 +3616,7 @@
       if (!_stripe && !_stripePkFetched) {
         _stripePkFetched = true;
         // Fetch publishable key from platform API
-        fetch(API_BASE + '/api/stripe/publishable-key')
+        fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/stripe/publishable-key')
           .then(function(r) { return r.json(); })
           .then(function(data) {
             var pk = data.publishableKey || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
@@ -4331,6 +4332,9 @@
     // In dev, point to backend server
     var API_BASE = 'https://cybercheck-api-database.vercel.app';
     var SUBDOMAIN = 'beachside-circle-boats';
+    // Expose globally so booking JS (outside this IIFE) can access it
+    window.API_BASE = API_BASE;
+    window.SUBDOMAIN = SUBDOMAIN;
 
     function api(path) {
       var sep = path.indexOf('?') > -1 ? '&' : '?';
