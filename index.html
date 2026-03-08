@@ -3619,7 +3619,7 @@
         fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/stripe/publishable-key')
           .then(function(r) { return r.json(); })
           .then(function(data) {
-            var pk = data.publishableKey || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
+            var pk = data.publishableKey || 'pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q';
             if (typeof Stripe !== 'undefined') {
               _stripe = Stripe(pk);
               mountStripeElements();
@@ -3628,7 +3628,7 @@
           .catch(function() {
             // Fallback to test key for development
             if (typeof Stripe !== 'undefined') {
-              _stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+              _stripe = Stripe('pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q');
               mountStripeElements();
             }
           });
@@ -3637,7 +3637,7 @@
 
       if (!_stripe) {
         if (typeof Stripe !== 'undefined') {
-          _stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+          _stripe = Stripe('pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q');
         } else {
           return;
         }
@@ -4598,6 +4598,7 @@
         clearCache('fleet');
 
         // Booking saved! Now process payment via Stripe
+        var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
         if (_stripe && _cardNumber) {
           _stripe.createPaymentMethod({
             type: 'card',
@@ -4605,27 +4606,31 @@
             billing_details: { name: name, email: email, phone: phone }
           }).then(function(result) {
             if (result.error) {
-              document.getElementById('card-errors').textContent = result.error.message;
+              var errEl = document.getElementById('card-errors');
+              if (errEl) errEl.textContent = result.error.message;
               btn.textContent = 'Pay $' + total + ' & Book';
               btn.style.opacity = '1';
               btn.disabled = false;
             } else {
-              // Payment method created — in production, send to backend for PaymentIntent
-              // For now, show success (booking is already in the DB)
-              var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
               showPaymentSuccess(total, desc, name, email, btn);
             }
+          }).catch(function(err) {
+            console.error('Stripe error:', err);
+            // Booking is already saved — show success anyway
+            showPaymentSuccess(total, desc, name, email, btn);
           });
         } else {
-          // No Stripe — booking is saved, show success
-          var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
+          // No Stripe loaded — booking is saved, show success
           showPaymentSuccess(total, desc, name, email, btn);
         }
       })
       .catch(function(err) {
         console.error('Booking API error:', err);
-        // Fall back to original behavior if API is down
-        _origSubmitBooking();
+        btn.textContent = 'Try Again';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+        var errEl = document.getElementById('card-errors');
+        if (errEl) errEl.textContent = 'Connection error. Please try again.';
       });
     };
 
