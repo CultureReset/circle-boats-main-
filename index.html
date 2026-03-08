@@ -4597,32 +4597,9 @@
         clearCache('avail_' + booking.date);
         clearCache('fleet');
 
-        // Booking saved! Now process payment via Stripe
+        // Booking saved to database — show confirmation
         var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
-        if (_stripe && _cardNumber) {
-          _stripe.createPaymentMethod({
-            type: 'card',
-            card: _cardNumber,
-            billing_details: { name: name, email: email, phone: phone }
-          }).then(function(result) {
-            if (result.error) {
-              var errEl = document.getElementById('card-errors');
-              if (errEl) errEl.textContent = result.error.message;
-              btn.textContent = 'Pay $' + total + ' & Book';
-              btn.style.opacity = '1';
-              btn.disabled = false;
-            } else {
-              showPaymentSuccess(total, desc, name, email, btn);
-            }
-          }).catch(function(err) {
-            console.error('Stripe error:', err);
-            // Booking is already saved — show success anyway
-            showPaymentSuccess(total, desc, name, email, btn);
-          });
-        } else {
-          // No Stripe loaded — booking is saved, show success
-          showPaymentSuccess(total, desc, name, email, btn);
-        }
+        showPaymentSuccess(total, desc, name, email, btn);
       })
       .catch(function(err) {
         console.error('Booking API error:', err);
