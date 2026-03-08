@@ -3223,6 +3223,7 @@
     };
 
     var GROUP_PRICE = 200; // 5+ singles all day
+    var TAX_RATE = 0.10; // Orange Beach, AL: 4% state + 6% local = 10%
 
     var ADDON_NAMES = {
       'mini-dock': 'Mini Dock',
@@ -3574,8 +3575,12 @@
         html += '<div class="cart-line"><span class="cart-label">' + (ADDON_NAMES[a.id] || a.id) + '</span><span class="cart-amount">$' + a.price + '</span></div>';
       });
 
-      var total = getBoatTotal() + getAddonsTotal();
-      html += '<div class="cart-line total"><span class="cart-label">Total</span><span class="cart-amount">$' + total + '</span></div>';
+      var subtotal = getBoatTotal() + getAddonsTotal();
+      var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+      var total = subtotal + tax;
+      html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Subtotal</span><span class="cart-amount" style="color:var(--gray);">$' + subtotal + '</span></div>';
+      html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Tax (10%)</span><span class="cart-amount" style="color:var(--gray);">$' + tax.toFixed(2) + '</span></div>';
+      html += '<div class="cart-line total"><span class="cart-label">Total</span><span class="cart-amount">$' + total.toFixed(2) + '</span></div>';
 
       document.getElementById('cartSummary').innerHTML = html;
     }
@@ -3689,7 +3694,9 @@
       }
 
       var btn = document.getElementById('bookNext');
-      var total = getBoatTotal() + getAddonsTotal();
+      var subtotal = getBoatTotal() + getAddonsTotal();
+      var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+      var total = Math.round((subtotal + tax) * 100) / 100;
 
       var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
       var slotLabel = SLOT_LABELS[booking.slot] || booking.slot;
@@ -3783,7 +3790,8 @@
             location_name: booking.locationName || null,
             qty: booking.qty,
             addons: booking.addons.map(function(a) { return { name: a.name || a, price: a.price || 0 }; }),
-            subtotal: total,
+            subtotal: subtotal,
+            tax: tax,
             total: total,
             customer_name: name,
             customer_phone: phone,
