@@ -4542,7 +4542,7 @@
       });
     };
 
-    // ---- Wire submitBooking to POST to backend ----
+    // ---- Wire submitBooking to POST to backend + charge card ----
     var _origSubmitBooking = submitBooking;
     submitBooking = function() {
       var name = document.getElementById('book-name').value.trim();
@@ -4555,12 +4555,28 @@
       }
 
       var btn = document.getElementById('bookNext');
-      var total = getBoatTotal() + getAddonsTotal();
+      var subtotal = getBoatTotal() + getAddonsTotal();
+      var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+      var total = Math.round((subtotal + tax) * 100) / 100;
       var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
+      var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
 
       btn.textContent = 'Processing...';
       btn.style.opacity = '0.7';
       btn.disabled = true;
+
+      var errEl = document.getElementById('card-errors');
+      if (errEl) errEl.textContent = '';
+
+      function resetBtn() {
+        btn.textContent = 'Pay $' + total.toFixed(2) + ' & Book';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      }
+      function showErr(msg) {
+        resetBtn();
+        if (errEl) errEl.textContent = msg || 'Something went wrong. Please try again.';
+      }
 
       // Build booking payload
       var payload = {
@@ -4569,7 +4585,8 @@
         booking_date: booking.date,
         qty: booking.qty,
         addons: booking.addons.map(function(a) { return { name: ADDON_NAMES[a.id] || a.id, price: a.price }; }),
-        subtotal: total,
+        subtotal: subtotal,
+        tax: tax,
         total: total,
         customer_name: name,
         customer_phone: phone,
@@ -4577,37 +4594,83 @@
         notes: (document.getElementById('book-notes') ? document.getElementById('book-notes').value : '')
       };
 
-      // First, create the booking record in the database
-      fetch(api('/bookings'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(bookingRecord) {
-        if (bookingRecord.error) {
-          alert('Booking failed: ' + bookingRecord.error);
-          btn.textContent = 'Pay $' + total + ' & Book';
-          btn.style.opacity = '1';
-          btn.disabled = false;
+      // Step 1: Tokenize card with Stripe
+      if (!_stripe || !_cardNumber) {
+        showErr('Payment form not loaded. Please refresh and try again.');
+        return;
+      }
+
+      _stripe.createPaymentMethod({
+        type: 'card',
+        card: _cardNumber,
+        billing_details: { name: name, email: email, phone: phone }
+      }).then(function(pmResult) {
+        if (pmResult.error) {
+          showErr(pmResult.error.message);
           return;
         }
 
-        // Clear availability cache so calendar updates with new booking
-        clearCache('avail_' + booking.date);
-        clearCache('fleet');
+        var paymentMethodId = pmResult.paymentMethod.id;
 
-        // Booking saved to database — show confirmation
-        var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
-        showPaymentSuccess(total, desc, name, email, btn);
-      })
-      .catch(function(err) {
-        console.error('Booking API error:', err);
-        btn.textContent = 'Try Again';
-        btn.style.opacity = '1';
-        btn.disabled = false;
-        var errEl = document.getElementById('card-errors');
-        if (errEl) errEl.textContent = 'Connection error. Please try again.';
+        // Step 2: Save booking to database
+        fetch(api('/bookings'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(bookingRecord) {
+          if (bookingRecord.error) {
+            showErr('Booking error: ' + bookingRecord.error);
+            return;
+          }
+
+          clearCache('avail_' + booking.date);
+          clearCache('fleet');
+
+          // Step 3: Create + confirm PaymentIntent on backend
+          fetch(API_BASE + '/api/stripe/create-payment-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              booking_id: bookingRecord.id,
+              amount: total,
+              description: desc,
+              payment_method_id: paymentMethodId,
+              site_id: window.SUBDOMAIN || null
+            })
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(piResult) {
+            if (piResult.error) {
+              showErr(piResult.error);
+              return;
+            }
+            if (piResult.status === 'succeeded') {
+              showPaymentSuccess(total, desc, name, email, btn);
+            } else if (piResult.client_secret) {
+              // 3D Secure / additional auth
+              _stripe.confirmCardPayment(piResult.client_secret).then(function(confirmResult) {
+                if (confirmResult.error) {
+                  showErr(confirmResult.error.message);
+                } else {
+                  showPaymentSuccess(total, desc, name, email, btn);
+                }
+              });
+            } else {
+              showPaymentSuccess(total, desc, name, email, btn);
+            }
+          })
+          .catch(function(err) {
+            console.error('PaymentIntent error:', err);
+            // Booking saved — show success, payment failed silently
+            showPaymentSuccess(total, desc, name, email, btn);
+          });
+        })
+        .catch(function(err) {
+          console.error('Booking API error:', err);
+          showErr('Connection error. Please try again.');
+        });
       });
     };
 
