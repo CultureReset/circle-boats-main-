@@ -3710,56 +3710,6 @@
       btn.style.opacity = '0.7';
       btn.disabled = true;
 
-      // Send booking to API
-      var bookingData = {
-        boat: booking.boat,
-        date: booking.date,
-        duration: booking.slot,
-        qty: booking.qty,
-        addons: booking.addons,
-        location: { id: booking.location, name: booking.locationName },
-        customer: {
-          name: name,
-          email: email,
-          phone: phone,
-          notes: notes
-        },
-        payment: {
-          amount: total,
-          currency: 'USD'
-        }
-      };
-
-      fetch('https://cybercheck-api-database.vercel.app/api/public/booking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bookingData)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert('Booking confirmed! Booking ID: ' + data.booking_id);
-          closeBooking();
-          resetBookingState();
-          btn.textContent = 'Complete Booking';
-          btn.style.opacity = '1';
-          btn.disabled = false;
-        } else {
-          alert('Booking error: ' + (data.error || 'Unknown error'));
-          btn.textContent = 'Complete Booking';
-          btn.style.opacity = '1';
-          btn.disabled = false;
-        }
-      })
-      .catch(err => {
-        console.error('Booking error:', err);
-        alert('Error submitting booking. Please try again.');
-        btn.textContent = 'Complete Booking';
-        btn.style.opacity = '1';
-        btn.disabled = false;
-      });
-      return;
-
       if (_stripe && _cardNumber) {
         // Create a payment method from the card element
         _stripe.createPaymentMethod({

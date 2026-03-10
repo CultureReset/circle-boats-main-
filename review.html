@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave a Review</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #00ada8 0%, #0088cc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .review-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .review-header h1 {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .review-header p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .booking-info {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 28px;
+            border-left: 4px solid #00ada8;
+        }
+
+        .booking-info h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .booking-detail {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .booking-detail-label {
+            color: #6b7280;
+        }
+
+        .booking-detail-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .form-section {
+            margin-bottom: 28px;
+        }
+
+        .form-section label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .form-section p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .stars {
+            display: flex;
+            gap: 12px;
+            font-size: 28px;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #d1d5db;
+            transition: all 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #f59e0b;
+            transform: scale(1.2);
+        }
+
+        .review-method-toggle {
+            display: flex;
+            gap: 8px;
+            background: #f3f4f6;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .method-btn.active {
+            background: white;
+            color: #00ada8;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00ada8;
+            box-shadow: 0 0 0 3px rgba(0,173,168,0.1);
+        }
+
+        .voice-recorder {
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .voice-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 5px;
+        }
+
+        .voice-btn:hover {
+            background: #dc2626;
+        }
+
+        .voice-btn.recording {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .question-group {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .question-group label {
+            margin-bottom: 10px;
+        }
+
+        .photo-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .photo-upload:hover {
+            border-color: #00ada8;
+            background: rgba(0,173,168,0.05);
+        }
+
+        .photo-upload input {
+            display: none;
+        }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .photo-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f3f4f6;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .submit-section {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #00ada8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #00897b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,173,168,0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .error-msg {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .success-msg {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .review-container {
+                padding: 24px;
+            }
+
+            .review-header h1 {
+                font-size: 22px;
+            }
+
+            .stars {
+                font-size: 24px;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="review-container">
+        <div class="review-header">
+            <h1>📝 Leave a Review</h1>
+            <p>Share your experience and help other customers decide</p>
+        </div>
+
+        <div id="error-container"></div>
+        <div id="success-container"></div>
+
+        <!-- Booking Info -->
+        <div class="booking-info" id="booking-info" style="display:none;">
+            <h3>Your Experience</h3>
+            <div class="booking-detail">
+                <span class="booking-detail-label">Service:</span>
+                <span class="booking-detail-value" id="booking-service">—</span>
+            </div>
+            <div class="booking-detail">
+                <span class="booking-detail-label">Date:</span>
+                <span class="booking-detail-value" id="booking-date">—</span>
+            </div>
+            <div class="booking-detail">
+                <span class="booking-detail-label">Guests:</span>
+                <span class="booking-detail-value" id="booking-guests">—</span>
+            </div>
+        </div>
+
+        <form id="review-form">
+            <!-- Rating -->
+            <div class="form-section">
+                <label>How would you rate your experience?</label>
+                <div class="stars" id="rating-stars">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+                <input type="hidden" id="rating-input" name="rating" value="0">
+            </div>
+
+            <!-- Review Text/Voice Toggle -->
+            <div class="form-section">
+                <label>Tell us about your experience</label>
+                <div class="review-method-toggle">
+                    <button type="button" class="method-btn active" data-method="text">✎ Write</button>
+                    <button type="button" class="method-btn" data-method="voice">🎤 Speak</button>
+                </div>
+
+                <!-- Text Review -->
+                <div id="text-method" class="review-method">
+                    <textarea id="review-text" name="review_text" placeholder="Share what you loved, what could be improved, or any special moments from your experience..."></textarea>
+                </div>
+
+                <!-- Voice Review -->
+                <div id="voice-method" class="review-method" style="display:none;">
+                    <div class="voice-recorder">
+                        <p style="margin-bottom: 15px; font-size: 14px; color: #6b7280;">Click to start recording. Speak naturally — we'll transcribe it.</p>
+                        <button type="button" class="voice-btn" id="voice-record-btn">🔴 Start Recording</button>
+                        <button type="button" class="voice-btn" id="voice-stop-btn" style="display:none;">⏹ Stop Recording</button>
+                        <div id="voice-transcript" style="margin-top: 15px; padding: 12px; background: white; border-radius: 6px; display: none; text-align: left; font-size: 14px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Questions (loaded dynamically) -->
+            <div id="custom-questions"></div>
+
+            <!-- Photo Upload -->
+            <div class="form-section">
+                <label>Add photos (optional)</label>
+                <p>Photos help other customers see your experience</p>
+                <div class="photo-upload" id="photo-upload">
+                    <div>📸 Click to upload photos or drag & drop</div>
+                    <input type="file" id="photo-input" multiple accept="image/*">
+                </div>
+                <div class="photo-preview" id="photo-preview"></div>
+            </div>
+
+            <!-- Submit -->
+            <div class="submit-section">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const API_BASE = window.API_BASE || 'https://cybercheck-api-database.vercel.app';
+        let currentRating = 0;
+        let currentMethod = 'text';
+        let voiceRecorder = null;
+        let uploadedPhotos = [];
+
+        // Get token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const reviewToken = urlParams.get('token');
+
+        if (!reviewToken) {
+            showError('Invalid review link. Please use the link from your email or SMS.');
+        }
+
+        // ─── Load Review & Booking Info ───
+        async function loadReviewInfo() {
+            try {
+                const res = await fetch(`${API_BASE}/api/public/reviews?token=${reviewToken}`);
+                if (!res.ok) throw new Error('Invalid or expired review link');
+
+                const data = await res.json();
+                if (data.booking) {
+                    document.getElementById('booking-info').style.display = 'block';
+                    document.getElementById('booking-service').textContent = data.booking.service || '—';
+                    document.getElementById('booking-date').textContent = new Date(data.booking.date).toLocaleDateString();
+                    document.getElementById('booking-guests').textContent = data.booking.guests || '—';
+                }
+
+                // Load custom questions
+                if (data.questions) {
+                    renderCustomQuestions(data.questions);
+                }
+            } catch (err) {
+                showError('Unable to load review. ' + err.message);
+            }
+        }
+
+        // ─── Star Rating ───
+        document.querySelectorAll('#rating-stars .star').forEach(star => {
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.dataset.rating);
+                document.getElementById('rating-input').value = currentRating;
+                document.querySelectorAll('#rating-stars .star').forEach((s, idx) => {
+                    s.classList.toggle('active', idx + 1 <= currentRating);
+                });
+            });
+        });
+
+        // ─── Review Method Toggle ───
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentMethod = btn.dataset.method;
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.review-method').forEach(m => m.style.display = 'none');
+                document.getElementById(currentMethod + '-method').style.display = 'block';
+            });
+        });
+
+        // ─── Voice Recording ───
+        document.getElementById('voice-record-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            startVoiceRecording();
+        });
+
+        document.getElementById('voice-stop-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            stopVoiceRecording();
+        });
+
+        async function startVoiceRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const mediaRecorder = new MediaRecorder(stream);
+                const chunks = [];
+
+                mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'audio/webm' });
+                    transcribeVoice(blob);
+                };
+
+                mediaRecorder.start();
+                voiceRecorder = mediaRecorder;
+
+                document.getElementById('voice-record-btn').style.display = 'none';
+                document.getElementById('voice-stop-btn').style.display = 'inline-flex';
+            } catch (err) {
+                showError('Microphone access denied. Please use text review instead.');
+            }
+        }
+
+        function stopVoiceRecording() {
+            voiceRecorder.stop();
+            document.getElementById('voice-record-btn').style.display = 'inline-flex';
+            document.getElementById('voice-stop-btn').style.display = 'none';
+        }
+
+        async function transcribeVoice(blob) {
+            // In production: send to Groq Whisper API or ElevenLabs
+            // For now: placeholder
+            const transcript = "Your voice review will be transcribed here...";
+            document.getElementById('voice-transcript').textContent = transcript;
+            document.getElementById('voice-transcript').style.display = 'block';
+        }
+
+        // ─── Custom Questions ───
+        function renderCustomQuestions(questions) {
+            const container = document.getElementById('custom-questions');
+            if (!questions || questions.length === 0) return;
+
+            let html = '';
+            questions.forEach(q => {
+                html += `<div class="question-group">`;
+                html += `<label>${q.question_text}</label>`;
+
+                if (q.question_type === 'stars') {
+                    html += `<div class="stars" data-question="${q.id}">`;
+                    for (let i = 1; i <= 5; i++) {
+                        html += `<span class="star" data-rating="${i}">★</span>`;
+                    }
+                    html += `</div>`;
+                } else if (q.question_type === 'yesno') {
+                    html += `<div style="display:flex;gap:8px;">
+                        <button type="button" class="btn btn-outline" data-question="${q.id}" data-answer="yes" style="flex:1;padding:8px;border:1px solid #d1d5db;">Yes</button>
+                        <button type="button" class="btn btn-outline" data-question="${q.id}" data-answer="no" style="flex:1;padding:8px;border:1px solid #d1d5db;">No</button>
+                    </div>`;
+                } else if (q.question_type === 'text') {
+                    html += `<textarea data-question="${q.id}" style="width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;min-height:60px;"></textarea>`;
+                }
+
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+
+            // Add event listeners for question answers
+            document.querySelectorAll('[data-question]').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('star')) {
+                        const rating = e.target.dataset.rating;
+                        document.querySelectorAll(`[data-question="${el.dataset.question}"] .star`).forEach((s, idx) => {
+                            s.classList.toggle('active', idx + 1 <= rating);
+                        });
+                    }
+                });
+            });
+        }
+
+        // ─── Photo Upload ───
+        document.getElementById('photo-upload').addEventListener('click', () => {
+            document.getElementById('photo-input').click();
+        });
+
+        document.getElementById('photo-input').addEventListener('change', (e) => {
+            uploadedPhotos = Array.from(e.target.files);
+            renderPhotoPreview();
+        });
+
+        function renderPhotoPreview() {
+            const preview = document.getElementById('photo-preview');
+            preview.innerHTML = uploadedPhotos.map((file, idx) => {
+                const url = URL.createObjectURL(file);
+                return `<div class="photo-item">
+                    <img src="${url}" alt="Photo">
+                    <button type="button" class="photo-remove" onclick="removePhoto(${idx})">✕</button>
+                </div>`;
+            }).join('');
+        }
+
+        function removePhoto(idx) {
+            uploadedPhotos.splice(idx, 1);
+            renderPhotoPreview();
+        }
+
+        // ─── Submit Review ───
+        document.getElementById('review-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentRating) {
+                showError('Please select a rating');
+                return;
+            }
+
+            if (currentMethod === 'text' && !document.getElementById('review-text').value.trim()) {
+                showError('Please write a review or switch to voice');
+                return;
+            }
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.classList.add('loading');
+            btn.textContent = 'Submitting...';
+
+            try {
+                const formData = new FormData();
+                formData.append('token', reviewToken);
+                formData.append('rating', currentRating);
+                formData.append('review_text', currentMethod === 'text' ? document.getElementById('review-text').value : 'Voice review');
+                formData.append('review_method', currentMethod);
+
+                uploadedPhotos.forEach(photo => {
+                    formData.append('photos', photo);
+                });
+
+                // Add custom question answers
+                document.querySelectorAll('[data-question]').forEach(el => {
+                    const qId = el.dataset.question;
+                    let answer = '';
+                    if (el.classList.contains('star')) {
+                        answer = document.querySelectorAll(`[data-question="${qId}"] .star.active`).length;
+                    } else if (el.dataset.answer) {
+                        answer = el.dataset.answer;
+                    } else if (el.tagName === 'TEXTAREA') {
+                        answer = el.value;
+                    }
+                    if (answer) formData.append(`question_${qId}`, answer);
+                });
+
+                const res = await fetch(`${API_BASE}/api/public/review`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) throw new Error('Failed to submit review');
+
+                showSuccess('Thank you! Your review has been submitted. 🎉');
+                setTimeout(() => window.location.href = '/', 2000);
+            } catch (err) {
+                showError('Error submitting review: ' + err.message);
+            } finally {
+                btn.classList.remove('loading');
+                btn.textContent = 'Submit Review';
+            }
+        });
+
+        // ─── Utilities ───
+        function showError(msg) {
+            const container = document.getElementById('error-container');
+            container.innerHTML = `<div class="error-msg">${msg}</div>`;
+        }
+
+        function showSuccess(msg) {
+            const container = document.getElementById('success-container');
+            container.innerHTML = `<div class="success-msg">${msg}</div>`;
+        }
+
+        // Load on page load
+        loadReviewInfo();
+    </script>
+</body>
+</html>
