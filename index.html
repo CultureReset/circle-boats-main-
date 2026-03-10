@@ -3152,7 +3152,7 @@
       };
 
       // Send to API
-      fetch('http://localhost:3001/api/contact', {
+      fetch('https://cybercheck-api-database.vercel.app/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(contactData)
@@ -3730,7 +3730,7 @@
         }
       };
 
-      fetch('http://localhost:3001/api/booking', {
+      fetch('https://cybercheck-api-database.vercel.app/api/public/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookingData)
@@ -3902,27 +3902,37 @@
     function showPaymentSuccess(total, desc, name, email, btn) {
       // Hold was converted to a booking — clear it so closeBooking doesn't try to release
       booking.holdId = null;
-      // Replace the checkout step with a success message
-      var step4 = document.getElementById('bstep4');
-      step4.innerHTML = '<div style="text-align:center;padding:32px 0;">' +
-        '<div style="width:64px;height:64px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">' +
-        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' +
-        '</div>' +
-        '<h3 style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Booking Confirmed!</h3>' +
-        '<p style="color:#666;font-size:14px;margin-bottom:4px;">Payment of <strong>$' + total + '</strong> processed successfully</p>' +
-        '<p style="color:#999;font-size:13px;margin-bottom:4px;">' + desc + '</p>' +
-        '<p style="color:#999;font-size:13px;">Confirmation sent to <strong>' + email + '</strong></p>' +
-        '<div style="margin-top:24px;padding:16px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">' +
-        '<p style="color:#166534;font-size:13px;margin:0;">A confirmation text has been sent to your phone. Check your email for booking details and waiver form.</p>' +
-        '</div>' +
+
+      // Full-screen confirmation overlay
+      var overlay = document.createElement('div');
+      overlay.id = 'payment-success-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeInOverlay 0.3s ease;';
+
+      overlay.innerHTML =
+        '<div style="background:#fff;border-radius:20px;padding:48px 36px;max-width:420px;width:100%;text-align:center;animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);">' +
+          '<div style="width:80px;height:80px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
+            '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</div>' +
+          '<h2 style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:8px;">Booking Confirmed!</h2>' +
+          '<p style="color:#10b981;font-size:16px;font-weight:600;margin-bottom:4px;">$' + total + ' paid successfully</p>' +
+          '<p style="color:#666;font-size:14px;margin-bottom:4px;">' + desc + '</p>' +
+          '<p style="color:#999;font-size:13px;margin-bottom:24px;">Confirmation sent to <strong>' + email + '</strong></p>' +
+          '<div style="padding:14px 16px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;margin-bottom:28px;">' +
+            '<p style="color:#166534;font-size:13px;margin:0;line-height:1.5;">📱 A confirmation text has been sent to your phone.<br>Check your email for booking details and waiver.</p>' +
+          '</div>' +
+          '<button onclick="document.getElementById(\'payment-success-overlay\').remove();closeBooking();resetBookingState();" ' +
+            'style="background:#10b981;color:#fff;border:none;border-radius:10px;padding:14px 40px;font-size:15px;font-weight:700;cursor:pointer;width:100%;">Done</button>' +
         '</div>';
 
-      btn.textContent = 'Done';
-      btn.style.background = '#10b981';
-      btn.style.borderColor = '#10b981';
-      btn.style.opacity = '1';
-      btn.disabled = false;
-      btn.onclick = function() { closeBooking(); resetBookingState(); btn.onclick = function() { bookingNav(1); }; };
+      // Inject keyframe animations once
+      if (!document.getElementById('success-anim-styles')) {
+        var style = document.createElement('style');
+        style.id = 'success-anim-styles';
+        style.textContent = '@keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}';
+        document.head.appendChild(style);
+      }
+
+      document.body.appendChild(overlay);
     }
 
     function resetBookingState() {
