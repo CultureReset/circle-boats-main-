@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waiver & Release | Beachside Circle Boats</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #00ada8;
+      --teal-dark: #009590;
+      --black: #1a1a1a;
+      --gray: #666;
+      --border: #e8e8e8;
+      --bg: #fafafa;
+      --error: #e74c3c;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+    header {
+      background: var(--teal);
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h1 { font-size: 36px; margin-bottom: 8px; }
+
+    .waiver-form {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .waiver-content {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .waiver-content h3 {
+      font-size: 16px;
+      margin: 16px 0 8px;
+      font-weight: 700;
+    }
+
+    .waiver-content p {
+      margin-bottom: 12px;
+    }
+
+    .waiver-content ul {
+      margin-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .waiver-content li {
+      margin-bottom: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0, 173, 168, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .canvas-container {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: white;
+      margin-bottom: 12px;
+    }
+
+    #signatureCanvas {
+      display: block;
+      cursor: crosshair;
+      width: 100%;
+      height: 150px;
+      background: white;
+    }
+
+    .signature-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 173, 168, 0.05);
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-label {
+      font-size: 14px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .error-message {
+      background: #fadbd8;
+      border: 1px solid #f5b7b1;
+      color: var(--error);
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .success-message {
+      background: #d5f4e6;
+      border: 1px solid #abebc6;
+      color: #27ae60;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .form-row, .form-actions {
+        grid-template-columns: 1fr;
+      }
+      .waiver-form {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Release of Liability Waiver</h1>
+      <p style="font-size: 16px; opacity: 0.9;">Please read and sign</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <form class="waiver-form" id="waiverForm">
+      <div id="error-message" class="error-message" style="display: none;"></div>
+
+      <!-- Waiver Content -->
+      <div class="waiver-content">
+        <h3>RELEASE OF LIABILITY & INDEMNIFICATION AGREEMENT</h3>
+
+        <p>
+          <strong>BEACHSIDE CIRCLE BOATS</strong> and its owners, operators, employees, and agents ("Released Parties")
+          are not responsible for injury, death, or property damage arising from the rental and use of watercraft.
+        </p>
+
+        <h3>Participant Acknowledgments:</h3>
+        <ul>
+          <li>I understand the inherent risks involved in water activities including but not limited to: drowning, hypothermia, equipment failure, and collision.</li>
+          <li>I acknowledge that I am physically capable of participating in this activity.</li>
+          <li>I am aware of and will follow all provided safety instructions.</li>
+          <li>I will wear all required safety equipment (life jackets).</li>
+          <li>I will not operate the watercraft under the influence of alcohol or drugs.</li>
+          <li>I am responsible for any damage to the rental equipment.</li>
+        </ul>
+
+        <h3>Release Agreement:</h3>
+        <p>
+          I hereby release and hold harmless the Released Parties from all claims, actions, and demands arising out of or related to this activity, including negligence, to the fullest extent permitted by law.
+        </p>
+
+        <h3>Assumption of Risk:</h3>
+        <p>
+          I assume all risks associated with this activity and understand that serious injury or death may occur.
+        </p>
+      </div>
+
+      <!-- Participant Info -->
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="fullName" name="fullName" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Birth *</label>
+          <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+        </div>
+        <div class="form-group">
+          <label>Age *</label>
+          <input type="number" id="age" name="age" readonly>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label>Phone *</label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Address *</label>
+        <input type="text" id="address" name="address" required>
+      </div>
+
+      <!-- Signature -->
+      <div class="form-group">
+        <label>Your Signature *</label>
+        <div class="canvas-container">
+          <canvas id="signatureCanvas"></canvas>
+        </div>
+        <div class="signature-controls">
+          <button type="button" class="btn-secondary" id="clearSignature">Clear Signature</button>
+          <button type="button" class="btn-secondary" onclick="document.getElementById('signatureCanvas').focus();" style="flex: 1;">
+            Click to Sign Above
+          </button>
+        </div>
+      </div>
+
+      <!-- Acknowledgments -->
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input type="checkbox" id="ack1" name="ack1" required>
+          <label class="checkbox-label" for="ack1">
+            I have read and understand this waiver and assumption of risk
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="ack2" name="ack2" required>
+          <label class="checkbox-label" for="ack2">
+            I agree to follow all safety instructions and use required safety equipment
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="ack3" name="ack3" required>
+          <label class="checkbox-label" for="ack3">
+            I acknowledge and assume all risks involved in this activity
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="ack4" name="ack4" required>
+          <label class="checkbox-label" for="ack4">
+            I release Beachside Circle Boats from all liability
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" onclick="window.history.back()">Back</button>
+        <button type="submit" class="btn-primary" id="submitBtn">Sign & Complete Booking</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000'
+      : 'https://cybercheck-api-database.vercel.app';
+
+    const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+    const canvas = document.getElementById('signatureCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    if (!bookingData) {
+      window.location.href = 'booking.html';
+    }
+
+    // Pre-fill customer info
+    document.getElementById('fullName').value = bookingData.customer_name;
+    document.getElementById('email').value = bookingData.customer_email;
+    document.getElementById('phone').value = bookingData.customer_phone;
+
+    // Calculate age
+    document.getElementById('dateOfBirth').addEventListener('change', (e) => {
+      const dob = new Date(e.target.value);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      document.getElementById('age').value = age;
+    });
+
+    // Canvas signature
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    });
+
+    canvas.addEventListener('mouseup', () => { isDrawing = false; });
+    canvas.addEventListener('mouseout', () => { isDrawing = false; });
+
+    document.getElementById('clearSignature').addEventListener('click', (e) => {
+      e.preventDefault();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Submit
+    document.getElementById('waiverForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Check signature
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      const hasSignature = imageData.some((val, i) => i % 4 === 3 && val > 0);
+
+      if (!hasSignature) {
+        document.getElementById('error-message').textContent = 'Please sign the waiver';
+        document.getElementById('error-message').style.display = 'block';
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+
+      try {
+        const waiverData = {
+          full_name: document.getElementById('fullName').value,
+          date_of_birth: document.getElementById('dateOfBirth').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          address: document.getElementById('address').value,
+          signature_image_url: canvas.toDataURL('image/png'),
+          acknowledged_at: new Date().toISOString(),
+          subdomain: bookingData.subdomain
+        };
+
+        // Submit waiver
+        const waiverRes = await fetch(`${API_BASE}/api/public/waiver`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(waiverData)
+        });
+
+        if (!waiverRes.ok) {
+          throw new Error('Failed to submit waiver');
+        }
+
+        const waiverRecord = await waiverRes.json();
+        sessionStorage.setItem('waiverToken', waiverRecord.token);
+
+        // Create final booking with waiver
+        const finalBooking = {
+          ...bookingData,
+          waiver_token: waiverRecord.token,
+          payment_intent_id: sessionStorage.getItem('paymentIntentId')
+        };
+
+        const bookingRes = await fetch(`${API_BASE}/api/public/bookings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(finalBooking)
+        });
+
+        if (!bookingRes.ok) {
+          throw new Error('Failed to complete booking');
+        }
+
+        const booking = await bookingRes.json();
+
+        // Redirect to confirmation
+        sessionStorage.setItem('confirmationData', JSON.stringify(booking));
+        window.location.href = 'confirmation.html';
+      } catch (err) {
+        console.error('Waiver error:', err);
+        document.getElementById('error-message').textContent = err.message;
+        document.getElementById('error-message').style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign & Complete Booking';
+      }
+    });
+  </script>
+</body>
+</html>

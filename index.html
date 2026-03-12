@@ -2441,7 +2441,7 @@
         <a href="#how">How It Works</a>
         <a href="#gallery">Gallery</a>
         <a href="#contact">Contact</a>
-        <a href="javascript:void(0)" class="nav-cta" onclick="openBooking()">Book Now</a>
+        <a href="booking.html" class="nav-cta">Book Now</a>
       </div>
       <div class="nav-hamburger" onclick="toggleMobileMenu()">
         <span></span><span></span><span></span>
@@ -2462,7 +2462,7 @@
     <a href="#gallery" onclick="toggleMobileMenu()">Gallery</a>
     <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
     <a href="tel:+16013251205" style="color:var(--teal);margin-top:12px;font-weight:600;">Call (601) 325-1205</a>
-    <button class="btn btn-primary" style="margin-top:8px;width:100%;justify-content:center;" onclick="toggleMobileMenu();openBooking();">Book Now &rarr;</button>
+    <a href="booking.html" class="btn btn-primary" style="margin-top:8px;width:100%;justify-content:center;">Book Now &rarr;</a>
   </div>
 
   <!-- HERO -->
@@ -2473,7 +2473,7 @@
         <h1>The Easiest Way to <span>Get on the Water</span></h1>
         <p class="hero-desc">Rent a portable, eco-friendly circle boat. No license needed, no experience required. Just show up and cruise.</p>
         <div class="hero-actions">
-          <button class="btn btn-primary btn-hero-book" onclick="openBooking()">Book Now &rarr;</button>
+          <a href="booking.html" class="btn btn-primary btn-hero-book">Book Now &rarr;</a>
         </div>
       </div>
     </div>
@@ -2715,7 +2715,7 @@
     <div class="container">
       <h2 data-bind="pages.cta.title">Ready to Get on the Water?</h2>
       <p data-bind="pages.cta.subtitle">Book your circle boat today and experience the Gulf Coast like never before.</p>
-      <button class="btn btn-white" onclick="openBooking()">Book Your Boat</button>
+      <a href="booking.html" class="btn btn-white">Book Your Boat</a>
     </div>
   </section>
 
@@ -3619,7 +3619,7 @@
         fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/stripe/publishable-key')
           .then(function(r) { return r.json(); })
           .then(function(data) {
-            var pk = data.publishableKey || 'pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q';
+            var pk = data.publishableKey || 'null';
             if (typeof Stripe !== 'undefined') {
               _stripe = Stripe(pk);
               mountStripeElements();
@@ -3628,7 +3628,7 @@
           .catch(function() {
             // Fallback to test key for development
             if (typeof Stripe !== 'undefined') {
-              _stripe = Stripe('pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q');
+              _stripe = Stripe('null');
               mountStripeElements();
             }
           });
@@ -3637,7 +3637,7 @@
 
       if (!_stripe) {
         if (typeof Stripe !== 'undefined') {
-          _stripe = Stripe('pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q');
+          _stripe = Stripe('null');
         } else {
           return;
         }

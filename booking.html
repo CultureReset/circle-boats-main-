@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Your Boat Rental | Beachside Circle Boats</title>
+  <script src="js/load-site-data.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #00ada8;
+      --teal-dark: #009590;
+      --black: #1a1a1a;
+      --gray: #666;
+      --border: #e8e8e8;
+      --bg: #fafafa;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      line-height: 1.6;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+    header {
+      background: var(--teal);
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h1 { font-size: 36px; margin-bottom: 8px; }
+    .subtitle { font-size: 16px; opacity: 0.9; }
+
+    .booking-form {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--black);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0, 173, 168, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .boat-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .boat-card {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .boat-card:hover {
+      border-color: var(--teal);
+      background: rgba(0, 173, 168, 0.05);
+    }
+
+    .boat-card.selected {
+      border-color: var(--teal);
+      background: rgba(0, 173, 168, 0.1);
+    }
+
+    .boat-card-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .boat-card-price {
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .boat-card-desc {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 4px;
+    }
+
+    .qty-selector {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .qty-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .qty-display {
+      min-width: 60px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .price-summary {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 32px 0;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .price-row.total {
+      border-top: 2px solid var(--border);
+      padding-top: 12px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--teal);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .success-message {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .form-row, .boat-selector {
+        grid-template-columns: 1fr;
+      }
+      .booking-form {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Book Your Adventure</h1>
+      <p class="subtitle">Select your dates and boat type</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <form class="booking-form" id="bookingForm">
+      <!-- Check-in Date -->
+      <div class="form-group">
+        <label for="bookingDate">Booking Date *</label>
+        <input
+          type="date"
+          id="bookingDate"
+          name="bookingDate"
+          required
+          min=""
+        >
+        <div class="error" id="dateError"></div>
+      </div>
+
+      <!-- Duration -->
+      <div class="form-group">
+        <label for="duration">Duration *</label>
+        <select id="duration" name="duration" required>
+          <option value="">Select duration...</option>
+          <option value="2">2 Hours - $100</option>
+          <option value="4">4 Hours - $180</option>
+          <option value="8">Full Day (8 hrs) - $300</option>
+        </select>
+      </div>
+
+      <!-- Boat Selection -->
+      <div class="form-group">
+        <label>Select Your Boat *</label>
+        <div class="boat-selector" id="boatSelector"></div>
+        <div class="error" id="boatError"></div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="form-group">
+        <label>Number of Boats</label>
+        <div class="qty-selector">
+          <button type="button" class="qty-btn" id="qtyMinus">−</button>
+          <div class="qty-display" id="qtyDisplay">1</div>
+          <button type="button" class="qty-btn" id="qtyPlus">+</button>
+        </div>
+      </div>
+
+      <!-- Customer Info -->
+      <div class="form-group">
+        <label for="customerName">Your Name *</label>
+        <input type="text" id="customerName" name="customerName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="customerPhone">Phone Number *</label>
+        <input type="tel" id="customerPhone" name="customerPhone" required>
+      </div>
+
+      <div class="form-group">
+        <label for="customerEmail">Email *</label>
+        <input type="email" id="customerEmail" name="customerEmail" required>
+      </div>
+
+      <!-- Special Requests -->
+      <div class="form-group">
+        <label for="notes">Special Requests (optional)</label>
+        <textarea
+          id="notes"
+          name="notes"
+          style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; min-height: 80px; resize: vertical;"
+        ></textarea>
+      </div>
+
+      <!-- Price Summary -->
+      <div class="price-summary">
+        <div class="price-row">
+          <span>Boat Rental:</span>
+          <span id="basePrice">$0</span>
+        </div>
+        <div class="price-row">
+          <span>Quantity:</span>
+          <span id="qtyPrice">1 × $0 = $0</span>
+        </div>
+        <div class="price-row total">
+          <span>Total:</span>
+          <span id="totalPrice">$0</span>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="form-group">
+        <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+          <input
+            type="checkbox"
+            id="agreeTerms"
+            name="agreeTerms"
+            style="width: auto; margin-right: 8px;"
+            required
+          >
+          I agree to the terms and will complete the waiver
+        </label>
+        <div class="error" id="termsError"></div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">
+        Continue to Checkout →
+      </button>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000'
+      : 'https://cybercheck-api-database.vercel.app';
+
+    const SUBDOMAIN = 'beachside-circle-boats';
+    const BOATS = [
+      { id: 'single', name: 'Single Seater', price: 50, capacity: 1, desc: '1 person max' },
+      { id: 'double', name: 'Double Seater', price: 80, capacity: 2, desc: '2 person max' }
+    ];
+
+    let selectedBoat = null;
+    let quantity = 1;
+    let bookingData = {};
+
+    // Initialize
+    function init() {
+      setMinDate();
+      renderBoatSelector();
+      attachEventListeners();
+      updatePricing();
+    }
+
+    function setMinDate() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('bookingDate').min = tomorrow.toISOString().split('T')[0];
+    }
+
+    function renderBoatSelector() {
+      const container = document.getElementById('boatSelector');
+      container.innerHTML = BOATS.map(boat => `
+        <div class="boat-card" data-boat-id="${boat.id}">
+          <div class="boat-card-name">${boat.name}</div>
+          <div class="boat-card-price">$${boat.price}/hr</div>
+          <div class="boat-card-desc">${boat.desc}</div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.boat-card').forEach(card => {
+        card.addEventListener('click', () => selectBoat(card.dataset.boatId));
+      });
+    }
+
+    function selectBoat(boatId) {
+      selectedBoat = BOATS.find(b => b.id === boatId);
+      document.querySelectorAll('.boat-card').forEach(card => {
+        card.classList.toggle('selected', card.dataset.boatId === boatId);
+      });
+      updatePricing();
+    }
+
+    function attachEventListeners() {
+      document.getElementById('qtyMinus').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (quantity > 1) quantity--;
+        updateQtyDisplay();
+        updatePricing();
+      });
+
+      document.getElementById('qtyPlus').addEventListener('click', (e) => {
+        e.preventDefault();
+        quantity++;
+        updateQtyDisplay();
+        updatePricing();
+      });
+
+      document.getElementById('duration').addEventListener('change', updatePricing);
+      document.getElementById('bookingForm').addEventListener('submit', handleSubmit);
+    }
+
+    function updateQtyDisplay() {
+      document.getElementById('qtyDisplay').textContent = quantity;
+    }
+
+    function updatePricing() {
+      if (!selectedBoat) return;
+
+      const durationHours = parseInt(document.getElementById('duration').value) || 1;
+      const basePrice = selectedBoat.price * durationHours;
+      const total = basePrice * quantity;
+
+      document.getElementById('basePrice').textContent = `$${basePrice}`;
+      document.getElementById('qtyPrice').textContent = `${quantity} × $${basePrice} = $${quantity * basePrice}`;
+      document.getElementById('totalPrice').textContent = `$${total}`;
+
+      bookingData.basePrice = basePrice;
+      bookingData.totalPrice = total;
+      bookingData.durationHours = durationHours;
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      // Validate
+      if (!selectedBoat) {
+        document.getElementById('boatError').textContent = 'Please select a boat';
+        return;
+      }
+
+      const form = e.target;
+      const data = {
+        fleet_type_id: selectedBoat.id,
+        booking_date: form.bookingDate.value,
+        duration_hours: bookingData.durationHours,
+        qty: quantity,
+        customer_name: form.customerName.value,
+        customer_phone: form.customerPhone.value,
+        customer_email: form.customerEmail.value,
+        notes: form.notes.value,
+        subdomain: SUBDOMAIN
+      };
+
+      // Save to sessionStorage for checkout page
+      sessionStorage.setItem('bookingData', JSON.stringify({
+        ...data,
+        totalPrice: bookingData.totalPrice,
+        boatName: selectedBoat.name
+      }));
+
+      // Create hold first
+      try {
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').classList.add('loading');
+        document.getElementById('submitBtn').textContent = 'Creating booking hold...';
+
+        const holdRes = await fetch(`${API_BASE}/api/public/hold`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!holdRes.ok) {
+          throw new Error(await holdRes.text());
+        }
+
+        const hold = await holdRes.json();
+        sessionStorage.setItem('holdId', hold.id);
+
+        // Redirect to checkout
+        window.location.href = 'checkout.html';
+      } catch (err) {
+        console.error('Booking error:', err);
+        alert('Error creating booking: ' + err.message);
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('submitBtn').classList.remove('loading');
+        document.getElementById('submitBtn').textContent = 'Continue to Checkout →';
+      }
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>

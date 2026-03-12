@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Beachside Circle Boats</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #00ada8;
+      --teal-dark: #009590;
+      --black: #1a1a1a;
+      --gray: #666;
+      --border: #e8e8e8;
+      --bg: #fafafa;
+      --error: #e74c3c;
+      --success: #27ae60;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      line-height: 1.6;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    header {
+      background: var(--teal);
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h1 { font-size: 36px; margin-bottom: 8px; }
+
+    .checkout-wrapper {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+    }
+
+    .payment-form {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .form-section {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0, 173, 168, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    #card-element {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: white;
+    }
+
+    .order-summary {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .summary-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .summary-item.label { color: var(--gray); }
+
+    .summary-divider {
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .booking-details {
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--teal);
+      border: 2px solid var(--teal);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 173, 168, 0.05);
+    }
+
+    .error-message {
+      background: #fadbd8;
+      border: 1px solid #f5b7b1;
+      color: var(--error);
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .success-message {
+      background: #d5f4e6;
+      border: 1px solid #abebc6;
+      color: var(--success);
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .checkout-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .order-summary {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Complete Your Booking</h1>
+      <p style="font-size: 16px; opacity: 0.9;">Secure payment with Stripe</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="checkout-wrapper">
+      <!-- Payment Form -->
+      <form id="payment-form" class="payment-form">
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+
+        <!-- Billing Info -->
+        <div class="form-section">
+          <div class="section-title">Billing Information</div>
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="customerName" readonly>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="customerEmail" readonly>
+          </div>
+
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="customerPhone" readonly>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-section">
+          <div class="section-title">Payment Method</div>
+
+          <div class="form-group">
+            <label>Card Details</label>
+            <div id="card-element"></div>
+          </div>
+
+          <input type="hidden" id="payment-intent-id">
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn-primary" id="submit-button">
+          Pay $<span id="amount-display">0</span>
+        </button>
+        <button type="button" class="btn-secondary" onclick="window.history.back()">
+          Back to Booking
+        </button>
+      </form>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <div class="summary-title">Order Summary</div>
+
+        <div class="summary-item label">
+          <span>Booking Details</span>
+        </div>
+
+        <div class="booking-details">
+          <div class="detail-row">
+            <span>Date:</span>
+            <span id="detail-date">—</span>
+          </div>
+          <div class="detail-row">
+            <span>Boat:</span>
+            <span id="detail-boat">—</span>
+          </div>
+          <div class="detail-row">
+            <span>Duration:</span>
+            <span id="detail-duration">—</span>
+          </div>
+          <div class="detail-row">
+            <span>Quantity:</span>
+            <span id="detail-qty">—</span>
+          </div>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-item">
+          <span>Subtotal:</span>
+          <span id="subtotal-display">$0</span>
+        </div>
+
+        <div class="summary-item">
+          <span>Tax (0%):</span>
+          <span>$0</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <span>Total:</span>
+          <span id="total-display">$0</span>
+        </div>
+
+        <p style="font-size: 12px; color: var(--gray); margin-top: 16px; text-align: center;">
+          After payment, you'll complete the waiver and receive a confirmation email.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000'
+      : 'https://cybercheck-api-database.vercel.app';
+
+    const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+
+    if (!bookingData) {
+      window.location.href = 'booking.html';
+    }
+
+    // Populate form
+    document.getElementById('customerName').value = bookingData.customer_name;
+    document.getElementById('customerEmail').value = bookingData.customer_email;
+    document.getElementById('customerPhone').value = bookingData.customer_phone;
+
+    // Populate summary
+    document.getElementById('detail-date').textContent = new Date(bookingData.booking_date).toLocaleDateString();
+    document.getElementById('detail-boat').textContent = bookingData.boatName;
+    document.getElementById('detail-duration').textContent = `${bookingData.duration_hours} hours`;
+    document.getElementById('detail-qty').textContent = bookingData.qty;
+    document.getElementById('subtotal-display').textContent = `$${bookingData.totalPrice}`;
+    document.getElementById('total-display').textContent = `$${bookingData.totalPrice}`;
+    document.getElementById('amount-display').textContent = bookingData.totalPrice;
+
+    // Stripe
+    const stripe = Stripe('pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q');
+    const elements = stripe.elements();
+    const cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+    cardElement.addEventListener('change', (event) => {
+      const displayError = document.getElementById('error-message');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+        displayError.style.display = 'block';
+      } else {
+        displayError.style.display = 'none';
+      }
+    });
+
+    // Submit
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitButton = document.getElementById('submit-button');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
+
+      try {
+        // Create PaymentIntent via API
+        const intentRes = await fetch(`${API_BASE}/api/stripe/intent`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: bookingData.totalPrice * 100, // cents
+            email: bookingData.customer_email,
+            description: `${bookingData.boatName} rental - ${bookingData.qty} boat(s)`
+          })
+        });
+
+        if (!intentRes.ok) {
+          throw new Error('Failed to create payment intent');
+        }
+
+        const { clientSecret } = await intentRes.json();
+
+        // Confirm payment
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: bookingData.customer_name,
+              email: bookingData.customer_email,
+              phone: bookingData.customer_phone
+            }
+          }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        if (paymentIntent.status === 'succeeded') {
+          // Payment successful - save to session and redirect
+          sessionStorage.setItem('paymentIntentId', paymentIntent.id);
+          sessionStorage.setItem('confirmedBooking', 'true');
+          window.location.href = 'waiver-form.html';
+        }
+      } catch (err) {
+        console.error('Payment error:', err);
+        document.getElementById('error-message').textContent = err.message;
+        document.getElementById('error-message').style.display = 'block';
+        submitButton.disabled = false;
+        submitButton.textContent = `Pay $${bookingData.totalPrice}`;
+      }
+    });
+  </script>
+</body>
+</html>
