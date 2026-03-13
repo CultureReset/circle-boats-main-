@@ -390,12 +390,12 @@
 
       try {
         // Create PaymentIntent via API
-        const intentRes = await fetch(`${API_BASE}/api/stripe/intent`, {
+        const intentRes = await fetch(`${API_BASE}/api/stripe/create-payment-intent`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: bookingData.totalPrice * 100, // cents
-            email: bookingData.customer_email,
+            amount: bookingData.totalPrice,
+            site_id: typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats',
             description: `${bookingData.boatName} rental - ${bookingData.qty} boat(s)`
           })
         });
@@ -404,7 +404,7 @@
           throw new Error('Failed to create payment intent');
         }
 
-        const { clientSecret } = await intentRes.json();
+        const { client_secret: clientSecret } = await intentRes.json();
 
         // Confirm payment
         const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
