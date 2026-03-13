@@ -4791,5 +4791,190 @@
     })();
   })();
   </script>
+
+<!-- Customer AI Chat Widget -->
+<style>
+#chat-fab{position:fixed;bottom:20px;right:20px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border:none;cursor:pointer;font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(99,102,241,.4);z-index:9999;transition:all .3s}
+#chat-fab:hover{transform:scale(1.1)}
+#chat-fab.hidden{display:none}
+#chat-widget{position:fixed;bottom:20px;right:20px;width:380px;max-height:600px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);display:none;flex-direction:column;z-index:10000;overflow:hidden;animation:chatUp .3s ease-out}
+@keyframes chatUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.chat-hdr{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.chat-hdr-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600}
+.chat-hdr button{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;background:#f8f9fa;min-height:280px;max-height:420px}
+.chat-msg{display:flex;gap:10px;margin-bottom:14px;animation:chatMsg .3s ease-out}
+@keyframes chatMsg{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-msg .bubble{max-width:80%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.5}
+.chat-msg.bot .bubble{background:#fff;color:#1f2937;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chat-msg.user .bubble{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff}
+.chat-msg.typing .bubble{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chat-dots{display:flex;gap:4px}.chat-dot{width:8px;height:8px;background:#9ca3af;border-radius:50%;animation:dotBounce 1.4s infinite}
+.chat-dot:nth-child(2){animation-delay:.2s}.chat-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.7}30%{transform:translateY(-8px);opacity:1}}
+.chat-bar{padding:12px;background:#fff;border-top:1px solid #e5e7eb;display:flex;gap:8px}
+.chat-bar input{flex:1;padding:10px 14px;border:2px solid #e5e7eb;border-radius:12px;font-size:14px;outline:none}
+.chat-bar input:focus{border-color:#6366f1}
+.chat-bar button{width:44px;height:44px;border:none;border-radius:12px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.chat-send{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff}
+.chat-mic{background:#f3f4f6;color:#6b7280}
+.chat-mic.listening{background:#ef4444;color:#fff;animation:micPulse 1.5s infinite}
+@keyframes micPulse{0%,100%{opacity:1}50%{opacity:.7}}
+@media(max-width:768px){#chat-widget{width:calc(100vw-24px);max-width:380px;right:12px;bottom:10px}#chat-fab{bottom:10px;right:10px;width:56px;height:56px;font-size:28px}}
+</style>
+
+<button id="chat-fab" onclick="chatToggle()">💬</button>
+<div id="chat-widget">
+  <div class="chat-hdr">
+    <div class="chat-hdr-title"><span>💬</span><span>Ask Us Anything</span></div>
+    <button onclick="chatToggle()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <div class="chat-bar">
+    <input type="text" id="chatInput" placeholder="Ask about boats, pricing, hours..." onkeydown="if(event.key==='Enter')chatSend()">
+    <button class="chat-mic" id="chatMic" onclick="chatVoice()">🎤</button>
+    <button class="chat-send" onclick="chatSend()">➤</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var chatOpen = false;
+  var chatHistory = [];
+  var voiceMode = false;
+  var recognition = null;
+  var listening = false;
+
+  // Voice recognition setup
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) {
+    recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.onresult = function(e) {
+      var text = e.results[0][0].transcript;
+      voiceMode = true;
+      document.getElementById('chatInput').value = text;
+      chatSend();
+    };
+    recognition.onerror = function() { chatStopMic(); };
+    recognition.onend = function() { chatStopMic(); };
+  }
+
+  window.chatToggle = function() {
+    chatOpen = !chatOpen;
+    var w = document.getElementById('chat-widget');
+    var fab = document.getElementById('chat-fab');
+    if (chatOpen) {
+      w.style.display = 'flex';
+      fab.classList.add('hidden');
+      if (chatHistory.length === 0) {
+        chatAddMsg('bot', "Hey! 👋 I'm the Beachside Circle Boats assistant. Ask me about our boats, pricing, availability, or just tap the mic and talk!");
+      }
+      setTimeout(function() { document.getElementById('chatInput').focus(); }, 100);
+    } else {
+      w.style.display = 'none';
+      fab.classList.remove('hidden');
+      if (window.speechSynthesis) speechSynthesis.cancel();
+    }
+  };
+
+  function chatAddMsg(role, text) {
+    var el = document.getElementById('chatMsgs');
+    var div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.innerHTML = '<div class="bubble">' + text.replace(/\n/g, '<br>') + '</div>';
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function chatTyping() {
+    var el = document.getElementById('chatMsgs');
+    var div = document.createElement('div');
+    div.className = 'chat-msg bot typing';
+    div.id = 'chatTyping';
+    div.innerHTML = '<div class="bubble"><div class="chat-dots"><span class="chat-dot"></span><span class="chat-dot"></span><span class="chat-dot"></span></div></div>';
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function chatSpeak(text) {
+    if (!voiceMode || !window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1.05;
+    var voices = speechSynthesis.getVoices();
+    var pick = voices.find(function(v) { return v.name.indexOf('Samantha') >= 0; }) ||
+               voices.find(function(v) { return v.lang === 'en-US' && v.localService; }) || voices[0];
+    if (pick) utter.voice = pick;
+    speechSynthesis.speak(utter);
+  }
+
+  window.chatSend = function() {
+    var input = document.getElementById('chatInput');
+    var msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+
+    chatAddMsg('user', msg);
+    chatHistory.push({ role: 'user', content: msg });
+    chatTyping();
+
+    fetch(API_BASE + '/api/public/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site_id: SUBDOMAIN, message: msg, history: chatHistory.slice(-10) })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var t = document.getElementById('chatTyping');
+      if (t) t.remove();
+
+      var reply = data.reply || 'Sorry, try again!';
+      chatAddMsg('bot', reply);
+      chatHistory.push({ role: 'assistant', content: reply });
+      chatSpeak(reply);
+      voiceMode = false;
+
+      // Handle booking intent
+      if (data.booking_intent) {
+        var bi = data.booking_intent;
+        setTimeout(function() {
+          chatAddMsg('bot', '📅 <a href="/booking.html' +
+            (bi.date ? '?date=' + bi.date : '') +
+            (bi.guests ? '&guests=' + bi.guests : '') +
+            '" style="color:#0ea5e9;text-decoration:underline">Click here to complete your booking</a>');
+        }, 500);
+      }
+    })
+    .catch(function() {
+      var t = document.getElementById('chatTyping');
+      if (t) t.remove();
+      chatAddMsg('bot', 'Connection error — try again.');
+    });
+  };
+
+  window.chatVoice = function() {
+    if (!recognition) { chatAddMsg('bot', 'Voice not supported — try Chrome or Safari.'); return; }
+    if (listening) { recognition.stop(); return; }
+    recognition.start();
+    listening = true;
+    document.getElementById('chatMic').classList.add('listening');
+    document.getElementById('chatMic').innerHTML = '🔴';
+  };
+
+  function chatStopMic() {
+    listening = false;
+    var btn = document.getElementById('chatMic');
+    if (btn) { btn.classList.remove('listening'); btn.innerHTML = '🎤'; }
+  }
+
+  // Preload voices
+  if (window.speechSynthesis && speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = function() {};
+  }
+})();
+</script>
 </body>
 </html>
