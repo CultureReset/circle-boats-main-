@@ -2890,31 +2890,31 @@
           <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">$25 half-day / $50 full-day. Rent 4+ boats = FREE dock!</p>
           <div class="addon-check-grid">
             <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="mini-dock" data-price="50">
+              <input type="checkbox" data-addon="mini-dock" data-price="25" data-price-half="25" data-price-all="50">
               <div class="addon-check-box">&#10003;</div>
               <div class="addon-check-info">
                 <strong>Mini Dock</strong>
                 <span>8'4" x 44" platform</span>
               </div>
-              <div class="addon-check-price">$50</div>
+              <div class="addon-check-price">$25</div>
             </label>
             <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="x-dock" data-price="50">
+              <input type="checkbox" data-addon="x-dock" data-price="25" data-price-half="25" data-price-all="50">
               <div class="addon-check-box">&#10003;</div>
               <div class="addon-check-info">
                 <strong>X Dock</strong>
                 <span>5' x 5' floating dock</span>
               </div>
-              <div class="addon-check-price">$50</div>
+              <div class="addon-check-price">$25</div>
             </label>
             <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="doggie-dock" data-price="50">
+              <input type="checkbox" data-addon="doggie-dock" data-price="25" data-price-half="25" data-price-all="50">
               <div class="addon-check-box">&#10003;</div>
               <div class="addon-check-info">
                 <strong>Doggie Dock</strong>
                 <span>5'4" x 43" with ramp</span>
               </div>
-              <div class="addon-check-price">$50</div>
+              <div class="addon-check-price">$25</div>
             </label>
           </div>
 
@@ -3373,18 +3373,17 @@
       booking.addons = booking.addons.map(function(addon) {
         var isDock = addon.id === 'mini-dock' || addon.id === 'x-dock' || addon.id === 'doggie-dock';
         if (isDock) {
-          addon.price = booking.slot === 'am' ? 25 : 50; // AM = half-day = $25, PM/All = full-day = $50
+          addon.price = booking.slot === 'all' ? 50 : 25; // half-day (AM or PM) = $25, all-day = $50
         }
         return addon;
       });
 
-      // Update the display prices for dock checkboxes
+      // Update the display prices for all dock checkboxes (checked or not)
+      var dockPrice = booking.slot === 'all' ? 50 : 25; // half-day (AM or PM) = $25, all-day = $50
       document.querySelectorAll('input[data-addon="mini-dock"], input[data-addon="x-dock"], input[data-addon="doggie-dock"]').forEach(function(input) {
-        if (input.checked) {
-          var label = input.closest('label');
-          var price = booking.slot === 'am' ? 25 : 50;
-          label.querySelector('.addon-check-price').textContent = '$' + price;
-        }
+        input.setAttribute('data-price', dockPrice);
+        var label = input.closest('label');
+        if (label) label.querySelector('.addon-check-price').textContent = '$' + dockPrice;
       });
 
       buildCart(); // Rebuild cart with updated prices
@@ -3408,7 +3407,7 @@
       // Docks have different pricing based on half-day vs full-day
       var isDock = addon === 'mini-dock' || addon === 'x-dock' || addon === 'doggie-dock';
       if (isDock && booking.slot) {
-        price = booking.slot === 'am' ? 25 : 50; // AM (morning) = half-day = $25, PM/All = full-day = $50
+        price = booking.slot === 'all' ? 50 : 25; // half-day (AM or PM) = $25, all-day = $50
       }
 
       if (cb.checked) {
