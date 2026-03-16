@@ -70,6 +70,8 @@ function applyAllData(data) {
   syncBookingPrices(data);
   updateHeroSection(data);
   updateBusinessInfo(data);
+  updateAboutSection(data);
+  updateGroupRate(data);
   updateProductsSection(data);
   updateDocksSection(data);
   updateWhatsIncluded(data);
@@ -84,6 +86,31 @@ function applyAllData(data) {
   updateLinksPage(data);
   // Re-apply fade-in animations to newly created elements
   reobserveFadeIns();
+}
+
+function updateAboutSection(data) {
+  if (!data.about) return;
+  var a = data.about;
+  if (a.title) document.querySelectorAll('[data-bind="pages.about.title"]').forEach(function(el) { el.textContent = a.title; });
+  if (a.subtitle) document.querySelectorAll('[data-bind="pages.about.subtitle"]').forEach(function(el) { el.textContent = a.subtitle; });
+}
+
+function updateGroupRate(data) {
+  var gr = data.group_rate;
+  if (!gr) return;
+  var banner = document.querySelector('.group-banner');
+  if (!banner) return;
+  var h3 = banner.querySelector('h3');
+  var p = banner.querySelector('p');
+  var strong = banner.querySelector('.group-banner-price strong');
+  var span = banner.querySelector('.group-banner-price span');
+  var btn = banner.querySelector('.btn');
+  if (h3 && gr.title) h3.textContent = gr.title;
+  if (p && gr.description) p.textContent = gr.description;
+  if (strong && gr.price) strong.textContent = '$' + gr.price;
+  if (span && gr.priceLabel) span.textContent = gr.priceLabel;
+  if (btn && gr.ctaText) btn.textContent = gr.ctaText;
+  if (btn && gr.ctaUrl) btn.href = gr.ctaUrl;
 }
 
 // ─── Links Page (links.html) ─────────────────────────────────────────────────
