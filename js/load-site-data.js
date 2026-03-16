@@ -449,7 +449,7 @@ function updateLocationsSection(data) {
   if (container) {
     container.innerHTML = locs.map(function(l) {
       return '<div class="location-card">' +
-        '<div class="location-pin">📍</div>' +
+        (l.image ? '<img src="' + l.image + '" alt="' + (l.name || '') + '" style="width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:14px;" loading="lazy">' : '<div class="location-pin">📍</div>') +
         '<h3>' + l.name + '</h3>' +
         '<p class="location-address">' + (l.address || '') + '</p>' +
         (l.description ? '<p class="location-desc">' + l.description + '</p>' : '') +
