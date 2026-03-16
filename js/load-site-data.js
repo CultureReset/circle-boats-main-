@@ -448,13 +448,16 @@ function updateLocationsSection(data) {
   var container = document.querySelector('.locations-grid');
   if (container) {
     container.innerHTML = locs.map(function(l) {
-      return '<div class="location-card">' +
-        (l.image ? '<img src="' + l.image + '" alt="' + (l.name || '') + '" style="width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:14px;" loading="lazy">' : '<div class="location-pin">📍</div>') +
+      var hasImg = l.image && l.image.length > 0;
+      return '<div class="location-card" style="' + (hasImg ? 'padding:0;overflow:hidden;' : '') + '">' +
+        (hasImg
+          ? '<img src="' + l.image + '" alt="' + (l.name || '') + '" style="width:100%;height:200px;object-fit:cover;display:block;" loading="lazy"><div style="padding:20px 24px;">'
+          : '<div class="location-pin">📍</div><div>') +
         '<h3>' + l.name + '</h3>' +
         '<p class="location-address">' + (l.address || '') + '</p>' +
         (l.description ? '<p class="location-desc">' + l.description + '</p>' : '') +
         (l.mapUrl ? '<a href="' + l.mapUrl + '" target="_blank" rel="noopener" class="location-map-link">Get Directions →</a>' : '') +
-        '</div>';
+        '</div></div>';
     }).join('');
   }
 
