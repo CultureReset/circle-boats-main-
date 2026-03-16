@@ -82,6 +82,7 @@ function applyAllData(data) {
   updateGallerySection(data);
   updateReviewsSection(data);
   updateQnASection(data);
+  applyBookingPolicy(data);
   updateSocialSection(data);
   updateContactInterests(data);
   updateLinksPage(data);
@@ -549,6 +550,41 @@ function updateQnASection(data) {
   // Show the section if it was hidden
   var section = document.getElementById('qna');
   if (section) section.style.display = '';
+}
+
+function applyBookingPolicy(data) {
+  var policy = (data.booking_settings) || {};
+  var mode = policy.paymentMode || 'full';
+  window.BOOKING_POLICY = policy;
+
+  var paymentSection = document.getElementById('payment-section');
+  if (!paymentSection) return;
+
+  if (mode === 'at_location') {
+    // Hide card form — no payment at booking
+    paymentSection.innerHTML =
+      '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:12px;">' +
+        '<span style="font-size:22px;">✅</span>' +
+        '<div>' +
+          '<div style="font-weight:600;font-size:14px;color:#166534;">No payment required to book</div>' +
+          '<div style="font-size:13px;color:#166534;margin-top:2px;">You\'ll pay when you arrive at the location.</div>' +
+        '</div>' +
+      '</div>';
+  } else if (mode === 'deposit') {
+    var pct = policy.depositPct || 25;
+    var label = policy.depositLabel || 'Deposit required to secure your booking';
+    // Add a deposit notice above the card form
+    var notice = document.createElement('div');
+    notice.id = 'deposit-notice';
+    notice.style.cssText = 'background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#92400e;';
+    notice.innerHTML = '<strong>💳 ' + pct + '% deposit required</strong> — ' + label;
+    paymentSection.insertBefore(notice, paymentSection.firstChild);
+  }
+  // Update the book button label if override is set
+  if (policy.buttonLabel) {
+    var btn = document.getElementById('bookNext');
+    if (btn && btn.textContent.indexOf('Book') > -1) btn.textContent = policy.buttonLabel;
+  }
 }
 
 function updateSocialSection(data) {

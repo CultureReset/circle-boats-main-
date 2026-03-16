@@ -3607,8 +3607,21 @@
         btn.textContent = 'Review & Checkout';
         btn.style.opacity = '1';
       } else if (s === 4) {
-        var t = getBoatTotal() + getAddonsTotal();
-        btn.textContent = 'Pay $' + t + ' & Book';
+        var policy = window.BOOKING_POLICY || {};
+        var mode = policy.paymentMode || 'full';
+        if (mode === 'at_location') {
+          btn.textContent = policy.buttonLabel || 'Confirm Booking';
+        } else if (mode === 'deposit') {
+          var subtotalD = getBoatTotal() + getAddonsTotal();
+          var taxD = Math.round(subtotalD * TAX_RATE * 100) / 100;
+          var totalD = Math.round((subtotalD + taxD) * 100) / 100;
+          var pct = policy.depositPct || 25;
+          var deposit = Math.round(totalD * pct) / 100;
+          btn.textContent = policy.buttonLabel || ('Pay $' + deposit.toFixed(2) + ' Deposit & Book');
+        } else {
+          var t = getBoatTotal() + getAddonsTotal();
+          btn.textContent = policy.buttonLabel || ('Pay $' + t + ' & Book');
+        }
         btn.style.opacity = '1';
       }
     }
@@ -3780,6 +3793,15 @@
       var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
       var total = Math.round((subtotal + tax) * 100) / 100;
 
+      // Determine charge amount based on payment policy
+      var policy = window.BOOKING_POLICY || {};
+      var payMode = policy.paymentMode || 'full';
+      var chargeAmount = total;
+      if (payMode === 'deposit') {
+        var depPct = policy.depositPct || 25;
+        chargeAmount = Math.round(total * depPct) / 100;
+      }
+
       var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
       var slotLabel = SLOT_LABELS[booking.slot] || booking.slot;
       var desc = boatName + ' x' + booking.qty + ' — ' + slotLabel;
@@ -3790,6 +3812,38 @@
       btn.textContent = 'Processing...';
       btn.style.opacity = '0.7';
       btn.disabled = true;
+
+      // Book now, pay at location — skip Stripe entirely
+      if (payMode === 'at_location') {
+        var bookingPayloadLoc = {
+          fleet_type_id: booking.fleetTypeId || null,
+          time_slot_id: booking.timeSlotId || null,
+          booking_date: booking.date,
+          location_id: booking.location || null,
+          location_name: booking.locationName || null,
+          qty: booking.qty,
+          addons: booking.addons.map(function(a) { return { name: a.name || a, price: a.price || 0 }; }),
+          subtotal: subtotal,
+          tax: tax,
+          total: total,
+          amount_paid: 0,
+          payment_mode: 'at_location',
+          customer_name: name,
+          customer_phone: phone,
+          customer_email: email,
+          notes: desc,
+          session_id: booking.sessionId
+        };
+        fetch(api('/bookings'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bookingPayloadLoc)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function() { showPaymentSuccess(0, desc, name, email, btn, true); })
+        .catch(function() { showPaymentSuccess(0, desc, name, email, btn, true); });
+        return;
+      }
 
       if (_stripe && _cardNumber) {
         // Create a payment method from the card element
@@ -3804,7 +3858,7 @@
         }).then(function(result) {
           if (result.error) {
             document.getElementById('card-errors').textContent = result.error.message;
-            btn.textContent = 'Pay $' + total + ' & Book';
+            btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
             btn.style.opacity = '1';
             btn.disabled = false;
             return;
@@ -3825,6 +3879,8 @@
             subtotal: subtotal,
             tax: tax,
             total: total,
+            amount_paid: chargeAmount,
+            payment_mode: payMode,
             customer_name: name,
             customer_phone: phone,
             customer_email: email,
@@ -3841,7 +3897,7 @@
           .then(function(bookingRecord) {
             if (bookingRecord.error) {
               document.getElementById('card-errors').textContent = 'Booking failed: ' + bookingRecord.error;
-              btn.textContent = 'Pay $' + total + ' & Book';
+              btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
               btn.style.opacity = '1';
               btn.disabled = false;
               return;
@@ -3853,7 +3909,7 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 booking_id: bookingRecord.id,
-                amount: total,
+                amount: chargeAmount,
                 description: desc,
                 payment_method_id: paymentMethodId,
                 site_id: typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : null
@@ -3864,40 +3920,40 @@
               if (piResult.error) {
                 // Payment failed but booking was created — show partial success
                 document.getElementById('card-errors').textContent = piResult.error;
-                btn.textContent = 'Pay $' + total + ' & Book';
+                btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
                 btn.style.opacity = '1';
                 btn.disabled = false;
                 return;
               }
 
               if (piResult.status === 'succeeded') {
-                showPaymentSuccess(total, desc, name, email, btn);
+                showPaymentSuccess(chargeAmount, desc, name, email, btn);
               } else if (piResult.client_secret) {
                 // Handle 3D Secure / additional authentication
                 _stripe.confirmCardPayment(piResult.client_secret).then(function(confirmResult) {
                   if (confirmResult.error) {
                     document.getElementById('card-errors').textContent = confirmResult.error.message;
-                    btn.textContent = 'Pay $' + total + ' & Book';
+                    btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
                     btn.style.opacity = '1';
                     btn.disabled = false;
                   } else {
-                    showPaymentSuccess(total, desc, name, email, btn);
+                    showPaymentSuccess(chargeAmount, desc, name, email, btn);
                   }
                 });
               } else {
-                showPaymentSuccess(total, desc, name, email, btn);
+                showPaymentSuccess(chargeAmount, desc, name, email, btn);
               }
             })
             .catch(function(err) {
               // Stripe API unreachable — booking still saved, show success with note
               console.warn('Payment API error:', err);
-              showPaymentSuccess(total, desc, name, email, btn);
+              showPaymentSuccess(chargeAmount, desc, name, email, btn);
             });
           })
           .catch(function(err) {
             // Booking API unreachable — show demo success
             console.warn('Booking API error:', err);
-            showPaymentSuccess(total, desc, name, email, btn);
+            showPaymentSuccess(chargeAmount, desc, name, email, btn);
           });
         });
       } else {
@@ -3925,14 +3981,18 @@
         }).catch(function() {});
 
         setTimeout(function() {
-          showPaymentSuccess(total, desc, name, email, btn);
+          showPaymentSuccess(chargeAmount, desc, name, email, btn);
         }, 1200);
       }
     }
 
-    function showPaymentSuccess(total, desc, name, email, btn) {
+    function showPaymentSuccess(total, desc, name, email, btn, noPayment) {
       // Hold was converted to a booking — clear it so closeBooking doesn't try to release
       booking.holdId = null;
+
+      var payLine = noPayment
+        ? '<p style="color:#10b981;font-size:15px;font-weight:600;margin-bottom:4px;">No payment required — pay when you arrive</p>'
+        : '<p style="color:#10b981;font-size:16px;font-weight:600;margin-bottom:4px;">$' + (total > 0 ? total.toFixed ? total.toFixed(2) : total : '0.00') + ' paid successfully</p>';
 
       // Full-screen confirmation overlay
       var overlay = document.createElement('div');
@@ -3945,7 +4005,7 @@
             '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' +
           '</div>' +
           '<h2 style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:8px;">Booking Confirmed!</h2>' +
-          '<p style="color:#10b981;font-size:16px;font-weight:600;margin-bottom:4px;">$' + total + ' paid successfully</p>' +
+          payLine +
           '<p style="color:#666;font-size:14px;margin-bottom:4px;">' + desc + '</p>' +
           '<p style="color:#999;font-size:13px;margin-bottom:24px;">Confirmation sent to <strong>' + email + '</strong></p>' +
           '<div style="padding:14px 16px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;margin-bottom:28px;">' +
@@ -4688,24 +4748,24 @@
               return;
             }
             if (piResult.status === 'succeeded') {
-              showPaymentSuccess(total, desc, name, email, btn);
+              showPaymentSuccess(chargeAmount, desc, name, email, btn);
             } else if (piResult.client_secret) {
               // 3D Secure / additional auth
               _stripe.confirmCardPayment(piResult.client_secret).then(function(confirmResult) {
                 if (confirmResult.error) {
                   showErr(confirmResult.error.message);
                 } else {
-                  showPaymentSuccess(total, desc, name, email, btn);
+                  showPaymentSuccess(chargeAmount, desc, name, email, btn);
                 }
               });
             } else {
-              showPaymentSuccess(total, desc, name, email, btn);
+              showPaymentSuccess(chargeAmount, desc, name, email, btn);
             }
           })
           .catch(function(err) {
             console.error('PaymentIntent error:', err);
             // Booking saved — show success, payment failed silently
-            showPaymentSuccess(total, desc, name, email, btn);
+            showPaymentSuccess(chargeAmount, desc, name, email, btn);
           });
         })
         .catch(function(err) {
