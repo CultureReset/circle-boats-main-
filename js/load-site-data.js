@@ -116,6 +116,23 @@ function updateAboutSection(data) {
   if (descEl && a.description) descEl.textContent = a.description;
   var forEl = document.getElementById('about-perfect-for');
   if (forEl && a.perfectFor) forEl.textContent = a.perfectFor;
+
+  // Feature highlights grid — rebuild with images when set from dashboard
+  if (a.features && a.features.length) {
+    var grid = document.getElementById('about-features-grid');
+    if (grid) {
+      grid.innerHTML = a.features.map(function(f) {
+        var hasImg = f.image && f.image.length > 0;
+        return '<div class="about-feature-item">' +
+          (hasImg
+            ? '<div class="about-feature-img"><img src="' + f.image + '" alt="' + (f.title || '') + '" style="width:100%;height:100%;object-fit:contain;display:block;" loading="lazy"></div>'
+            : (f.icon ? '<div class="about-feature-icon">' + f.icon + '</div>' : '')) +
+          '<h4>' + (f.title || '') + '</h4>' +
+          '<p>' + (f.description || '') + '</p>' +
+        '</div>';
+      }).join('');
+    }
+  }
 }
 
 function updateGroupRate(data) {
