@@ -2554,15 +2554,21 @@
   <section class="section" id="about">
     <div class="container">
       <div class="section-header">
-        <h2>About Beachside Circle Boats</h2>
-        <p>Experience a new way to explore Orange Beach</p>
+        <h2 data-bind="pages.about.title">About Beachside Circle Boats</h2>
+        <p data-bind="pages.about.subtitle">Experience a new way to explore Orange Beach</p>
       </div>
+
+      <!-- About photo — hidden until set from dashboard -->
+      <div id="about-photo-wrap" style="display:none;margin-bottom:28px;border-radius:14px;overflow:hidden;background:#f3f4f6;aspect-ratio:1/1;max-width:560px;margin-left:auto;margin-right:auto;">
+        <img src="" alt="About us" style="width:100%;height:100%;object-fit:contain;display:block;" loading="lazy">
+      </div>
+
       <div style="background:#f9fafb;border-radius:12px;padding:32px;border:1px solid #e5e5e5;">
-        <p style="font-size:15px;line-height:1.8;color:#333;margin-bottom:16px;">
+        <p id="about-description" style="font-size:15px;line-height:1.8;color:#333;margin-bottom:16px;">
           Beachside Circle Boats brings a whole new way to experience Orange Beach. Our portable, eco-friendly electric circle boats are perfect for cruising the intercoastal waterways — no gas, no noise, just pure fun on the water.
         </p>
         <p style="font-size:15px;line-height:1.8;color:#333;margin-bottom:20px;">
-          <strong style="color:#1a1a1a;">Perfect For:</strong> Families, couples, birthday parties, group outings, fishing, or just relaxing on the water. No boating license needed!
+          <strong style="color:#1a1a1a;">Perfect For:</strong> <span id="about-perfect-for">Families, couples, birthday parties, group outings, fishing, or just relaxing on the water. No boating license needed!</span>
         </p>
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:24px;">
           <div>

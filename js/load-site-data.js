@@ -95,6 +95,27 @@ function updateAboutSection(data) {
   var a = data.about;
   if (a.title) document.querySelectorAll('[data-bind="pages.about.title"]').forEach(function(el) { el.textContent = a.title; });
   if (a.subtitle) document.querySelectorAll('[data-bind="pages.about.subtitle"]').forEach(function(el) { el.textContent = a.subtitle; });
+
+  // Photo block — full-width square, full image visible (object-fit: contain)
+  var imgWrap = document.getElementById('about-photo-wrap');
+  if (imgWrap) {
+    if (a.image) {
+      imgWrap.style.display = 'block';
+      var img = imgWrap.querySelector('img');
+      if (img) {
+        img.src = a.image;
+        img.alt = a.title || 'About us';
+      }
+    } else {
+      imgWrap.style.display = 'none';
+    }
+  }
+
+  // Text block
+  var descEl = document.getElementById('about-description');
+  if (descEl && a.description) descEl.textContent = a.description;
+  var forEl = document.getElementById('about-perfect-for');
+  if (forEl && a.perfectFor) forEl.textContent = a.perfectFor;
 }
 
 function updateGroupRate(data) {
