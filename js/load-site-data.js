@@ -81,6 +81,7 @@ function applyAllData(data) {
   updateLocationsSection(data);
   updateGallerySection(data);
   updateReviewsSection(data);
+  updateQnASection(data);
   updateSocialSection(data);
   updateContactInterests(data);
   updateLinksPage(data);
@@ -532,6 +533,24 @@ function updateReviewsSection(data) {
   container.innerHTML = cardHtml + cardHtml;
 }
 
+function updateQnASection(data) {
+  if (!data.qna || !data.qna.length) return;
+  var container = document.querySelector('.qna-grid');
+  if (!container) return;
+  container.innerHTML = data.qna.map(function(q, i) {
+    return '<div class="qna-item">' +
+      '<button class="qna-question" onclick="this.parentElement.classList.toggle(\'open\')">' +
+        '<span>' + (q.question || '') + '</span>' +
+        '<span class="qna-arrow">▸</span>' +
+      '</button>' +
+      '<div class="qna-answer"><p>' + (q.answer || '') + '</p></div>' +
+    '</div>';
+  }).join('');
+  // Show the section if it was hidden
+  var section = document.getElementById('qna');
+  if (section) section.style.display = '';
+}
+
 function updateSocialSection(data) {
   if (!data.social) return;
   ['facebook', 'instagram', 'google'].forEach(platform => {
@@ -558,7 +577,7 @@ function reobserveFadeIns() {
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.product-card, .step-card, .feature-card, .addon-card, .gallery-item, .dock-card, .location-card, .review-card').forEach(function(el) {
+  document.querySelectorAll('.product-card, .step-card, .feature-card, .addon-card, .gallery-item, .dock-card, .location-card, .review-card, .qna-item').forEach(function(el) {
     if (el.style.opacity === '0') return; // already observed by the inline script
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';

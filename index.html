@@ -2070,6 +2070,74 @@
       color: var(--gray-light);
     }
 
+    /* ===== Q&A / FAQ ===== */
+
+    .qna-grid {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .qna-item {
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--bg);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    .qna-item:hover {
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .qna-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      background: none;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--black);
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .qna-arrow {
+      font-size: 14px;
+      color: var(--gray-light);
+      transition: transform 0.25s;
+      flex-shrink: 0;
+    }
+
+    .qna-item.open .qna-arrow {
+      transform: rotate(90deg);
+    }
+
+    .qna-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .qna-item.open .qna-answer {
+      max-height: 500px;
+    }
+
+    .qna-answer p {
+      padding: 0 24px 18px;
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.7;
+      margin: 0;
+    }
+
     /* ===== RESPONSIVE ===== */
 
     /* Tablet */
@@ -2706,6 +2774,20 @@
         <div class="reviews-track" id="reviewsTrack">
           <!-- Populated from dashboard via /api/site-data -->
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q&A / FAQ -->
+  <section class="section" id="qna" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">FAQ</div>
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know before booking.</p>
+      </div>
+      <div class="qna-grid">
+        <!-- Populated from dashboard via /api/site-data -->
       </div>
     </div>
   </section>
