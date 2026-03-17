@@ -553,6 +553,8 @@ function updateLocationsSection(data) {
 }
 
 var _allGalleryImages = [];
+var _gallerySections = [];
+var _galleryActiveSection = 'all';
 var _galleryModalPage = 0;
 var GALLERY_HOME_COUNT = 12;
 var GALLERY_MODAL_PER_PAGE = 12;
@@ -562,10 +564,11 @@ function updateGallerySection(data) {
   const container = document.querySelector('.gallery-grid');
   if (!container) return;
 
-  // Store all images globally
+  // Store all images and sections globally
   _allGalleryImages = data.gallery.map(function(img) {
     return resolveImageUrl(typeof img === 'string' ? img : img.url);
   });
+  _gallerySections = data.gallery_sections || [];
 
   // Show first 12 on home page with lazy loading
   var first = _allGalleryImages.slice(0, GALLERY_HOME_COUNT);
@@ -596,12 +599,43 @@ function updateGallerySection(data) {
 
 function openGalleryAllModal() {
   _galleryModalPage = 0;
+  _galleryActiveSection = 'all';
   var modal = document.getElementById('galleryAllModal');
   if (!modal) return;
   document.getElementById('galleryAllGrid').innerHTML = '';
+  renderGalleryTabs();
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   renderGalleryModalPage();
+}
+
+function renderGalleryTabs() {
+  var tabBar = document.getElementById('galleryTabBar');
+  if (!tabBar) return;
+  if (!_gallerySections || !_gallerySections.length) {
+    tabBar.style.display = 'none';
+    return;
+  }
+  tabBar.style.display = 'flex';
+  tabBar.innerHTML = [{ id: 'all', name: 'All Photos' }].concat(_gallerySections).map(function(s) {
+    var active = _galleryActiveSection === s.id;
+    return '<button onclick="switchGalleryTab(\'' + s.id + '\')" style="padding:8px 16px;border-radius:50px;border:2px solid ' + (active ? 'var(--primary)' : 'var(--border,#e5e7eb)') + ';background:' + (active ? 'var(--primary)' : 'transparent') + ';color:' + (active ? 'white' : 'var(--text)') + ';font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">' + s.name + '</button>';
+  }).join('');
+}
+
+function switchGalleryTab(sectionId) {
+  _galleryActiveSection = sectionId;
+  _galleryModalPage = 0;
+  document.getElementById('galleryAllGrid').innerHTML = '';
+  renderGalleryTabs();
+  renderGalleryModalPage();
+}
+
+function getActiveGalleryImages() {
+  if (_galleryActiveSection === 'all' || !_gallerySections.length) return _allGalleryImages;
+  var section = _gallerySections.find(function(s) { return s.id === _galleryActiveSection; });
+  if (!section || !section.images || !section.images.length) return [];
+  return section.images.map(function(url) { return resolveImageUrl(url); }).filter(function(url) { return _allGalleryImages.includes(url); });
 }
 
 function closeGalleryAllModal() {
@@ -613,25 +647,26 @@ function closeGalleryAllModal() {
 function renderGalleryModalPage() {
   var grid = document.getElementById('galleryAllGrid');
   var loadMoreBtn = document.getElementById('galleryLoadMoreBtn');
+  var activeImages = getActiveGalleryImages();
   var start = _galleryModalPage * GALLERY_MODAL_PER_PAGE;
   var end = start + GALLERY_MODAL_PER_PAGE;
-  var pageImages = _allGalleryImages.slice(start, end);
+  var pageImages = activeImages.slice(start, end);
 
-  pageImages.forEach(function(src, i) {
-    var globalIndex = start + i;
+  pageImages.forEach(function(src, idx) {
+    var globalIndex = start + idx;
     var item = document.createElement('div');
     item.className = 'gallery-item';
-    item.onclick = (function(idx) { return function() { openGalleryAllLightbox(idx); }; })(globalIndex);
+    item.onclick = (function(n) { return function() { openGalleryAllLightbox(n); }; })(globalIndex);
     item.innerHTML = '<img src="' + src + '" alt="Gallery ' + (globalIndex + 1) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
     grid.appendChild(item);
   });
 
-  if (end >= _allGalleryImages.length) {
+  if (end >= activeImages.length) {
     if (loadMoreBtn) loadMoreBtn.style.display = 'none';
   } else {
     if (loadMoreBtn) {
       loadMoreBtn.style.display = 'inline-block';
-      loadMoreBtn.textContent = 'Load More (' + (_allGalleryImages.length - end) + ' more)';
+      loadMoreBtn.textContent = 'Load More (' + (activeImages.length - end) + ' more)';
     }
   }
 }
