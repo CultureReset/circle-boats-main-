@@ -516,24 +516,106 @@ function updateLocationsSection(data) {
   }
 }
 
+var _allGalleryImages = [];
+var _galleryModalPage = 0;
+var GALLERY_HOME_COUNT = 12;
+var GALLERY_MODAL_PER_PAGE = 12;
+
 function updateGallerySection(data) {
   if (!data.gallery || !data.gallery.length) return;
   const container = document.querySelector('.gallery-grid');
   if (!container) return;
-  container.innerHTML = data.gallery.map((img, i) => {
-    var src = resolveImageUrl(typeof img === 'string' ? img : img.url);
-    return `
-    <div class="gallery-item" onclick="openLightbox(${i})">
-      <img src="${src}" alt="Gallery ${i + 1}">
-    </div>`;
+
+  // Store all images globally
+  _allGalleryImages = data.gallery.map(function(img) {
+    return resolveImageUrl(typeof img === 'string' ? img : img.url);
+  });
+
+  // Show first 12 on home page with lazy loading
+  var first = _allGalleryImages.slice(0, GALLERY_HOME_COUNT);
+  container.innerHTML = first.map(function(src, i) {
+    return '<div class="gallery-item" onclick="openLightbox(' + i + ')">' +
+      '<img src="' + src + '" alt="Gallery ' + (i + 1) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
+      '</div>';
   }).join('');
-  // Re-populate the lightbox images array so openLightbox() works
+
+  // "See All Photos" button if there are more than 12
+  var existing = container.parentElement.querySelector('.gallery-see-more');
+  if (existing) existing.remove();
+  if (_allGalleryImages.length > GALLERY_HOME_COUNT) {
+    var btn = document.createElement('div');
+    btn.className = 'gallery-see-more';
+    btn.innerHTML = '<button class="btn btn-outline" onclick="openGalleryAllModal()">See All Photos (' + _allGalleryImages.length + ')</button>';
+    container.parentElement.appendChild(btn);
+  }
+
+  // Populate lightbox with first 12
   if (typeof lbImages !== 'undefined') {
     lbImages.length = 0;
-    container.querySelectorAll('.gallery-item img').forEach(function(img) {
-      lbImages.push({ src: img.src, alt: img.alt });
+    first.forEach(function(src, i) {
+      lbImages.push({ src: src, alt: 'Gallery ' + (i + 1) });
     });
   }
+}
+
+function openGalleryAllModal() {
+  _galleryModalPage = 0;
+  var modal = document.getElementById('galleryAllModal');
+  if (!modal) return;
+  document.getElementById('galleryAllGrid').innerHTML = '';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderGalleryModalPage();
+}
+
+function closeGalleryAllModal() {
+  var modal = document.getElementById('galleryAllModal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function renderGalleryModalPage() {
+  var grid = document.getElementById('galleryAllGrid');
+  var loadMoreBtn = document.getElementById('galleryLoadMoreBtn');
+  var start = _galleryModalPage * GALLERY_MODAL_PER_PAGE;
+  var end = start + GALLERY_MODAL_PER_PAGE;
+  var pageImages = _allGalleryImages.slice(start, end);
+
+  pageImages.forEach(function(src, i) {
+    var globalIndex = start + i;
+    var item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.onclick = (function(idx) { return function() { openGalleryAllLightbox(idx); }; })(globalIndex);
+    item.innerHTML = '<img src="' + src + '" alt="Gallery ' + (globalIndex + 1) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
+    grid.appendChild(item);
+  });
+
+  if (end >= _allGalleryImages.length) {
+    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+  } else {
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = 'inline-block';
+      loadMoreBtn.textContent = 'Load More (' + (_allGalleryImages.length - end) + ' more)';
+    }
+  }
+}
+
+function galleryLoadMore() {
+  _galleryModalPage++;
+  renderGalleryModalPage();
+}
+
+function openGalleryAllLightbox(index) {
+  // Swap lightbox to use all images
+  if (typeof lbImages !== 'undefined') {
+    lbImages.length = 0;
+    _allGalleryImages.forEach(function(src, i) {
+      lbImages.push({ src: src, alt: 'Gallery ' + (i + 1) });
+    });
+  }
+  closeGalleryAllModal();
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() { openLightbox(index); }, 50);
 }
 
 function updateReviewsSection(data) {

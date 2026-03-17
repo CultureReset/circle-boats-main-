@@ -838,6 +838,44 @@
       transform: scale(1.06);
     }
 
+    /* ===== SEE ALL GALLERY MODAL ===== */
+    .gallery-see-more {
+      text-align: center;
+      margin-top: 24px;
+    }
+    .gallery-all-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .gallery-all-modal.active { display: flex; }
+    .gallery-all-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: -1;
+    }
+    .gallery-all-content {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 960px;
+      padding: 24px;
+      position: relative;
+      margin: auto;
+    }
+    .gallery-all-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
     /* ===== SWIPEABLE LIGHTBOX ===== */
     .lightbox {
       position: fixed;
@@ -2800,6 +2838,21 @@
       </div>
     </div>
   </section>
+
+  <!-- GALLERY ALL MODAL -->
+  <div class="gallery-all-modal" id="galleryAllModal">
+    <div class="gallery-all-overlay" onclick="closeGalleryAllModal()"></div>
+    <div class="gallery-all-content">
+      <div class="gallery-all-header">
+        <h3 style="margin:0;font-size:20px;">All Photos</h3>
+        <button onclick="closeGalleryAllModal()" style="background:none;border:none;font-size:28px;cursor:pointer;line-height:1;color:var(--text);">&times;</button>
+      </div>
+      <div class="gallery-grid" id="galleryAllGrid"></div>
+      <div style="text-align:center;padding:24px 0 8px;">
+        <button class="btn btn-outline" id="galleryLoadMoreBtn" onclick="galleryLoadMore()" style="display:none;">Load More</button>
+      </div>
+    </div>
+  </div>
 
   <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
