@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking Confirmed | Beachside Circle Boats</title>
+  <link rel="icon" type="image/jpeg" href="images/goboat/goboat-hero.jpg">
+  <meta property="og:title" content="Booking Confirmed — Beachside Circle Boats">
+  <meta property="og:description" content="Your circle boat rental is confirmed! See you on the water.">
+  <meta property="og:image" content="https://circle-boats-main-.vercel.app/images/goboat/goboat-onwater1.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -327,6 +332,11 @@
       </div>
     </div>
 
+    <!-- Share with group -->
+    <div style="margin-bottom:16px;">
+      <button class="btn-secondary" onclick="shareBooking()" style="width:100%;font-size:16px;">📤 Share with Your Group</button>
+    </div>
+
     <!-- Actions -->
     <div class="action-buttons">
       <a href="index.html" class="btn-secondary">Return Home</a>
@@ -360,6 +370,22 @@
     document.getElementById('detailQty').textContent = booking.qty || 1;
     document.getElementById('detailTotal').textContent = `$${booking.total || sessionStorage.getItem('bookingData') ? JSON.parse(sessionStorage.getItem('bookingData')).totalPrice : '0'}`;
     document.getElementById('confirmationEmail').textContent = booking.customer_email || sessionStorage.getItem('bookingData') ? JSON.parse(sessionStorage.getItem('bookingData')).customer_email : '—';
+
+    function shareBooking() {
+      const date = document.getElementById('detailDate').textContent;
+      const boat = document.getElementById('detailBoat').textContent;
+      const duration = document.getElementById('detailDuration').textContent;
+      const text = `Join me for circle boats! 🚤\n\n📅 ${date}\n🛥️ ${boat}\n⏰ ${duration}\n📍 Beachside Circle Boats, Orange Beach, AL\n\nBook yours: https://circle-boats-main-.vercel.app/booking.html`;
+      if (navigator.share) {
+        navigator.share({ title: 'Circle Boat Booking', text });
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = event.target;
+          btn.textContent = '✓ Copied to clipboard!';
+          setTimeout(() => { btn.textContent = '📤 Share with Your Group'; }, 2500);
+        });
+      }
+    }
 
     // Clear session storage
     setTimeout(() => {

@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beachside Circle Boats — Orange Beach, AL | Rentals</title>
   <meta name="description" content="Portable inflatable circle boat rentals in Orange Beach, Alabama. Eco-friendly electric boats for singles and doubles. Book your day on the water today!">
+  <link rel="icon" type="image/jpeg" href="images/goboat/goboat-hero.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Beachside Circle Boats — Orange Beach, AL">
+  <meta property="og:description" content="Portable inflatable circle boat rentals in Orange Beach, Alabama. No license needed, no experience required. Just show up and cruise.">
+  <meta property="og:image" content="https://circle-boats-main-.vercel.app/images/goboat/goboat-onwater1.jpg">
+  <meta property="og:url" content="https://circle-boats-main-.vercel.app/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Beachside Circle Boats — Orange Beach, AL">
+  <meta name="twitter:description" content="Portable inflatable circle boat rentals in Orange Beach, Alabama. No license needed, no experience required. Just show up and cruise.">
+  <meta name="twitter:image" content="https://circle-boats-main-.vercel.app/images/goboat/goboat-onwater1.jpg">
   <script src="tracking.js"></script>
   <script src="js/load-site-data.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2493,6 +2503,18 @@
       border: 3px solid var(--teal-light);
     }
 
+    /* Review customer photos — override the circular review-card img rule */
+    .review-photos { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
+    .review-photos .review-photo {
+      width: 80px !important;
+      height: 80px !important;
+      object-fit: cover !important;
+      border-radius: 8px !important;
+      border: 1px solid var(--border) !important;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
     /* Dock Images — 500x375 (4:3 aspect ratio) */
     .dock-image,
     .img-dock {
@@ -2637,7 +2659,7 @@
         </div>
       </div>
     </div>
-    <div class="hero-image">
+    <div class="hero-image" id="heroMedia">
       <iframe src="https://www.youtube.com/embed/CI4qVeBE36Q?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&playlist=CI4qVeBE36Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
   </section>
