@@ -1037,7 +1037,9 @@
        ============================================ -->
   <script>
   (function() {
-    var API_BASE = window.location.origin;
+    var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? window.location.protocol + '//' + window.location.hostname + ':3000'
+      : 'https://cybercheck-api-database.vercel.app';
     var SUBDOMAIN = 'beachside-circle-boats';
     // Expose for submitBooking
     window.API_BASE = API_BASE;
@@ -1357,6 +1359,10 @@
 
     console.log('API: Linktree integration loaded');
   })();
+  </script>
+  <script>
+    // Load dashboard-managed content (links, profile, etc.) via load-site-data.js
+    if (typeof loadWebsiteData === 'function') loadWebsiteData();
   </script>
 </body>
 </html>
