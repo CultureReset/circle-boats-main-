@@ -504,9 +504,12 @@ function updateStepsSection(data) {
 }
 
 function updateFeaturesSection(data) {
-  if (!data.features || !data.features.length) return;
   const container = document.querySelector('.features-grid');
   if (!container) return;
+  if (!data.features || !data.features.length) {
+    container.innerHTML = '';
+    return;
+  }
   container.innerHTML = data.features.map(f => `
     <div class="feature-card">
       ${f.image
