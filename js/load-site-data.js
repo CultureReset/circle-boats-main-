@@ -42,10 +42,12 @@ async function fetchAndCache() {
     return data;
   } catch (e) {
     console.warn('Could not fetch site data:', e.message);
-    // Try stale cache as last resort
+    // Try stale cache as last resort — but cap at 24h max
     try {
       const stale = localStorage.getItem(CACHE_KEY);
-      if (stale) return JSON.parse(stale);
+      const staleTs = localStorage.getItem(CACHE_KEY + '_ts');
+      const age = staleTs ? Date.now() - parseInt(staleTs) : Infinity;
+      if (stale && age < 24 * 60 * 60 * 1000) return JSON.parse(stale);
     } catch (_) {}
     return null;
   }
