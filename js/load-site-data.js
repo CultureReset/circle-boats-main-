@@ -646,34 +646,43 @@ function closeGalleryAllModal() {
 
 function renderGalleryModalPage() {
   var grid = document.getElementById('galleryAllGrid');
-  var loadMoreBtn = document.getElementById('galleryLoadMoreBtn');
+  var prevBtn = document.getElementById('galleryPrevBtn');
+  var nextBtn = document.getElementById('galleryNextBtn');
+  var label = document.getElementById('galleryPageLabel');
   var activeImages = getActiveGalleryImages();
+  var totalPages = Math.ceil(activeImages.length / GALLERY_MODAL_PER_PAGE);
   var start = _galleryModalPage * GALLERY_MODAL_PER_PAGE;
-  var end = start + GALLERY_MODAL_PER_PAGE;
+  var end = Math.min(start + GALLERY_MODAL_PER_PAGE, activeImages.length);
   var pageImages = activeImages.slice(start, end);
 
-  pageImages.forEach(function(src, idx) {
+  // Replace grid content (not append)
+  grid.innerHTML = pageImages.map(function(src, idx) {
     var globalIndex = start + idx;
-    var item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.onclick = (function(n) { return function() { openGalleryAllLightbox(n); }; })(globalIndex);
-    item.innerHTML = '<img src="' + src + '" alt="Gallery ' + (globalIndex + 1) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
-    grid.appendChild(item);
-  });
+    return '<div class="gallery-item" onclick="openGalleryAllLightbox(' + globalIndex + ')">' +
+      '<img src="' + src + '" alt="Gallery ' + (globalIndex + 1) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">' +
+      '</div>';
+  }).join('');
 
-  if (end >= activeImages.length) {
-    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-  } else {
-    if (loadMoreBtn) {
-      loadMoreBtn.style.display = 'inline-block';
-      loadMoreBtn.textContent = 'Load More (' + (activeImages.length - end) + ' more)';
-    }
-  }
+  // Scroll modal back to top on page change
+  var content = document.querySelector('.gallery-all-content');
+  if (content) content.scrollTop = 0;
+
+  // Update pagination controls
+  if (label) label.textContent = totalPages > 1 ? 'Page ' + (_galleryModalPage + 1) + ' of ' + totalPages : '';
+  if (prevBtn) prevBtn.style.display = _galleryModalPage > 0 ? 'inline-block' : 'none';
+  if (nextBtn) nextBtn.style.display = end < activeImages.length ? 'inline-block' : 'none';
 }
 
-function galleryLoadMore() {
+function galleryNextPage() {
   _galleryModalPage++;
   renderGalleryModalPage();
+}
+
+function galleryPrevPage() {
+  if (_galleryModalPage > 0) {
+    _galleryModalPage--;
+    renderGalleryModalPage();
+  }
 }
 
 function openGalleryAllLightbox(index) {

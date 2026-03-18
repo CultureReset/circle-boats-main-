@@ -2871,8 +2871,10 @@
       </div>
       <div id="galleryTabBar" style="display:none;gap:8px;flex-wrap:wrap;margin-bottom:16px;"></div>
       <div class="gallery-grid" id="galleryAllGrid"></div>
-      <div style="text-align:center;padding:24px 0 8px;">
-        <button class="btn btn-outline" id="galleryLoadMoreBtn" onclick="galleryLoadMore()" style="display:none;">Load More</button>
+      <div style="text-align:center;padding:24px 0 8px;display:flex;align-items:center;justify-content:center;gap:16px;">
+        <button class="btn btn-outline" id="galleryPrevBtn" onclick="galleryPrevPage()" style="display:none;">&#8249; Prev</button>
+        <span id="galleryPageLabel" style="font-size:14px;color:#888;"></span>
+        <button class="btn btn-outline" id="galleryNextBtn" onclick="galleryNextPage()" style="display:none;">Next &#8250;</button>
       </div>
     </div>
   </div>
