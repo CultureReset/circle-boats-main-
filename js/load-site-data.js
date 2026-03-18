@@ -321,24 +321,77 @@ function syncBookingPrices(data) {
   });
 }
 
-// Update contact form "Interested In" dropdown from dashboard data
+// Update contact section from dashboard data
 function updateContactInterests(data) {
+  var c = data.contact || {};
+
+  // Section heading + subtitle
+  if (c.heading) {
+    document.querySelectorAll('[data-bind="pages.contact.heading"]').forEach(function(el) { el.textContent = c.heading; });
+  }
+  if (c.subtitle) {
+    document.querySelectorAll('[data-bind="pages.contact.subtitle"]').forEach(function(el) { el.textContent = c.subtitle; });
+  }
+
+  // Form title
+  var titleEl = document.getElementById('contact-form-title');
+  if (titleEl && c.formTitle) titleEl.textContent = c.formTitle;
+
+  // Submit button label
+  var submitBtn = document.getElementById('contact-submit-btn');
+  if (submitBtn && c.submitLabel) submitBtn.textContent = c.submitLabel;
+
+  // "Interested In" dropdown
   var sel = document.getElementById('contact-interest');
-  if (!sel) return;
-  var opts = ['<option value="">Select one...</option>'];
-  if (data.products) {
-    data.products.forEach(function(p) {
-      opts.push('<option>' + p.name + ' — Half Day ($' + (p.halfDayAM ?? p.halfDay) + ')</option>');
-      opts.push('<option>' + p.name + ' — All Day ($' + p.allDay + ')</option>');
-    });
+  if (sel) {
+    var opts = ['<option value="">Select one...</option>'];
+    // Use dashboard-defined options if set, else auto-build from products
+    if (c.interests && c.interests.length) {
+      c.interests.forEach(function(opt) { opts.push('<option>' + opt + '</option>'); });
+    } else {
+      if (data.products) {
+        data.products.forEach(function(p) {
+          opts.push('<option>' + p.name + ' \u2014 Half Day ($' + (p.halfDayAM != null ? p.halfDayAM : p.halfDay) + ')</option>');
+          opts.push('<option>' + p.name + ' \u2014 All Day ($' + p.allDay + ')</option>');
+        });
+      }
+      if (data.docks && data.docks.length) {
+        opts.push('<option>Dock Rental ($' + data.docks[0].allDay + ')</option>');
+      }
+      opts.push('<option>Add-ons</option>');
+      opts.push('<option>Private Event</option>');
+      opts.push('<option>General Question</option>');
+    }
+    sel.innerHTML = opts.join('');
   }
-  if (data.docks && data.docks.length) {
-    opts.push('<option>Dock Rental ($' + data.docks[0].allDay + ')</option>');
+
+  // Custom extra fields
+  var customContainer = document.getElementById('contact-custom-fields');
+  if (customContainer) {
+    if (c.customFields && c.customFields.length) {
+      customContainer.innerHTML = c.customFields.map(function(f) {
+        var req = f.required ? ' required' : '';
+        var reqStar = f.required ? ' <span style="color:var(--danger);">*</span>' : '';
+        var inner = '';
+        if (f.type === 'textarea') {
+          inner = '<textarea id="cf-' + f.id + '" data-custom-field="' + f.label + '" placeholder="' + (f.placeholder || '') + '"' + req + ' style="width:100%;padding:10px 14px;background:var(--bg,#fff);border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;resize:vertical;min-height:80px;box-sizing:border-box;"></textarea>';
+        } else if (f.type === 'select') {
+          var options = (f.options || []).map(function(o) { return '<option>' + o + '</option>'; }).join('');
+          inner = '<select id="cf-' + f.id + '" data-custom-field="' + f.label + '"' + req + ' style="width:100%;padding:10px 14px;background:var(--bg,#fff);border:1px solid #d1d5db;border-radius:8px;font-size:14px;">' +
+            '<option value="">Select...</option>' + options + '</select>';
+        } else if (f.type === 'checkbox') {
+          return '<div class="form-group" style="display:flex;align-items:center;gap:10px;">' +
+            '<input type="checkbox" id="cf-' + f.id + '" data-custom-field="' + f.label + '" style="width:18px;height:18px;cursor:pointer;">' +
+            '<label for="cf-' + f.id + '" style="margin:0;cursor:pointer;">' + f.label + reqStar + '</label></div>';
+        } else {
+          inner = '<input type="' + (f.type || 'text') + '" id="cf-' + f.id + '" data-custom-field="' + f.label + '" placeholder="' + (f.placeholder || '') + '"' + req + ' style="width:100%;padding:10px 14px;background:var(--bg,#fff);border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;">';
+        }
+        return '<div class="form-group"><label for="cf-' + f.id + '">' + f.label + reqStar + '</label>' + inner + '</div>';
+      }).join('');
+    } else {
+      customContainer.innerHTML = '';
+    }
   }
-  opts.push('<option>Add-ons</option>');
-  opts.push('<option>Private Event</option>');
-  opts.push('<option>General Question</option>');
-  sel.innerHTML = opts.join('');
 }
 
 function updateHeroSection(data) {

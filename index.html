@@ -2948,12 +2948,12 @@
     <div class="container">
       <div class="section-header">
         <div class="section-tag">Contact</div>
-        <h2>Book or Ask a Question</h2>
-        <p>Send us a message or call. We respond fast.</p>
+        <h2 data-bind="pages.contact.heading">Book or Ask a Question</h2>
+        <p data-bind="pages.contact.subtitle">Send us a message or call. We respond fast.</p>
       </div>
       <div class="contact-grid">
         <div class="contact-form">
-          <h3>Send a Message</h3>
+          <h3 id="contact-form-title">Send a Message</h3>
           <form onsubmit="handleContact(event)">
             <div class="form-row">
               <div class="form-group">
@@ -2984,11 +2984,12 @@
                 <option value="other">General Question</option>
               </select>
             </div>
+            <div id="contact-custom-fields"></div>
             <div class="form-group">
               <label for="contact-message">Message</label>
               <textarea id="contact-message" placeholder="Tell us about your plans, preferred dates, or any questions..."></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
+            <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
           </form>
         </div>
         <div class="contact-sidebar">
@@ -3367,12 +3368,20 @@
       var btn = e.target.querySelector('button[type="submit"]');
       var form = e.target;
 
+      // Collect custom field answers
+      var customAnswers = {};
+      form.querySelectorAll('[data-custom-field]').forEach(function(el) {
+        var label = el.getAttribute('data-custom-field');
+        customAnswers[label] = el.type === 'checkbox' ? el.checked : el.value;
+      });
+
       var contactData = {
         name: form.querySelector('#contact-name')?.value || '',
         email: form.querySelector('#contact-email')?.value || '',
         phone: form.querySelector('#contact-phone')?.value || '',
         interest: form.querySelector('#contact-interest')?.value || '',
-        message: form.querySelector('#contact-message')?.value || ''
+        message: form.querySelector('#contact-message')?.value || '',
+        custom: customAnswers
       };
 
       // Send to API
