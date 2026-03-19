@@ -610,6 +610,12 @@
       </a>
     </div>
 
+    <div style="text-align:center;margin-top:20px;margin-bottom:8px;">
+      <button onclick="shareLinksPage()" style="background:#00ada8;color:white;border:none;border-radius:50px;padding:12px 28px;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(0,173,168,0.3);">
+        &#128279; Share This Page
+      </button>
+    </div>
+
     <div class="footer">
       Powered by CyberCheck
     </div>
@@ -1366,6 +1372,18 @@
 
     console.log('API: Linktree integration loaded');
   })();
+  </script>
+  <script>
+  function shareLinksPage() {
+    var url = window.location.href.split('?')[0];
+    if (navigator.share) {
+      navigator.share({ title: 'Beachside Circle Boats', url: url });
+    } else {
+      navigator.clipboard.writeText(url).then(function() {
+        alert('Link copied! ' + url);
+      });
+    }
+  }
   </script>
   <script>
     // Load dashboard-managed content (links, profile, etc.) via load-site-data.js
