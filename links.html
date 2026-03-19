@@ -1109,8 +1109,9 @@
           var hoursList = document.getElementById('hours-list');
           if (hoursList) {
             if (typeof data.hours === 'string') {
-              // Split by newline, each line becomes its own row
+              // Split by newline; if only one line, fall back to splitting by comma
               var lines = data.hours.split('\n').filter(function(l) { return l.trim(); });
+              if (lines.length <= 1) lines = data.hours.split(',').filter(function(l) { return l.trim(); });
               hoursList.innerHTML = lines.map(function(line) {
                 // Convert military time patterns like 08:00 to 8:00 AM
                 line = line.replace(/\b(\d{1,2}):(\d{2})\b/g, function(m, h, min) {
