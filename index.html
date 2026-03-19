@@ -4737,6 +4737,30 @@
           });
         }
 
+        // Update hours
+        if (data.hours && typeof data.hours === 'string') {
+          var hoursEl = document.querySelector('.info-row[data-bind="business.hours"]');
+          if (hoursEl) {
+            var hStr = data.hours;
+            // Convert military times like 08:00 → 8:00 AM
+            hStr = hStr.replace(/\b(\d{1,2}):(\d{2})\b/g, function(m, h, min) {
+              h = parseInt(h);
+              var ampm = h >= 12 ? 'PM' : 'AM';
+              if (h > 12) h -= 12;
+              if (h === 0) h = 12;
+              return h + ':' + min + ' ' + ampm;
+            });
+            // Split by newline or comma, put each day on its own line
+            var lines = hStr.split('\n').filter(function(l) { return l.trim(); });
+            if (lines.length <= 1) lines = hStr.split(',').filter(function(l) { return l.trim(); });
+            hoursEl.innerHTML = lines.join('<br>');
+          }
+        }
+        if (data.hoursNote) {
+          var noteEl = document.querySelector('.info-row[data-bind="business.hoursNote"]');
+          if (noteEl) noteEl.textContent = data.hoursNote;
+        }
+
         console.log('API: Profile loaded from backend');
       })
       .catch(function(err) {
