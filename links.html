@@ -881,14 +881,8 @@
       <div class="modal-header">&#x1F551; Business Hours</div>
 
       <div style="background: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 16px;">
-        <div style="font-size: 15px;">
-          <div class="hours-row"><span>Monday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
-          <div class="hours-row"><span>Tuesday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
-          <div class="hours-row"><span>Wednesday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
-          <div class="hours-row"><span>Thursday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
-          <div class="hours-row"><span>Friday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
-          <div class="hours-row"><span>Saturday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
-          <div class="hours-row"><span>Sunday</span><span class="hours-time">9:00 AM &ndash; 6:00 PM</span></div>
+        <div id="hours-list" style="font-size: 15px;">
+          <div class="hours-row">Loading hours...</div>
         </div>
       </div>
 
@@ -1112,24 +1106,32 @@
 
         // Update hours modal
         if (data.hours) {
-          var hoursContainer = document.querySelector('#hoursModal .modal-content');
-          if (hoursContainer) {
-            var daysOfWeek = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
-            var dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-            var hoursRows = hoursContainer.querySelectorAll('.hours-row');
-            hoursRows.forEach(function(row, i) {
-              if (i < daysOfWeek.length && data.hours[daysOfWeek[i]]) {
-                var dayData = data.hours[daysOfWeek[i]];
-                var timeEl = row.querySelector('.hours-time');
-                if (timeEl) {
-                  if (dayData.closed) {
-                    timeEl.textContent = 'Closed';
-                  } else {
-                    timeEl.textContent = formatTime(dayData.open) + ' \u2013 ' + formatTime(dayData.close);
-                  }
-                }
-              }
-            });
+          var hoursList = document.getElementById('hours-list');
+          if (hoursList) {
+            if (typeof data.hours === 'string') {
+              // Split by newline, each line becomes its own row
+              var lines = data.hours.split('\n').filter(function(l) { return l.trim(); });
+              hoursList.innerHTML = lines.map(function(line) {
+                // Convert military time patterns like 08:00 to 8:00 AM
+                line = line.replace(/\b(\d{1,2}):(\d{2})\b/g, function(m, h, min) {
+                  h = parseInt(h);
+                  var ampm = h >= 12 ? 'PM' : 'AM';
+                  if (h > 12) h -= 12;
+                  if (h === 0) h = 12;
+                  return h + ':' + min + ' ' + ampm;
+                });
+                return '<div class="hours-row">' + line + '</div>';
+              }).join('');
+            } else {
+              // Structured object format {monday: {open, close, closed}, ...}
+              var daysOfWeek = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+              var dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+              hoursList.innerHTML = daysOfWeek.map(function(day, i) {
+                var dayData = data.hours[day];
+                var timeStr = dayData ? (dayData.closed ? 'Closed' : formatTime(dayData.open) + ' \u2013 ' + formatTime(dayData.close)) : '\u2014';
+                return '<div class="hours-row"><span>' + dayNames[i] + '</span><span class="hours-time">' + timeStr + '</span></div>';
+              }).join('');
+            }
           }
         }
 
