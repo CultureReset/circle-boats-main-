@@ -673,6 +673,27 @@
   }
   .b-form-group input:focus, .b-form-group textarea:focus { outline: none; border-color: #00ada8; }
   .b-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  /* ── Boat qty rows (step 2) ── */
+  .bk-boat-row { display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid #e8e8e8;border-radius:12px;margin-bottom:10px;transition:border-color .15s; }
+  .bk-boat-row.active { border-color:#00ada8;background:rgba(0,173,168,0.06); }
+  .bk-boat-row-img { width:72px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0; }
+  .bk-boat-row-info { flex:1; }
+  .bk-boat-row-info h4 { font-size:15px;font-weight:700;color:#333;margin-bottom:2px; }
+  .bk-boat-row-info p { font-size:12px;color:#666; }
+  .bk-boat-row-price { font-size:13px;font-weight:700;color:#00ada8;white-space:nowrap;margin-right:6px; }
+  /* ── Extras rows (step 3) ── */
+  .bk-extra-row { display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #e8e8e8;border-radius:10px;margin-bottom:8px;transition:border-color .15s; }
+  .bk-extra-row.active { border-color:#00ada8;background:rgba(0,173,168,0.06); }
+  .bk-extra-row-info { flex:1; }
+  .bk-extra-row-info strong { display:block;font-size:13px;color:#333; }
+  .bk-extra-row-info span { font-size:11px;color:#666; }
+  .bk-extra-price { font-weight:700;color:#00ada8;font-size:13px;white-space:nowrap;margin-right:6px; }
+  /* ── Shared qty control ── */
+  .bk-qty-ctrl { display:flex;align-items:center;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden; }
+  .bk-qty-ctrl button { width:32px;height:32px;border:none;background:#fafafa;font-size:17px;cursor:pointer;color:#333;display:flex;align-items:center;justify-content:center; }
+  .bk-qty-ctrl button:hover { background:#e8e8e8; }
+  .bk-qty-ctrl span { width:34px;text-align:center;font-weight:700;font-size:15px;color:#333; }
+  .bk-section-label { font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px; }
   @media (max-width: 480px) {
     .booking-overlay { padding: 0; align-items: flex-end; }
     .booking-modal { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 95vh; }
@@ -818,7 +839,7 @@
       <button class="modal-close" onclick="closeModal('fleet')">&times;</button>
       <div class="modal-header">&#x1F6A4; Circle Boats &amp; Docks</div>
 
-      <div class="pkg-item" onclick="openBooking()">
+      <div class="pkg-item" onclick="closeModal('fleet');openBooking('single')">
         <img src="images/goboat/goboat-main.jpg?v=3" alt="Single Seater" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Single Seater</div>
@@ -827,7 +848,7 @@
         <div class="pkg-price">$150–$225</div>
       </div>
 
-      <div class="pkg-item" onclick="openBooking()">
+      <div class="pkg-item" onclick="closeModal('fleet');openBooking('double')">
         <img src="images/goboat/goboat-bumpers.jpg?v=3" alt="Double Seater" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Double Seater <span class="pkg-badge">Popular</span></div>
@@ -1529,16 +1550,10 @@
         </div>
         <!-- STEP 2: BOAT & TIME -->
         <div class="bstep" id="bstep2">
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;color:#333;">Select Boat Type</h4>
-          <div class="boat-option" data-boat="single" onclick="selectBoat(this)">
-            <img src="images/goboat/goboat-beach.jpg" alt="Single Seater" class="boat-option-img">
-            <div class="boat-option-info"><h4>Single Seater</h4><p>1 person &bull; Max 300 lbs &bull; 70" diameter</p></div>
-            <div class="boat-option-price">from $150</div>
-          </div>
-          <div class="boat-option" data-boat="double" onclick="selectBoat(this)">
-            <img src="images/goboat/goboat-bumpers.jpg" alt="Double Seater" class="boat-option-img">
-            <div class="boat-option-info"><h4>Double Seater</h4><p>2 people &bull; Max 450 lbs &bull; 89" x 70"</p></div>
-            <div class="boat-option-price">from $200</div>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;color:#333;">Choose Your Boats</h4>
+          <p style="font-size:13px;color:#666;margin-bottom:14px;">Add as many as you like — mix &amp; match.</p>
+          <div id="bk-boat-list">
+            <!-- Populated by renderBoatOptions() -->
           </div>
           <h4 style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:4px;color:#333;">Time Slot</h4>
           <div class="slot-grid">
@@ -1546,35 +1561,11 @@
             <div class="slot-btn" data-slot="pm" onclick="selectSlot(this)"><strong>Half Day PM</strong><span>2:00 &ndash; 6:00</span><div class="slot-price" id="slotPM">$150</div></div>
             <div class="slot-btn" data-slot="all" onclick="selectSlot(this)"><strong>All Day</strong><span>9:00 &ndash; 6:00</span><div class="slot-price" id="slotAll">$225</div></div>
           </div>
-          <div class="qty-row">
-            <label>Quantity:</label>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty(-1)">-</button>
-              <div class="qty-val" id="qtyVal">1</div>
-              <button class="qty-btn" onclick="changeQty(1)">+</button>
-            </div>
-          </div>
         </div>
         <!-- STEP 3: EXTRAS -->
         <div class="bstep" id="bstep3">
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;color:#333;">Add a Dock</h4>
-          <p style="font-size:13px;color:#666;margin-bottom:12px;">$25 half-day / $50 full-day. Rent 4+ boats = FREE dock!</p>
-          <div class="addon-check-grid">
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="mini-dock" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>Mini Dock</strong><span>8'4" x 44" platform</span></div><div class="addon-check-price">$25</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="x-dock" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>X Dock</strong><span>5' x 5' floating dock</span></div><div class="addon-check-price">$25</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="doggie-dock" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>Doggie Dock</strong><span>5'4" x 43" with ramp</span></div><div class="addon-check-price">$25</div></label>
-          </div>
-          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:4px;color:#333;">Add-ons</h4>
-          <p style="font-size:13px;color:#666;margin-bottom:12px;">Enhance your trip with these extras.</p>
-          <div class="addon-check-grid">
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="cooler" data-price="35"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127866; Cooler Pack</strong><span>Cooler + ice + drinks</span></div><div class="addon-check-price">$35</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="drinks" data-price="15"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#129380; Drink &amp; Ice</strong><span>6 drinks + bag of ice</span></div><div class="addon-check-price">$15</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="snacks" data-price="20"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127839; Snack Pack</strong><span>Chips, granola, fruit</span></div><div class="addon-check-price">$20</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="pup" data-price="15"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#128054; Pup Pack</strong><span>Treats, bowl, dog vest</span></div><div class="addon-check-price">$15</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="speaker" data-price="15"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127925; BT Speaker</strong><span>Waterproof JBL</span></div><div class="addon-check-price">$15</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="gopro" data-price="30"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#128247; GoPro</strong><span>Waterproof camera</span></div><div class="addon-check-price">$30</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="fishing" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127907; Fishing Gear</strong><span>Rod, reel, tackle, bait</span></div><div class="addon-check-price">$25</div></label>
-            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="sunkit" data-price="10"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#9728;&#65039; Sun &amp; Safety</strong><span>Sunscreen, hat, dry bag</span></div><div class="addon-check-price">$10</div></label>
+          <div id="bk-extras-list">
+            <!-- Populated by renderExtrasOptions() from SITE_DATA -->
           </div>
         </div>
         <!-- STEP 4: CHECKOUT -->
@@ -1613,27 +1604,35 @@
   </div>
 
   <script>
-  /* ===== BOOKING SYSTEM — same logic as main website ===== */
+  /* ===== BOOKING SYSTEM ===== */
   (function() {
     var bk = {
       step: 1, location: 'loc1', locationName: 'Main Launch — Canal Road',
-      date: null, boat: null, slot: null, qty: 1, addons: [],
+      date: null, slot: null, boats: {}, addons: [],
       calMonth: new Date().getMonth(), calYear: new Date().getFullYear(),
       sessionId: null, holdId: null
     };
     var PRICES = { single: { am: 150, pm: 150, all: 225 }, double: { am: 200, pm: 200, all: 275 } };
     var GROUP_PRICE = 200;
     var TAX_RATE = 0.10;
-    var ADDON_NAMES = { 'mini-dock':'Mini Dock','x-dock':'X Dock','doggie-dock':'Doggie Dock','cooler':'Cooler Pack','drinks':'Drink & Ice','snacks':'Snack Pack','pup':'Pup Pack','speaker':'BT Speaker','gopro':'GoPro Rental','fishing':'Fishing Gear','sunkit':'Sun & Safety Kit' };
     var SLOT_LABELS = { am:'Half Day AM (9:00-1:00)', pm:'Half Day PM (2:00-6:00)', all:'All Day (9:00-6:00)' };
     var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     var _stripe = null, _cardNumber = null, _cardExpiry = null, _cardCvc = null, _stripePkFetched = false;
+    function api(path) {
+      var base = window.API_BASE || 'https://cybercheck-api-database.vercel.app';
+      var sub = window.SUBDOMAIN || 'beachside-circle-boats';
+      var sep = path.indexOf('?') > -1 ? '&' : '?';
+      return base + '/api/public' + path + sep + 'subdomain=' + sub;
+    }
 
     function genSessionId() { return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2,9); }
+    function getTotalBoatQty() { return Object.keys(bk.boats).reduce(function(s,k){return s+(bk.boats[k]||0);},0); }
 
     window.openBooking = function(preselect) {
-      if (preselect) bk.boat = preselect;
+      bk.boats = {}; bk.addons = []; bk.slot = null;
+      if (preselect) bk.boats[preselect] = 1;
       bk.sessionId = genSessionId(); bk.holdId = null;
+      document.querySelectorAll('.slot-btn').forEach(function(s){s.classList.remove('selected');});
       document.getElementById('bookingOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
       goToStep(1); renderBkCalendar();
@@ -1683,35 +1682,127 @@
       bk.locationName = el.getAttribute('data-loc-name');
       updateBkNextBtn();
     };
-    window.selectBoat = function(el) {
-      document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
-      el.classList.add('selected'); bk.boat = el.getAttribute('data-boat');
+    /* ── Per-boat qty rendering ─────────────────────────────────────────────── */
+    function renderBoatOptions() {
+      var container = document.getElementById('bk-boat-list');
+      if (!container) return;
+      // Sync PRICES from SITE_DATA if available
+      if (window.SITE_DATA && window.SITE_DATA.products) {
+        window.SITE_DATA.products.forEach(function(p) {
+          var k = p.key || p.name.toLowerCase().split(' ')[0];
+          PRICES[k] = { am: p.halfDayAM!=null?p.halfDayAM:(p.halfDay||0), pm: p.halfDayPM!=null?p.halfDayPM:(p.halfDay||0), all: p.allDay||0 };
+        });
+      }
+      var products = (window.SITE_DATA && window.SITE_DATA.products) || [
+        { key:'single', name:'Single Seater', description:'1 person • Max 300 lbs • 70" diameter', image:'images/goboat/goboat-beach.jpg' },
+        { key:'double', name:'Double Seater', description:'2 people • Max 450 lbs • 89" × 70"', image:'images/goboat/goboat-bumpers.jpg' }
+      ];
+      container.innerHTML = products.map(function(p) {
+        var key = p.key || p.name.toLowerCase().split(' ')[0];
+        var qty = bk.boats[key] || 0;
+        var priceStr = bk.slot && PRICES[key] ? '$'+PRICES[key][bk.slot]+'/ea' : 'from $'+((PRICES[key]&&PRICES[key].am)||(p.halfDayAM!=null?p.halfDayAM:p.halfDay)||'?');
+        var img = p.image || '';
+        return '<div class="bk-boat-row'+(qty>0?' active':'')+'" data-boat="'+key+'">' +
+          (img ? '<img class="bk-boat-row-img" src="'+img+'" alt="'+p.name+'">' : '') +
+          '<div class="bk-boat-row-info"><h4>'+p.name+'</h4><p>'+(p.description||'')+'</p></div>' +
+          '<span class="bk-boat-row-price">'+priceStr+'</span>' +
+          '<div class="bk-qty-ctrl">' +
+            '<button onclick="changeBoatQty(\''+key+'\',-1)">−</button>' +
+            '<span id="bkqty-'+key+'">'+qty+'</span>' +
+            '<button onclick="changeBoatQty(\''+key+'\',1)">+</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+    window.changeBoatQty = function(key, delta) {
+      bk.boats[key] = Math.max(0, Math.min(20, (bk.boats[key]||0) + delta));
+      var span = document.getElementById('bkqty-'+key);
+      if (span) span.textContent = bk.boats[key];
+      var row = document.querySelector('.bk-boat-row[data-boat="'+key+'"]');
+      if (row) row.classList.toggle('active', bk.boats[key] > 0);
       updateSlotPrices(); updateBkNextBtn();
     };
     function updateSlotPrices() {
-      if (!bk.boat) return; var p = PRICES[bk.boat];
-      document.getElementById('slotAM').textContent = '$'+p.am;
-      document.getElementById('slotPM').textContent = '$'+p.pm;
-      document.getElementById('slotAll').textContent = '$'+p.all;
+      var boats = Object.keys(bk.boats).filter(function(k){return bk.boats[k]>0;});
+      var key = boats[0] || 'single';
+      var p = PRICES[key] || { am:150, pm:150, all:225 };
+      var amEl=document.getElementById('slotAM'), pmEl=document.getElementById('slotPM'), allEl=document.getElementById('slotAll');
+      if (amEl) amEl.textContent='$'+p.am;
+      if (pmEl) pmEl.textContent='$'+p.pm;
+      if (allEl) allEl.textContent='$'+p.all;
     }
     window.selectSlot = function(el) {
       document.querySelectorAll('.slot-btn').forEach(function(s) { s.classList.remove('selected'); });
-      el.classList.add('selected'); bk.slot = el.getAttribute('data-slot'); updateBkNextBtn();
+      el.classList.add('selected'); bk.slot = el.getAttribute('data-slot');
+      renderBoatOptions(); updateBkNextBtn();
     };
-    window.changeQty = function(delta) {
-      bk.qty = Math.max(1, Math.min(20, bk.qty+delta));
-      document.getElementById('qtyVal').textContent = bk.qty;
-    };
-    window.toggleAddon = function(el) {
-      var cb = el.querySelector('input[type="checkbox"]'); cb.checked = !cb.checked;
-      el.classList.toggle('checked', cb.checked);
-      var addon = cb.getAttribute('data-addon');
-      var price = parseInt(cb.getAttribute('data-price'));
-      var isDock = addon === 'mini-dock' || addon === 'x-dock' || addon === 'doggie-dock';
-      if (isDock && bk.slot) price = bk.slot === 'all' ? 50 : 25;
-      if (cb.checked) { bk.addons.push({ id: addon, price: price }); }
-      else { bk.addons = bk.addons.filter(function(a) { return a.id !== addon; }); }
-      if (isDock) { el.querySelector('.addon-check-price').textContent = '$'+price; }
+    /* ── Dynamic extras rendering (step 3) ─────────────────────────────────── */
+    function renderExtrasOptions() {
+      var container = document.getElementById('bk-extras-list');
+      if (!container) return;
+      var html = '';
+      var docks = (window.SITE_DATA && window.SITE_DATA.docks) || [];
+      var addons = (window.SITE_DATA && window.SITE_DATA.addons) || [];
+      if (docks.length) {
+        var totalBoats = getTotalBoatQty();
+        var freeNote = totalBoats >= 4 ? '<span style="color:#16a34a;font-weight:700;"> — FREE with 4+ boats!</span>' : '';
+        html += '<div class="bk-section-label">Add a Dock</div>';
+        html += '<p style="font-size:13px;color:#666;margin-bottom:10px;">$25 half-day / $50 all-day.'+freeNote+'</p>';
+        docks.forEach(function(d) {
+          var dockId = 'dock-'+(d.id||d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+          var existing = bk.addons.find(function(a){return a.id===dockId;});
+          var qty = existing ? existing.qty : 0;
+          var price = totalBoats >= 4 ? 0 : (bk.slot==='all' ? (d.allDay||d.fullDay||50) : (d.halfDay||25));
+          html += '<div class="bk-extra-row'+(qty>0?' active':'')+'" data-extra-id="'+dockId+'">' +
+            '<div class="bk-extra-row-info"><strong>'+d.name+'</strong><span>'+(d.size||'')+' • '+(d.capacity||'')+'</span></div>' +
+            '<span class="bk-extra-price">'+(price===0?'FREE':'$'+price)+'</span>' +
+            '<div class="bk-qty-ctrl">' +
+              '<button onclick="changeAddonQty(\''+dockId+'\',\''+d.name.replace(/'/g,"\\'")+'\',' +price+',-1)">−</button>' +
+              '<span id="bkexqty-'+dockId+'">'+qty+'</span>' +
+              '<button onclick="changeAddonQty(\''+dockId+'\',\''+d.name.replace(/'/g,"\\'")+'\','+price+',1)">+</button>' +
+            '</div>' +
+          '</div>';
+        });
+      }
+      if (addons.length) {
+        html += '<div class="bk-section-label">Add-ons</div>';
+        html += '<p style="font-size:13px;color:#666;margin-bottom:10px;">Enhance your trip.</p>';
+        addons.forEach(function(a) {
+          var addonId = 'addon-'+(a.id||a.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+          var existing = bk.addons.find(function(x){return x.id===addonId;});
+          var qty = existing ? existing.qty : 0;
+          var safeName = a.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+          html += '<div class="bk-extra-row'+(qty>0?' active':'')+'" data-extra-id="'+addonId+'">' +
+            (a.image_url ? '<img src="'+a.image_url+'" style="width:44px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0;">' :
+              '<span style="font-size:22px;flex-shrink:0;">'+(a.icon||'🎁')+'</span>') +
+            '<div class="bk-extra-row-info"><strong>'+a.name+'</strong><span>'+(a.description||'')+'</span></div>' +
+            '<span class="bk-extra-price">$'+a.price+'</span>' +
+            '<div class="bk-qty-ctrl">' +
+              '<button onclick="changeAddonQty(\''+addonId+'\',\''+safeName+'\','+a.price+',-1)">−</button>' +
+              '<span id="bkexqty-'+addonId+'">'+qty+'</span>' +
+              '<button onclick="changeAddonQty(\''+addonId+'\',\''+safeName+'\','+a.price+',1)">+</button>' +
+            '</div>' +
+          '</div>';
+        });
+      }
+      if (!docks.length && !addons.length) {
+        html = '<p style="color:#999;font-size:14px;padding:16px 0;">No extras configured yet.</p>';
+      }
+      container.innerHTML = html;
+    }
+    window.changeAddonQty = function(id, name, price, delta) {
+      var existing = bk.addons.find(function(a){return a.id===id;});
+      if (existing) {
+        existing.qty = Math.max(0, Math.min(20, existing.qty + delta));
+        if (existing.qty === 0) bk.addons = bk.addons.filter(function(a){return a.id!==id;});
+      } else if (delta > 0) {
+        bk.addons.push({ id:id, name:name, price:price, qty:1 });
+      }
+      var curQty = (bk.addons.find(function(a){return a.id===id;})||{qty:0}).qty;
+      var span = document.getElementById('bkexqty-'+id);
+      if (span) span.textContent = curQty;
+      var row = document.querySelector('.bk-extra-row[data-extra-id="'+id+'"]');
+      if (row) row.classList.toggle('active', curQty > 0);
     };
     function goToStep(n) {
       bk.step = n;
@@ -1723,11 +1814,8 @@
         if (i+1<n) t.classList.add('done');
       });
       document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
-      if (n===2 && bk.boat) {
-        var opt = document.querySelector('.boat-option[data-boat="'+bk.boat+'"]');
-        if (opt && !opt.classList.contains('selected')) { document.querySelectorAll('.boat-option').forEach(function(o){o.classList.remove('selected');}); opt.classList.add('selected'); }
-        updateSlotPrices();
-      }
+      if (n===2) { renderBoatOptions(); updateSlotPrices(); }
+      if (n===3) renderExtrasOptions();
       if (n===4) { buildCart(); setTimeout(initStripeElements, 100); }
       updateBkNextBtn();
     }
@@ -1736,7 +1824,7 @@
       if (next < 1) return;
       if (dir > 0) {
         if (bk.step===1 && (!bk.location || !bk.date)) return;
-        if (bk.step===2 && (!bk.boat || !bk.slot)) return;
+        if (bk.step===2 && (!bk.slot || getTotalBoatQty() === 0)) return;
         if (bk.step===4) { submitBooking(); return; }
       }
       if (next >= 1 && next <= 4) goToStep(next);
@@ -1744,29 +1832,39 @@
     function updateBkNextBtn() {
       var btn = document.getElementById('bookNext'); var s = bk.step;
       if (s===1) { var r=bk.location&&bk.date; btn.textContent=!bk.location?'Select a Location':!bk.date?'Select a Date':'Continue'; btn.style.opacity=r?'1':'0.5'; }
-      else if (s===2) { var r2=bk.boat&&bk.slot; btn.textContent=r2?'Continue':'Select Boat & Time'; btn.style.opacity=r2?'1':'0.5'; }
+      else if (s===2) { var hasBoats=getTotalBoatQty()>0, r2=hasBoats&&bk.slot; btn.textContent=r2?'Continue':!hasBoats?'Add at Least 1 Boat':'Select a Time Slot'; btn.style.opacity=r2?'1':'0.5'; }
       else if (s===3) { btn.textContent='Review & Checkout'; btn.style.opacity='1'; }
-      else if (s===4) { var t=getBoatTotal()+getAddonsTotal(); btn.textContent='Pay $'+t+' & Book'; btn.style.opacity='1'; }
+      else if (s===4) { var sub=getBoatTotal()+getAddonsTotal(); var tax=Math.round(sub*TAX_RATE*100)/100; btn.textContent='Pay $'+(sub+tax).toFixed(2)+' & Book'; btn.style.opacity='1'; }
     }
     function getBoatTotal() {
-      if (!bk.boat||!bk.slot) return 0;
-      var unit = PRICES[bk.boat][bk.slot];
-      if (bk.boat==='single'&&bk.slot==='all'&&bk.qty>=5) unit=GROUP_PRICE;
-      return unit*bk.qty;
+      if (!bk.slot) return 0;
+      var total = 0;
+      Object.keys(bk.boats).forEach(function(key) {
+        var qty = bk.boats[key]||0; if (!qty) return;
+        var price = (PRICES[key]&&PRICES[key][bk.slot])||0;
+        if (key==='single'&&bk.slot==='all'&&getTotalBoatQty()>=5) price=GROUP_PRICE;
+        total += price * qty;
+      });
+      return total;
     }
-    function getAddonsTotal() { var s=0; bk.addons.forEach(function(a){s+=a.price;}); return s; }
+    function getAddonsTotal() { var s=0; bk.addons.forEach(function(a){s+=a.price*(a.qty||1);}); return s; }
     function buildCart() {
       var html=''; var dp=bk.date?bk.date.split('-'):[];
       var dateStr=dp.length===3?MONTHS[parseInt(dp[1])-1]+' '+parseInt(dp[2])+', '+dp[0]:'';
       if (bk.locationName) html+='<div class="cart-line"><span class="cart-label">Location</span><span class="cart-amount">'+bk.locationName+'</span></div>';
       html+='<div class="cart-line"><span class="cart-label">Date</span><span class="cart-amount">'+dateStr+'</span></div>';
-      if (!bk.boat||!bk.slot) return;
-      var bn=bk.boat==='single'?'Single Seater':'Double Seater';
-      var up=PRICES[bk.boat][bk.slot];
-      if (bk.boat==='single'&&bk.slot==='all'&&bk.qty>=5) up=GROUP_PRICE;
-      html+='<div class="cart-line"><span class="cart-label">'+bn+' x'+bk.qty+'</span><span class="cart-amount">$'+(up*bk.qty)+'</span></div>';
-      html+='<div class="cart-line"><span class="cart-label">'+SLOT_LABELS[bk.slot]+'</span><span class="cart-amount">$'+up+'/ea</span></div>';
-      bk.addons.forEach(function(a) { html+='<div class="cart-line"><span class="cart-label">'+(ADDON_NAMES[a.id]||a.id)+'</span><span class="cart-amount">$'+a.price+'</span></div>'; });
+      if (!bk.slot) { document.getElementById('cartSummary').innerHTML=html; return; }
+      Object.keys(bk.boats).forEach(function(key) {
+        var qty=bk.boats[key]||0; if (!qty) return;
+        var bn=key==='single'?'Single Seater':key==='double'?'Double Seater':key;
+        var up=(PRICES[key]&&PRICES[key][bk.slot])||0;
+        if (key==='single'&&bk.slot==='all'&&getTotalBoatQty()>=5) up=GROUP_PRICE;
+        html+='<div class="cart-line"><span class="cart-label">'+bn+' ×'+qty+' — '+SLOT_LABELS[bk.slot]+'</span><span class="cart-amount">$'+(up*qty)+'</span></div>';
+      });
+      bk.addons.forEach(function(a) {
+        if (!a.qty||a.qty<1) return;
+        html+='<div class="cart-line"><span class="cart-label">'+a.name+(a.qty>1?' ×'+a.qty:'')+'</span><span class="cart-amount">$'+(a.price*a.qty)+'</span></div>';
+      });
       var sub=getBoatTotal()+getAddonsTotal();
       var tax=Math.round(sub*TAX_RATE*100)/100;
       var total=sub+tax;
@@ -1804,12 +1902,17 @@
       var sub=getBoatTotal()+getAddonsTotal();
       var tax=Math.round(sub*TAX_RATE*100)/100;
       var total=Math.round((sub+tax)*100)/100;
-      var bn=bk.boat==='single'?'Single Seater':'Double Seater';
-      var desc=bn+' x'+bk.qty+' — '+(SLOT_LABELS[bk.slot]||bk.slot);
+      var boatLines=Object.keys(bk.boats).filter(function(k){return bk.boats[k]>0;}).map(function(key){
+        var bn=key==='single'?'Single Seater':key==='double'?'Double Seater':key;
+        return bn+' ×'+bk.boats[key];
+      }).join(', ');
+      var desc=boatLines+' — '+(SLOT_LABELS[bk.slot]||bk.slot);
       btn.textContent='Processing...'; btn.style.opacity='0.7'; btn.disabled=true;
       var payload = {
         booking_date:bk.date, location_id:bk.location, location_name:bk.locationName,
-        qty:bk.qty, addons:bk.addons.map(function(a){return{name:ADDON_NAMES[a.id]||a.id,price:a.price};}),
+        qty:getTotalBoatQty(),
+        boats:Object.keys(bk.boats).filter(function(k){return bk.boats[k]>0;}).map(function(k){return{type:k,qty:bk.boats[k],price:(PRICES[k]&&PRICES[k][bk.slot])||0};}),
+        addons:bk.addons.filter(function(a){return a.qty>0;}).map(function(a){return{name:a.name+(a.qty>1?' ×'+a.qty:''),price:a.price*a.qty};}),
         subtotal:sub, tax:tax, total:total, customer_name:name, customer_phone:phone, customer_email:email, notes:desc, session_id:bk.sessionId
       };
       if (_stripe && _cardNumber) {

@@ -472,7 +472,9 @@ function updateProductsSection(data) {
   if (!data.products || !data.products.length) return;
   const container = document.querySelector('.product-grid');
   if (!container) return;
-  container.innerHTML = data.products.map(p => `
+  container.innerHTML = data.products.map(p => {
+    const key = p.key || p.name.toLowerCase().split(' ')[0];
+    return `
     <div class="product-card ${p.featured ? 'featured' : ''}">
       ${p.featured ? '<div class="product-badge">Popular</div>' : ''}
       <div class="product-image swipe-carousel" data-count="1">
@@ -489,10 +491,10 @@ function updateProductsSection(data) {
         <div class="price-row"><span class="price-label">Half Day 2:00 – 6:00</span><span class="price-amount">$${p.halfDayPM ?? p.halfDay}</span></div>
         <div class="price-row"><span class="price-label">All Day 9:00 – 6:00</span><span class="price-amount">$${p.allDay}</span></div>
         ${p.specs ? `<div class="product-specs">${p.specs}</div>` : ''}
-        <button class="btn btn-primary" onclick="openBooking()">Reserve</button>
+        <button class="btn btn-primary" onclick="openBooking('${key}')">Reserve</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function updateDocksSection(data) {

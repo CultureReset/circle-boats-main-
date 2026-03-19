@@ -1862,6 +1862,27 @@
       gap: 10px;
       margin-top: 12px;
     }
+    /* ── Boat qty rows (step 2) ── */
+    .bk-boat-row { display:flex;align-items:center;gap:14px;padding:14px 16px;border:2px solid var(--border);border-radius:12px;margin-bottom:10px;transition:border-color .15s; }
+    .bk-boat-row.active { border-color:var(--teal);background:var(--teal-light); }
+    .bk-boat-row-img { width:72px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0; }
+    .bk-boat-row-info { flex:1; }
+    .bk-boat-row-info h4 { font-size:15px;font-weight:700;color:var(--dark);margin-bottom:2px; }
+    .bk-boat-row-info p { font-size:12px;color:var(--gray); }
+    .bk-boat-row-price { font-size:13px;font-weight:700;color:var(--teal);white-space:nowrap;margin-right:6px; }
+    /* ── Extras rows (step 3) ── */
+    .bk-extra-row { display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;transition:border-color .15s; }
+    .bk-extra-row.active { border-color:var(--teal);background:var(--teal-light); }
+    .bk-extra-row-info { flex:1; }
+    .bk-extra-row-info strong { display:block;font-size:13px;color:var(--dark); }
+    .bk-extra-row-info span { font-size:11px;color:var(--gray); }
+    .bk-extra-price { font-weight:700;color:var(--teal);font-size:13px;white-space:nowrap;margin-right:6px; }
+    /* ── Shared qty control ── */
+    .bk-qty-ctrl { display:flex;align-items:center;border:1px solid var(--border);border-radius:8px;overflow:hidden; }
+    .bk-qty-ctrl button { width:32px;height:32px;border:none;background:var(--bg);font-size:17px;cursor:pointer;color:var(--dark);display:flex;align-items:center;justify-content:center; }
+    .bk-qty-ctrl button:hover { background:var(--border); }
+    .bk-qty-ctrl span { width:34px;text-align:center;font-weight:700;font-size:15px;color:var(--dark); }
+    .bk-section-label { font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px; }
 
     .addon-check {
       display: flex;
@@ -3062,24 +3083,11 @@
 
         <!-- STEP 2: BOAT & TIME -->
         <div class="bstep" id="bstep2">
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Select Boat Type</h4>
-          <div class="boat-option" data-boat="single" onclick="selectBoat(this)">
-            <img src="images/goboat/goboat-beach.jpg" alt="Single Seater" class="boat-option-img">
-            <div class="boat-option-info">
-              <h4>Single Seater</h4>
-              <p>1 person &bull; Max 300 lbs &bull; 70" diameter</p>
-            </div>
-            <div class="boat-option-price">from $150</div>
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;">Choose Your Boats</h4>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:14px;">Add as many as you like — mix &amp; match.</p>
+          <div id="bk-boat-list">
+            <!-- Populated by renderBoatOptions() -->
           </div>
-          <div class="boat-option" data-boat="double" onclick="selectBoat(this)">
-            <img src="images/goboat/goboat-bumpers.jpg" alt="Double Seater" class="boat-option-img">
-            <div class="boat-option-info">
-              <h4>Double Seater</h4>
-              <p>2 people &bull; Max 450 lbs &bull; 89" x 70"</p>
-            </div>
-            <div class="boat-option-price">from $200</div>
-          </div>
-
           <h4 style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:4px;">Time Slot</h4>
           <div class="slot-grid">
             <div class="slot-btn" data-slot="am" onclick="selectSlot(this)">
@@ -3098,126 +3106,12 @@
               <div class="slot-price" id="slotAll">$225</div>
             </div>
           </div>
-
-          <div class="qty-row">
-            <label>Quantity:</label>
-            <div class="qty-ctrl">
-              <button class="qty-btn" onclick="changeQty(-1)">-</button>
-              <div class="qty-val" id="qtyVal">1</div>
-              <button class="qty-btn" onclick="changeQty(1)">+</button>
-            </div>
-          </div>
         </div>
 
         <!-- STEP 3: EXTRAS -->
         <div class="bstep" id="bstep3">
-          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;">Add a Dock</h4>
-          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">$25 half-day / $50 full-day. Rent 4+ boats = FREE dock!</p>
-          <div class="addon-check-grid">
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="mini-dock" data-price="25" data-price-half="25" data-price-all="50">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>Mini Dock</strong>
-                <span>8'4" x 44" platform</span>
-              </div>
-              <div class="addon-check-price">$25</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="x-dock" data-price="25" data-price-half="25" data-price-all="50">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>X Dock</strong>
-                <span>5' x 5' floating dock</span>
-              </div>
-              <div class="addon-check-price">$25</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="doggie-dock" data-price="25" data-price-half="25" data-price-all="50">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>Doggie Dock</strong>
-                <span>5'4" x 43" with ramp</span>
-              </div>
-              <div class="addon-check-price">$25</div>
-            </label>
-          </div>
-
-          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:4px;">Add-ons</h4>
-          <p style="font-size:13px;color:var(--gray);margin-bottom:12px;">Enhance your trip with these extras.</p>
-          <div class="addon-check-grid">
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="cooler" data-price="35">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#127866; Cooler Pack</strong>
-                <span>Cooler + ice + drinks</span>
-              </div>
-              <div class="addon-check-price">$35</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="drinks" data-price="15">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#129380; Drink &amp; Ice</strong>
-                <span>6 drinks + bag of ice</span>
-              </div>
-              <div class="addon-check-price">$15</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="snacks" data-price="20">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#127839; Snack Pack</strong>
-                <span>Chips, granola, fruit</span>
-              </div>
-              <div class="addon-check-price">$20</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="pup" data-price="15">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#128054; Pup Pack</strong>
-                <span>Treats, bowl, dog vest</span>
-              </div>
-              <div class="addon-check-price">$15</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="speaker" data-price="15">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#127925; BT Speaker</strong>
-                <span>Waterproof JBL</span>
-              </div>
-              <div class="addon-check-price">$15</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="gopro" data-price="30">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#128247; GoPro</strong>
-                <span>Waterproof camera</span>
-              </div>
-              <div class="addon-check-price">$30</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="fishing" data-price="25">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#127907; Fishing Gear</strong>
-                <span>Rod, reel, tackle, bait</span>
-              </div>
-              <div class="addon-check-price">$25</div>
-            </label>
-            <label class="addon-check" onclick="toggleAddon(this)">
-              <input type="checkbox" data-addon="sunkit" data-price="10">
-              <div class="addon-check-box">&#10003;</div>
-              <div class="addon-check-info">
-                <strong>&#9728;&#65039; Sun &amp; Safety</strong>
-                <span>Sunscreen, hat, dry bag</span>
-              </div>
-              <div class="addon-check-price">$10</div>
-            </label>
+          <div id="bk-extras-list">
+            <!-- Populated by renderExtrasOptions() from SITE_DATA -->
           </div>
         </div>
 
@@ -3432,17 +3326,16 @@
        ============================================ */
     var booking = {
       step: 1,
-      location: 'loc1',      // selected location id
+      location: 'loc1',
       locationName: 'Main Launch — Canal Road',
       date: null,
-      boat: null,    // 'single' or 'double'
-      slot: null,    // 'am', 'pm', 'all'
-      qty: 1,
-      addons: [],
+      slot: null,       // 'am', 'pm', 'all'
+      boats: {},        // { single: 2, double: 1 } — qty per boat type
+      addons: [],       // [{ id, name, price, qty }]
       calMonth: new Date().getMonth(),
       calYear: new Date().getFullYear(),
-      sessionId: null,  // unique per booking attempt, used for hold system
-      holdId: null      // tracks active hold so we can release it
+      sessionId: null,
+      holdId: null
     };
 
     // Generate a unique session ID for hold tracking
@@ -3456,21 +3349,7 @@
     };
 
     var GROUP_PRICE = 200; // 5+ singles all day
-    var TAX_RATE = 0.10; // Orange Beach, AL: 4% state + 6% local = 10%
-
-    var ADDON_NAMES = {
-      'mini-dock': 'Mini Dock',
-      'x-dock': 'X Dock',
-      'doggie-dock': 'Doggie Dock',
-      'cooler': 'Cooler Pack',
-      'drinks': 'Drink & Ice',
-      'snacks': 'Snack Pack',
-      'pup': 'Pup Pack',
-      'speaker': 'BT Speaker',
-      'gopro': 'GoPro Rental',
-      'fishing': 'Fishing Gear',
-      'sunkit': 'Sun & Safety Kit'
-    };
+    var TAX_RATE = 0.10;
 
     var SLOT_LABELS = {
       am: 'Half Day AM (9:00-1:00)',
@@ -3478,11 +3357,19 @@
       all: 'All Day (9:00-6:00)'
     };
 
+    function getTotalBoatQty() {
+      return Object.keys(booking.boats).reduce(function(s, k) { return s + (booking.boats[k] || 0); }, 0);
+    }
+
     /* Open / Close */
     function openBooking(preselect) {
-      if (preselect) booking.boat = preselect;
+      booking.boats = {};
+      booking.addons = [];
+      booking.slot = null;
+      if (preselect) booking.boats[preselect] = 1;
       booking.sessionId = generateSessionId();
       booking.holdId = null;
+      document.querySelectorAll('.slot-btn').forEach(function(s) { s.classList.remove('selected'); });
       document.getElementById('bookingOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
       goToStep(1);
@@ -3492,7 +3379,6 @@
     function closeBooking() {
       document.getElementById('bookingOverlay').classList.remove('active');
       document.body.style.overflow = '';
-      // Release the hold if customer abandons without completing
       releaseHold();
     }
 
@@ -3516,7 +3402,6 @@
 
     function renderCalendar() {
       var grid = document.getElementById('calGrid');
-      // Remove old day buttons
       grid.querySelectorAll('.cal-day').forEach(function(d) { d.remove(); });
 
       var y = booking.calYear, m = booking.calMonth;
@@ -3527,7 +3412,6 @@
       var today = new Date();
       today.setHours(0,0,0,0);
 
-      // Empty cells before first day
       for (var i = 0; i < firstDay; i++) {
         var empty = document.createElement('div');
         empty.className = 'cal-day empty';
@@ -3550,7 +3434,6 @@
             updateNextBtn();
           });
         }
-        // Highlight selected
         if (booking.date === y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0')) {
           btn.classList.add('selected');
         }
@@ -3574,21 +3457,46 @@
       updateNextBtn();
     }
 
-    /* Boat Selection */
-    function selectBoat(el) {
-      document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
-      el.classList.add('selected');
-      booking.boat = el.getAttribute('data-boat');
-      updateSlotPrices();
-      updateNextBtn();
+    /* Boat Options — rendered dynamically from SITE_DATA */
+    function renderBoatOptions() {
+      var container = document.getElementById('bk-boat-list');
+      if (!container) return;
+      var products = (window.SITE_DATA && window.SITE_DATA.products) || [
+        { key: 'single', name: 'Single Seater', description: '1 person max', halfDayAM: 150, halfDayPM: 150, allDay: 225, image: 'images/goboat/goboat-hero.jpg' },
+        { key: 'double', name: 'Double Seater', description: '2 person max', halfDayAM: 200, halfDayPM: 200, allDay: 275, image: 'images/goboat/goboat-onwater1.jpg' }
+      ];
+      container.innerHTML = products.map(function(p) {
+        var key = p.key || p.name.toLowerCase().split(' ')[0];
+        var qty = booking.boats[key] || 0;
+        var priceStr = booking.slot
+          ? '$' + (PRICES[key] ? PRICES[key][booking.slot] : (p.allDay || 0)) + '/ea'
+          : 'from $' + (p.halfDayAM || p.allDay || 0);
+        var img = p.image ? '<img class="bk-boat-row-img" src="' + p.image + '" alt="' + p.name + '">' : '';
+        return '<div class="bk-boat-row' + (qty > 0 ? ' active' : '') + '" id="bkrow-' + key + '">' +
+          img +
+          '<div class="bk-boat-row-info"><h4>' + p.name + '</h4><p>' + (p.description || '') + '</p></div>' +
+          '<span class="bk-boat-row-price">' + priceStr + '</span>' +
+          '<div class="bk-qty-ctrl">' +
+            '<button type="button" onclick="changeBoatQty(\'' + key + '\',-1)">−</button>' +
+            '<span id="bkqty-' + key + '">' + qty + '</span>' +
+            '<button type="button" onclick="changeBoatQty(\'' + key + '\',1)">+</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
     }
 
+    window.changeBoatQty = function(key, delta) {
+      booking.boats[key] = Math.max(0, Math.min(20, (booking.boats[key] || 0) + delta));
+      var span = document.getElementById('bkqty-' + key);
+      if (span) span.textContent = booking.boats[key];
+      var row = document.getElementById('bkrow-' + key);
+      if (row) row.classList.toggle('active', booking.boats[key] > 0);
+      updateNextBtn();
+    };
+
     function updateSlotPrices() {
-      if (!booking.boat) return;
-      var p = PRICES[booking.boat];
-      document.getElementById('slotAM').textContent = '$' + p.am;
-      document.getElementById('slotPM').textContent = '$' + p.pm;
-      document.getElementById('slotAll').textContent = '$' + p.all;
+      // Re-render boat rows to reflect new slot prices
+      renderBoatOptions();
     }
 
     /* Time Slot */
@@ -3596,64 +3504,97 @@
       document.querySelectorAll('.slot-btn').forEach(function(s) { s.classList.remove('selected'); });
       el.classList.add('selected');
       booking.slot = el.getAttribute('data-slot');
-      updateDockPrices(); // Update dock prices when slot changes
+      updateSlotPrices();
+      // Re-render extras so dock prices update
+      if (booking.step === 3) renderExtrasOptions();
       updateNextBtn();
     }
 
-    /* Update dock prices when time slot changes */
-    function updateDockPrices() {
-      // Recalculate dock addon prices based on new slot
-      booking.addons = booking.addons.map(function(addon) {
-        var isDock = addon.id === 'mini-dock' || addon.id === 'x-dock' || addon.id === 'doggie-dock';
-        if (isDock) {
-          addon.price = booking.slot === 'all' ? 50 : 25; // half-day (AM or PM) = $25, all-day = $50
+    /* Extras (docks + addons) — rendered dynamically from SITE_DATA */
+    function renderExtrasOptions() {
+      var container = document.getElementById('bk-extras-list');
+      if (!container) return;
+      var sd = window.SITE_DATA || {};
+      var docks = sd.docks || [];
+      var addons = sd.addons || [];
+      var totalQty = getTotalBoatQty();
+      var html = '';
+
+      if (docks.length) {
+        html += '<p class="bk-section-label">Add a Dock</p>';
+        var freeDoc = totalQty >= 4;
+        docks.forEach(function(dk) {
+          var dockPrice = freeDoc ? 0 : (booking.slot === 'all' ? (dk.allDay || 50) : (dk.halfDay || 25));
+          var priceLabel = freeDoc ? '<span style="color:#10b981;font-weight:700;">FREE</span>' : '$' + dockPrice;
+          var existing = booking.addons.find(function(a) { return a.id === 'dock-' + dk.id; });
+          var qty = existing ? existing.qty : 0;
+          var img = dk.image ? '<img class="bk-boat-row-img" src="' + dk.image + '" alt="' + dk.name + '" style="width:60px;height:45px;">' : '';
+          html += '<div class="bk-extra-row' + (qty > 0 ? ' active' : '') + '" id="bkextra-dock-' + dk.id + '">' +
+            img +
+            '<div class="bk-extra-row-info"><strong>' + dk.name + '</strong>' +
+            (dk.size || dk.capacity ? '<span>' + [dk.size, dk.capacity ? dk.capacity + ' boats' : ''].filter(Boolean).join(' · ') + '</span>' : '') +
+            '</div>' +
+            '<span class="bk-extra-price">' + priceLabel + '</span>' +
+            '<div class="bk-qty-ctrl">' +
+              '<button type="button" onclick="changeAddonQty(\'dock-' + dk.id + '\',\'' + dk.name + '\',' + dockPrice + ',-1)">−</button>' +
+              '<span id="bkqty-dock-' + dk.id + '">' + qty + '</span>' +
+              '<button type="button" onclick="changeAddonQty(\'dock-' + dk.id + '\',\'' + dk.name + '\',' + dockPrice + ',1)">+</button>' +
+            '</div>' +
+          '</div>';
+        });
+        if (freeDoc) {
+          html += '<p style="font-size:12px;color:#10b981;font-weight:600;margin:-4px 0 12px;">🎉 4+ boats = FREE dock!</p>';
+        } else {
+          html += '<p style="font-size:12px;color:var(--gray);margin:-4px 0 12px;">Rent 4+ boats = FREE dock!</p>';
         }
-        return addon;
-      });
-
-      // Update the display prices for all dock checkboxes (checked or not)
-      var dockPrice = booking.slot === 'all' ? 50 : 25; // half-day (AM or PM) = $25, all-day = $50
-      document.querySelectorAll('input[data-addon="mini-dock"], input[data-addon="x-dock"], input[data-addon="doggie-dock"]').forEach(function(input) {
-        input.setAttribute('data-price', dockPrice);
-        var label = input.closest('label');
-        if (label) label.querySelector('.addon-check-price').textContent = '$' + dockPrice;
-      });
-
-      buildCart(); // Rebuild cart with updated prices
-    }
-
-    /* Quantity */
-    function changeQty(delta) {
-      booking.qty = Math.max(1, Math.min(20, booking.qty + delta));
-      document.getElementById('qtyVal').textContent = booking.qty;
-    }
-
-    /* Add-ons */
-    function toggleAddon(el) {
-      var cb = el.querySelector('input[type="checkbox"]');
-      cb.checked = !cb.checked;
-      el.classList.toggle('checked', cb.checked);
-
-      var addon = cb.getAttribute('data-addon');
-      var price = parseInt(cb.getAttribute('data-price'));
-
-      // Docks have different pricing based on half-day vs full-day
-      var isDock = addon === 'mini-dock' || addon === 'x-dock' || addon === 'doggie-dock';
-      if (isDock && booking.slot) {
-        price = booking.slot === 'all' ? 50 : 25; // half-day (AM or PM) = $25, all-day = $50
       }
 
-      if (cb.checked) {
-        booking.addons.push({ id: addon, price: price });
-      } else {
-        booking.addons = booking.addons.filter(function(a) { return a.id !== addon; });
+      if (addons.length) {
+        html += '<p class="bk-section-label">Add-ons</p>';
+        addons.forEach(function(ad) {
+          var existing = booking.addons.find(function(a) { return a.id === 'addon-' + ad.id; });
+          var qty = existing ? existing.qty : 0;
+          var icon = ad.image_url
+            ? '<img class="bk-boat-row-img" src="' + ad.image_url + '" alt="' + ad.name + '" style="width:60px;height:45px;">'
+            : '<span style="font-size:28px;width:44px;text-align:center;">' + (ad.icon || '📦') + '</span>';
+          html += '<div class="bk-extra-row' + (qty > 0 ? ' active' : '') + '" id="bkextra-addon-' + ad.id + '">' +
+            icon +
+            '<div class="bk-extra-row-info"><strong>' + ad.name + '</strong>' +
+            (ad.description ? '<span>' + ad.description + '</span>' : '') +
+            '</div>' +
+            '<span class="bk-extra-price">$' + (ad.price || 0) + '</span>' +
+            '<div class="bk-qty-ctrl">' +
+              '<button type="button" onclick="changeAddonQty(\'addon-' + ad.id + '\',\'' + ad.name.replace(/'/g,"\\'") + '\',' + (ad.price || 0) + ',-1)">−</button>' +
+              '<span id="bkqty-addon-' + ad.id + '">' + qty + '</span>' +
+              '<button type="button" onclick="changeAddonQty(\'addon-' + ad.id + '\',\'' + ad.name.replace(/'/g,"\\'") + '\',' + (ad.price || 0) + ',1)">+</button>' +
+            '</div>' +
+          '</div>';
+        });
       }
 
-      // Update the display price on the checkbox label
-      if (isDock) {
-        el.querySelector('.addon-check-price').textContent = '$' + price;
+      if (!docks.length && !addons.length) {
+        html = '<p style="color:var(--gray);font-size:14px;text-align:center;padding:20px 0;">No extras configured yet.</p>';
       }
+
+      container.innerHTML = html;
     }
+
+    window.changeAddonQty = function(id, name, price, delta) {
+      var existing = booking.addons.find(function(a) { return a.id === id; });
+      if (existing) {
+        existing.qty = Math.max(0, (existing.qty || 1) + delta);
+        if (existing.qty === 0) {
+          booking.addons = booking.addons.filter(function(a) { return a.id !== id; });
+        }
+      } else if (delta > 0) {
+        booking.addons.push({ id: id, name: name, price: price, qty: 1 });
+      }
+      var span = document.getElementById('bkqty-' + id);
+      if (span) span.textContent = existing ? (existing.qty || 0) : (delta > 0 ? 1 : 0);
+      var row = document.getElementById('bkextra-' + id);
+      var newQty = booking.addons.find(function(a) { return a.id === id; });
+      if (row) row.classList.toggle('active', !!newQty);
+    };
 
     /* Step Navigation */
     function goToStep(n) {
@@ -3669,17 +3610,9 @@
 
       document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
 
-      // Pre-select boat if already chosen
-      if (n === 2 && booking.boat) {
-        var opt = document.querySelector('.boat-option[data-boat="' + booking.boat + '"]');
-        if (opt && !opt.classList.contains('selected')) {
-          document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
-          opt.classList.add('selected');
-        }
-        updateSlotPrices();
-      }
+      if (n === 2) { renderBoatOptions(); updateSlotPrices(); }
+      if (n === 3) renderExtrasOptions();
 
-      // Build cart on step 4 + init Stripe card form + create hold
       if (n === 4) {
         buildCart();
         setTimeout(initStripeElements, 100);
@@ -3689,20 +3622,17 @@
       updateNextBtn();
     }
 
-    // Create a 10-minute hold when entering checkout (step 4)
-    // This prevents overbooking by reserving inventory while customer pays
     function createBookingHold() {
-      if (!booking.boat || !booking.slot || !booking.date) return;
+      if (getTotalBoatQty() === 0 || !booking.slot || !booking.date) return;
 
       var holdPayload = {
         fleet_type_id: booking.fleetTypeId || null,
         time_slot_id: booking.timeSlotId || null,
         booking_date: booking.date,
-        qty: booking.qty,
+        qty: getTotalBoatQty(),
         session_id: booking.sessionId
       };
 
-      // Only create hold if we have the IDs needed for fleet-based booking
       if (!holdPayload.fleet_type_id || !holdPayload.time_slot_id) return;
 
       fetch(api('/hold'), {
@@ -3715,14 +3645,11 @@
         if (result.hold_id) {
           booking.holdId = result.hold_id;
         } else if (result.error) {
-          // Slot no longer available — notify user and go back
           alert('Sorry, this slot is no longer available: ' + result.error);
           goToStep(2);
         }
       })
-      .catch(function() {
-        // API unreachable — proceed without hold (booking will still do atomic check)
-      });
+      .catch(function() {});
     }
 
     function bookingNav(dir) {
@@ -3730,9 +3657,8 @@
       if (next < 1) return;
 
       if (dir > 0) {
-        // Validation
         if (booking.step === 1 && (!booking.location || !booking.date)) return;
-        if (booking.step === 2 && (!booking.boat || !booking.slot)) return;
+        if (booking.step === 2 && (!booking.slot || getTotalBoatQty() === 0)) return;
         if (booking.step === 4) {
           submitBooking();
           return;
@@ -3751,8 +3677,8 @@
         btn.textContent = !booking.location ? 'Select a Location' : !booking.date ? 'Select a Date' : 'Continue';
         btn.style.opacity = step1Ready ? '1' : '0.5';
       } else if (s === 2) {
-        var ready = booking.boat && booking.slot;
-        btn.textContent = ready ? 'Continue' : 'Select Boat & Time';
+        var ready = booking.slot && getTotalBoatQty() > 0;
+        btn.textContent = ready ? 'Continue' : (getTotalBoatQty() === 0 ? 'Choose at Least 1 Boat' : 'Select a Time Slot');
         btn.style.opacity = ready ? '1' : '0.5';
       } else if (s === 3) {
         btn.textContent = 'Review & Checkout';
@@ -3779,18 +3705,21 @@
 
     /* Cart */
     function getBoatTotal() {
-      if (!booking.boat || !booking.slot) return 0;
-      var unit = PRICES[booking.boat][booking.slot];
-      // Group rate: 5+ singles all day
-      if (booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5) {
-        unit = GROUP_PRICE;
-      }
-      return unit * booking.qty;
+      if (!booking.slot) return 0;
+      var total = 0;
+      Object.keys(booking.boats).forEach(function(key) {
+        var qty = booking.boats[key] || 0;
+        if (!qty || !PRICES[key]) return;
+        var unit = PRICES[key][booking.slot] || 0;
+        if (key === 'single' && booking.slot === 'all' && qty >= 5) unit = GROUP_PRICE;
+        total += unit * qty;
+      });
+      return total;
     }
 
     function getAddonsTotal() {
       var sum = 0;
-      booking.addons.forEach(function(a) { sum += a.price; });
+      booking.addons.forEach(function(a) { sum += (a.price || 0) * (a.qty || 1); });
       return sum;
     }
 
@@ -3803,22 +3732,27 @@
         html += '<div class="cart-line"><span class="cart-label">Location</span><span class="cart-amount">' + booking.locationName + '</span></div>';
       }
       html += '<div class="cart-line"><span class="cart-label">Date</span><span class="cart-amount">' + dateStr + '</span></div>';
-
-      if (!booking.boat || !PRICES[booking.boat] || !booking.slot) return;
-      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
-      var unitPrice = PRICES[booking.boat][booking.slot];
-      var isGroup = booking.boat === 'single' && booking.slot === 'all' && booking.qty >= 5;
-      if (isGroup) unitPrice = GROUP_PRICE;
-
-      html += '<div class="cart-line"><span class="cart-label">' + boatName + ' x' + booking.qty + '</span><span class="cart-amount">$' + (unitPrice * booking.qty) + '</span></div>';
-      html += '<div class="cart-line"><span class="cart-label">' + SLOT_LABELS[booking.slot] + '</span><span class="cart-amount">$' + unitPrice + '/ea</span></div>';
-
-      if (isGroup) {
-        html += '<div class="cart-line"><span class="cart-label" style="color:var(--teal);font-weight:600;">Group Rate Applied!</span><span class="cart-amount" style="color:var(--teal);">Save $' + (225 - GROUP_PRICE) * booking.qty + '</span></div>';
+      if (booking.slot) {
+        html += '<div class="cart-line"><span class="cart-label">Time</span><span class="cart-amount">' + SLOT_LABELS[booking.slot] + '</span></div>';
       }
 
+      Object.keys(booking.boats).forEach(function(key) {
+        var qty = booking.boats[key] || 0;
+        if (!qty || !PRICES[key] || !booking.slot) return;
+        var unit = PRICES[key][booking.slot] || 0;
+        var isGroup = key === 'single' && booking.slot === 'all' && qty >= 5;
+        if (isGroup) unit = GROUP_PRICE;
+        var label = key.charAt(0).toUpperCase() + key.slice(1) + ' Seater × ' + qty;
+        html += '<div class="cart-line"><span class="cart-label">' + label + '</span><span class="cart-amount">$' + (unit * qty) + '</span></div>';
+        if (isGroup) {
+          html += '<div class="cart-line"><span class="cart-label" style="color:var(--teal);font-weight:600;">Group Rate!</span><span class="cart-amount" style="color:var(--teal);">$' + unit + '/ea</span></div>';
+        }
+      });
+
       booking.addons.forEach(function(a) {
-        html += '<div class="cart-line"><span class="cart-label">' + (ADDON_NAMES[a.id] || a.id) + '</span><span class="cart-amount">$' + a.price + '</span></div>';
+        var qty = a.qty || 1;
+        var lineLabel = a.name + (qty > 1 ? ' ×' + qty : '');
+        html += '<div class="cart-line"><span class="cart-label">' + lineLabel + '</span><span class="cart-amount">$' + (a.price * qty) + '</span></div>';
       });
 
       var subtotal = getBoatTotal() + getAddonsTotal();
@@ -3953,12 +3887,23 @@
         chargeAmount = Math.round(total * depPct) / 100;
       }
 
-      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
+      var boatParts = Object.keys(booking.boats).filter(function(k) { return booking.boats[k] > 0; }).map(function(k) {
+        return (booking.boats[k]) + '× ' + k.charAt(0).toUpperCase() + k.slice(1);
+      });
       var slotLabel = SLOT_LABELS[booking.slot] || booking.slot;
-      var desc = boatName + ' x' + booking.qty + ' — ' + slotLabel;
+      var desc = boatParts.join(', ') + ' — ' + slotLabel;
       if (booking.addons.length > 0) {
         desc += ' + ' + booking.addons.length + ' add-on(s)';
       }
+
+      // Build boats array and addons array for API
+      var boatsPayload = Object.keys(booking.boats).filter(function(k) { return booking.boats[k] > 0; }).map(function(k) {
+        return { type: k, qty: booking.boats[k], price: PRICES[k] ? PRICES[k][booking.slot] || 0 : 0 };
+      });
+      var addonsPayload = booking.addons.map(function(a) {
+        var qty = a.qty || 1;
+        return { name: qty > 1 ? a.name + ' ×' + qty : a.name, price: a.price * qty };
+      });
 
       btn.textContent = 'Processing...';
       btn.style.opacity = '0.7';
@@ -3972,8 +3917,9 @@
           booking_date: booking.date,
           location_id: booking.location || null,
           location_name: booking.locationName || null,
-          qty: booking.qty,
-          addons: booking.addons.map(function(a) { return { name: a.name || a, price: a.price || 0 }; }),
+          qty: getTotalBoatQty(),
+          boats: boatsPayload,
+          addons: addonsPayload,
           subtotal: subtotal,
           tax: tax,
           total: total,
@@ -4025,8 +3971,9 @@
             booking_date: booking.date,
             location_id: booking.location || null,
             location_name: booking.locationName || null,
-            qty: booking.qty,
-            addons: booking.addons.map(function(a) { return { name: a.name || a, price: a.price || 0 }; }),
+            qty: getTotalBoatQty(),
+            boats: boatsPayload,
+            addons: addonsPayload,
             subtotal: subtotal,
             tax: tax,
             total: total,
@@ -4115,7 +4062,9 @@
           booking_date: booking.date,
           location_id: booking.location || null,
           location_name: booking.locationName || null,
-          qty: booking.qty,
+          qty: getTotalBoatQty(),
+          boats: boatsPayload,
+          addons: addonsPayload,
           subtotal: total,
           total: total,
           customer_name: name,
@@ -4179,9 +4128,8 @@
 
     function resetBookingState() {
       booking.date = null;
-      booking.boat = null;
+      booking.boats = {};
       booking.slot = null;
-      booking.qty = 1;
       booking.addons = [];
       booking.sessionId = null;
       booking.holdId = null;
@@ -4191,12 +4139,9 @@
       if (_cardExpiry) { _cardExpiry.destroy(); _cardExpiry = null; }
       if (_cardCvc) { _cardCvc.destroy(); _cardCvc = null; }
 
-      // Rebuild step 4 HTML on next open
       setTimeout(function() {
         rebuildStep4();
-        document.getElementById('qtyVal').textContent = '1';
-        document.querySelectorAll('.boat-option, .slot-btn').forEach(function(e) { e.classList.remove('selected'); });
-        document.querySelectorAll('.addon-check').forEach(function(e) { e.classList.remove('checked'); e.querySelector('input').checked = false; });
+        document.querySelectorAll('.slot-btn').forEach(function(e) { e.classList.remove('selected'); });
         var btn = document.getElementById('bookNext');
         btn.textContent = 'Select Date to Continue';
         btn.style.background = '';
@@ -4696,8 +4641,8 @@
         var priceAmounts = document.querySelectorAll('.price-amount');
         var productCards = document.querySelectorAll('.product-card');
 
-        // Update slot prices if booking modal is open
-        if (booking.boat) updateSlotPrices();
+        // Update boat row prices if booking modal is open
+        if (getTotalBoatQty() > 0) updateSlotPrices();
 
         console.log('API: Fleet & pricing loaded from backend');
       })
@@ -4834,8 +4779,8 @@
       var subtotal = getBoatTotal() + getAddonsTotal();
       var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
       var total = Math.round((subtotal + tax) * 100) / 100;
-      var boatName = booking.boat === 'single' ? 'Single Seater' : 'Double Seater';
-      var desc = boatName + ' x' + booking.qty + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
+      var boatParts2 = Object.keys(booking.boats).filter(function(k){ return booking.boats[k]>0; }).map(function(k){ return booking.boats[k]+'× '+k.charAt(0).toUpperCase()+k.slice(1); });
+      var desc = boatParts2.join(', ') + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
 
       btn.textContent = 'Processing...';
       btn.style.opacity = '0.7';
@@ -4856,11 +4801,12 @@
 
       // Build booking payload
       var payload = {
-        fleet_type_id: window._fleetIds ? window._fleetIds[booking.boat] : null,
-        time_slot_id: window._slotIds ? window._slotIds[booking.slot] : null,
+        fleet_type_id: null,
+        time_slot_id: null,
         booking_date: booking.date,
-        qty: booking.qty,
-        addons: booking.addons.map(function(a) { return { name: ADDON_NAMES[a.id] || a.id, price: a.price }; }),
+        qty: getTotalBoatQty(),
+        boats: boatsPayload,
+        addons: addonsPayload,
         subtotal: subtotal,
         tax: tax,
         total: total,
@@ -5094,7 +5040,7 @@
                 if (_apiGroupRates.length > 0) {
                   GROUP_PRICE = _apiGroupRates[0].price_per_unit || GROUP_PRICE;
                 }
-                if (booking.boat) updateSlotPrices();
+                if (getTotalBoatQty() > 0) updateSlotPrices();
                 console.log('Fleet & pricing updated on website');
               });
           })
