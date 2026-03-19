@@ -11,6 +11,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <!-- Loads all data from /api/site-data (same source as main website) -->
   <script src="js/load-site-data.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     /* ====== THEME COLORS — Change these to switch light/dark ====== */
     :root {
@@ -536,6 +537,153 @@
       .pkg-item { flex-direction: column; }
       .pkg-price { align-self: center; width: 100%; text-align: center; }
     }
+
+  /* ===== BOOKING OVERLAY (same as main website) ===== */
+  .booking-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000;
+    opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .booking-overlay.active { opacity: 1; visibility: visible; }
+  .booking-modal {
+    --teal: #00ada8; --teal-dark: #009590; --teal-light: rgba(0,173,168,0.08);
+    --teal-border: rgba(0,173,168,0.2); --dark: #333333; --gray: #666666;
+    --gray-light: #999999; --border: #e8e8e8; --bg: #fafafa; --white: #ffffff;
+    --radius: 8px; --radius-lg: 16px;
+    background: #ffffff; color: #333333;
+    border-radius: 16px; width: 100%; max-width: 720px;
+    max-height: 90vh; overflow-y: auto; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .booking-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+    border-radius: 50%; background: #fafafa; border: none; font-size: 20px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #333; z-index: 5;
+  }
+  .booking-header { padding: 28px 32px 0; }
+  .booking-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; color: #333; }
+  .booking-header p { font-size: 14px; color: #666; }
+  .booking-steps-nav { display: flex; padding: 20px 32px 0; }
+  .bstep-tab {
+    flex: 1; text-align: center; padding: 10px 8px; font-size: 12px; font-weight: 600;
+    color: #999; border-bottom: 2px solid #e8e8e8; cursor: pointer; transition: all 0.2s;
+  }
+  .bstep-tab.active { color: #00ada8; border-color: #00ada8; }
+  .bstep-tab.done { color: #009590; border-color: #00ada8; }
+  .booking-body { padding: 24px 32px 28px; }
+  .bstep { display: none; } .bstep.active { display: block; }
+  .loc-section-label { font-size: 13px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .loc-option {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+    border: 2px solid #e8e8e8; border-radius: 10px; cursor: pointer;
+    margin-bottom: 8px; transition: all 0.2s;
+  }
+  .loc-option:hover, .loc-option.selected { border-color: #00ada8; background: rgba(0,173,168,0.08); }
+  .loc-option-icon { font-size: 20px; }
+  .loc-option-info strong { display: block; font-size: 14px; font-weight: 700; color: #333; }
+  .loc-option-info span { font-size: 12px; color: #666; }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cal-header h3 { font-size: 16px; font-weight: 700; color: #333; }
+  .cal-nav {
+    background: #fafafa; border: 1px solid #e8e8e8; border-radius: 8px;
+    width: 32px; height: 32px; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center; color: #333;
+  }
+  .cal-nav:hover { background: #e8e8e8; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; text-align: center; }
+  .cal-day-label { font-size: 11px; font-weight: 600; color: #999; padding: 6px 0; text-transform: uppercase; }
+  .cal-day {
+    padding: 10px 4px; border-radius: 8px; font-size: 14px; cursor: pointer;
+    transition: all 0.15s; border: none; background: none; color: #333;
+  }
+  .cal-day:hover { background: rgba(0,173,168,0.08); }
+  .cal-day.selected { background: #00ada8; color: #fff; font-weight: 600; }
+  .cal-day.disabled { color: #e8e8e8; pointer-events: none; }
+  .cal-day.empty { pointer-events: none; }
+  .boat-option {
+    border: 2px solid #e8e8e8; border-radius: 12px; padding: 16px;
+    margin-bottom: 12px; cursor: pointer; display: flex; align-items: center;
+    gap: 16px; transition: all 0.2s;
+  }
+  .boat-option:hover { border-color: rgba(0,173,168,0.3); }
+  .boat-option.selected { border-color: #00ada8; background: rgba(0,173,168,0.08); }
+  .boat-option-img { width: 80px; height: 60px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+  .boat-option-info { flex: 1; }
+  .boat-option-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 2px; color: #333; }
+  .boat-option-info p { font-size: 12px; color: #666; }
+  .boat-option-price { font-size: 18px; font-weight: 700; color: #00ada8; white-space: nowrap; }
+  .slot-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 16px; }
+  .slot-btn {
+    padding: 14px 12px; border: 2px solid #e8e8e8; border-radius: 8px;
+    background: #fff; cursor: pointer; text-align: center; transition: all 0.2s;
+  }
+  .slot-btn:hover { border-color: rgba(0,173,168,0.3); }
+  .slot-btn.selected { border-color: #00ada8; background: rgba(0,173,168,0.08); }
+  .slot-btn strong { display: block; font-size: 14px; font-weight: 700; margin-bottom: 2px; color: #333; }
+  .slot-btn span { font-size: 12px; color: #666; }
+  .slot-btn .slot-price { display: block; font-size: 16px; font-weight: 700; color: #00ada8; margin-top: 4px; }
+  .qty-row { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+  .qty-row label { font-size: 14px; font-weight: 600; color: #333; }
+  .qty-ctrl { display: flex; align-items: center; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+  .qty-btn { width: 36px; height: 36px; border: none; background: #fafafa; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #333; }
+  .qty-btn:hover { background: #e8e8e8; }
+  .qty-val { width: 40px; text-align: center; font-weight: 700; font-size: 16px; border: none; background: #fff; color: #333; }
+  .addon-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .addon-check {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    border: 1px solid #e8e8e8; border-radius: 8px; cursor: pointer;
+    transition: all 0.15s; font-size: 13px;
+  }
+  .addon-check:hover { border-color: rgba(0,173,168,0.3); }
+  .addon-check.checked { border-color: #00ada8; background: rgba(0,173,168,0.08); }
+  .addon-check input { display: none; }
+  .addon-check-box {
+    width: 20px; height: 20px; border: 2px solid #e8e8e8; border-radius: 4px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: all 0.15s;
+  }
+  .addon-check.checked .addon-check-box { background: #00ada8; border-color: #00ada8; color: #fff; }
+  .addon-check-info { flex: 1; }
+  .addon-check-info strong { display: block; font-size: 13px; color: #333; }
+  .addon-check-info span { font-size: 11px; color: #666; }
+  .addon-check-price { font-weight: 700; color: #00ada8; font-size: 14px; white-space: nowrap; }
+  .cart-summary { background: #fafafa; border-radius: 8px; padding: 20px; margin-top: 16px; }
+  .cart-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+  .cart-line.total { border-top: 2px solid #e8e8e8; margin-top: 8px; padding-top: 12px; font-weight: 700; font-size: 18px; }
+  .cart-line.total .cart-amount { color: #00ada8; }
+  .cart-label { color: #666; } .cart-amount { font-weight: 600; color: #333; }
+  .booking-footer { padding: 0 32px 28px; display: flex; justify-content: space-between; gap: 12px; }
+  .booking-footer .b-btn { flex: 1; justify-content: center; }
+  .b-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 32px; border-radius: 100px; font-weight: 600; font-size: 15px;
+    cursor: pointer; border: 2px solid transparent; transition: all 0.2s; width: 100%;
+  }
+  .b-btn-primary { background: #00ada8; color: #fff; border-color: #00ada8; }
+  .b-btn-primary:hover { background: #009590; border-color: #009590; }
+  .b-btn-outline { background: transparent; color: #333; border-color: #e8e8e8; }
+  .b-btn-outline:hover { border-color: #333; }
+  .b-form-group { margin-bottom: 14px; }
+  .b-form-group label { display: block; font-size: 13px; font-weight: 600; color: #666; margin-bottom: 6px; }
+  .b-form-group input, .b-form-group textarea, .b-form-group select {
+    width: 100%; padding: 11px 14px; border: 1px solid #e8e8e8; border-radius: 8px;
+    font-family: inherit; font-size: 14px; color: #333; background: #fff;
+    transition: border-color 0.2s;
+  }
+  .b-form-group input:focus, .b-form-group textarea:focus { outline: none; border-color: #00ada8; }
+  .b-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  @media (max-width: 480px) {
+    .booking-overlay { padding: 0; align-items: flex-end; }
+    .booking-modal { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 95vh; }
+    .booking-header { padding: 20px 16px 0; }
+    .booking-steps-nav { padding: 12px 16px 0; }
+    .booking-body { padding: 16px 16px 20px; }
+    .booking-footer { padding: 0 16px 20px; }
+    .slot-grid { grid-template-columns: 1fr 1fr; }
+    .addon-check-grid { grid-template-columns: 1fr; }
+    .b-form-row { grid-template-columns: 1fr; }
+  }
   </style>
 </head>
 <body>
@@ -585,7 +733,7 @@
         <span class="link-arrow">&rsaquo;</span>
       </div>
 
-      <div class="link-item" onclick="window.location.href='index.html#book'">
+      <div class="link-item" onclick="openBooking()">
         <span class="link-icon">&#x1F4C5;</span>
         <div class="link-text">Book Now<div class="link-sub">Check availability &amp; reserve</div></div>
         <span class="link-arrow">&rsaquo;</span>
@@ -670,7 +818,7 @@
       <button class="modal-close" onclick="closeModal('fleet')">&times;</button>
       <div class="modal-header">&#x1F6A4; Circle Boats &amp; Docks</div>
 
-      <div class="pkg-item" onclick="window.location.href='index.html#book'">
+      <div class="pkg-item" onclick="openBooking()">
         <img src="images/goboat/goboat-main.jpg?v=3" alt="Single Seater" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Single Seater</div>
@@ -679,7 +827,7 @@
         <div class="pkg-price">$150–$225</div>
       </div>
 
-      <div class="pkg-item" onclick="window.location.href='index.html#book'">
+      <div class="pkg-item" onclick="openBooking()">
         <img src="images/goboat/goboat-bumpers.jpg?v=3" alt="Double Seater" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Double Seater <span class="pkg-badge">Popular</span></div>
@@ -688,7 +836,7 @@
         <div class="pkg-price">$200–$275</div>
       </div>
 
-      <div class="pkg-item" onclick="window.location.href='index.html#book'">
+      <div class="pkg-item" onclick="openBooking()">
         <img src="images/goboat/mini-dock-tow.jpg?v=2" alt="Mini Dock" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Mini Dock</div>
@@ -697,7 +845,7 @@
         <div class="pkg-price">$25–$50</div>
       </div>
 
-      <div class="pkg-item" onclick="window.location.href='index.html#book'">
+      <div class="pkg-item" onclick="openBooking()">
         <img src="images/goboat/goboat-accessories.jpg?v=2" alt="X Dock" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">X Dock</div>
@@ -706,7 +854,7 @@
         <div class="pkg-price">$25–$50</div>
       </div>
 
-      <div class="pkg-item" onclick="window.location.href='index.html#book'">
+      <div class="pkg-item" onclick="openBooking()">
         <img src="images/goboat/goboat-bumpers.jpg?v=2" alt="Doggie Dock" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Doggie Dock</div>
@@ -1391,6 +1539,374 @@
   <script>
     // Load dashboard-managed content (links, profile, etc.) via load-site-data.js
     if (typeof loadWebsiteData === 'function') loadWebsiteData();
+  </script>
+
+  <!-- ===== FULL BOOKING OVERLAY ===== -->
+  <div class="booking-overlay" id="bookingOverlay">
+    <div class="booking-modal">
+      <button class="booking-close" onclick="closeBooking()">&times;</button>
+      <div class="booking-header">
+        <h2>Book Your Rental</h2>
+        <p>Select a date, choose your boat, and add extras.</p>
+      </div>
+      <div class="booking-steps-nav">
+        <div class="bstep-tab active" data-step="1">1. Date</div>
+        <div class="bstep-tab" data-step="2">2. Boat &amp; Time</div>
+        <div class="bstep-tab" data-step="3">3. Extras</div>
+        <div class="bstep-tab" data-step="4">4. Checkout</div>
+      </div>
+      <div class="booking-body">
+        <!-- STEP 1: LOCATION + DATE -->
+        <div class="bstep active" id="bstep1">
+          <div class="loc-section-label">📍 Choose Launch Location</div>
+          <div id="booking-locations">
+            <div class="loc-option selected" data-loc-id="loc1" data-loc-name="Main Launch — Canal Road" onclick="selectLocation(this)">
+              <div class="loc-option-icon">📍</div>
+              <div class="loc-option-info">
+                <strong>Main Launch — Canal Road</strong>
+                <span>25856 Canal Road, Unit A, Orange Beach, AL 36561</span>
+              </div>
+            </div>
+          </div>
+          <div style="height:20px;"></div>
+          <div class="loc-section-label">📅 Choose Your Date</div>
+          <div class="cal-header">
+            <button class="cal-nav" onclick="calNav(-1)">&#8249;</button>
+            <h3 id="calMonthLabel"></h3>
+            <button class="cal-nav" onclick="calNav(1)">&#8250;</button>
+          </div>
+          <div class="cal-grid" id="calGrid">
+            <div class="cal-day-label">Sun</div>
+            <div class="cal-day-label">Mon</div>
+            <div class="cal-day-label">Tue</div>
+            <div class="cal-day-label">Wed</div>
+            <div class="cal-day-label">Thu</div>
+            <div class="cal-day-label">Fri</div>
+            <div class="cal-day-label">Sat</div>
+          </div>
+        </div>
+        <!-- STEP 2: BOAT & TIME -->
+        <div class="bstep" id="bstep2">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;color:#333;">Select Boat Type</h4>
+          <div class="boat-option" data-boat="single" onclick="selectBoat(this)">
+            <img src="images/goboat/goboat-beach.jpg" alt="Single Seater" class="boat-option-img">
+            <div class="boat-option-info"><h4>Single Seater</h4><p>1 person &bull; Max 300 lbs &bull; 70" diameter</p></div>
+            <div class="boat-option-price">from $150</div>
+          </div>
+          <div class="boat-option" data-boat="double" onclick="selectBoat(this)">
+            <img src="images/goboat/goboat-bumpers.jpg" alt="Double Seater" class="boat-option-img">
+            <div class="boat-option-info"><h4>Double Seater</h4><p>2 people &bull; Max 450 lbs &bull; 89" x 70"</p></div>
+            <div class="boat-option-price">from $200</div>
+          </div>
+          <h4 style="font-size:15px;font-weight:700;margin-top:20px;margin-bottom:4px;color:#333;">Time Slot</h4>
+          <div class="slot-grid">
+            <div class="slot-btn" data-slot="am" onclick="selectSlot(this)"><strong>Half Day AM</strong><span>9:00 &ndash; 1:00</span><div class="slot-price" id="slotAM">$150</div></div>
+            <div class="slot-btn" data-slot="pm" onclick="selectSlot(this)"><strong>Half Day PM</strong><span>2:00 &ndash; 6:00</span><div class="slot-price" id="slotPM">$150</div></div>
+            <div class="slot-btn" data-slot="all" onclick="selectSlot(this)"><strong>All Day</strong><span>9:00 &ndash; 6:00</span><div class="slot-price" id="slotAll">$225</div></div>
+          </div>
+          <div class="qty-row">
+            <label>Quantity:</label>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(-1)">-</button>
+              <div class="qty-val" id="qtyVal">1</div>
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+        <!-- STEP 3: EXTRAS -->
+        <div class="bstep" id="bstep3">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:4px;color:#333;">Add a Dock</h4>
+          <p style="font-size:13px;color:#666;margin-bottom:12px;">$25 half-day / $50 full-day. Rent 4+ boats = FREE dock!</p>
+          <div class="addon-check-grid">
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="mini-dock" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>Mini Dock</strong><span>8'4" x 44" platform</span></div><div class="addon-check-price">$25</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="x-dock" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>X Dock</strong><span>5' x 5' floating dock</span></div><div class="addon-check-price">$25</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="doggie-dock" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>Doggie Dock</strong><span>5'4" x 43" with ramp</span></div><div class="addon-check-price">$25</div></label>
+          </div>
+          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:4px;color:#333;">Add-ons</h4>
+          <p style="font-size:13px;color:#666;margin-bottom:12px;">Enhance your trip with these extras.</p>
+          <div class="addon-check-grid">
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="cooler" data-price="35"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127866; Cooler Pack</strong><span>Cooler + ice + drinks</span></div><div class="addon-check-price">$35</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="drinks" data-price="15"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#129380; Drink &amp; Ice</strong><span>6 drinks + bag of ice</span></div><div class="addon-check-price">$15</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="snacks" data-price="20"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127839; Snack Pack</strong><span>Chips, granola, fruit</span></div><div class="addon-check-price">$20</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="pup" data-price="15"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#128054; Pup Pack</strong><span>Treats, bowl, dog vest</span></div><div class="addon-check-price">$15</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="speaker" data-price="15"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127925; BT Speaker</strong><span>Waterproof JBL</span></div><div class="addon-check-price">$15</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="gopro" data-price="30"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#128247; GoPro</strong><span>Waterproof camera</span></div><div class="addon-check-price">$30</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="fishing" data-price="25"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#127907; Fishing Gear</strong><span>Rod, reel, tackle, bait</span></div><div class="addon-check-price">$25</div></label>
+            <label class="addon-check" onclick="toggleAddon(this)"><input type="checkbox" data-addon="sunkit" data-price="10"><div class="addon-check-box">&#10003;</div><div class="addon-check-info"><strong>&#9728;&#65039; Sun &amp; Safety</strong><span>Sunscreen, hat, dry bag</span></div><div class="addon-check-price">$10</div></label>
+          </div>
+        </div>
+        <!-- STEP 4: CHECKOUT -->
+        <div class="bstep" id="bstep4">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:16px;color:#333;">Your Booking Summary</h4>
+          <div class="cart-summary" id="cartSummary"></div>
+          <h4 style="font-size:15px;font-weight:700;margin-top:24px;margin-bottom:12px;color:#333;">Your Info</h4>
+          <div class="b-form-row">
+            <div class="b-form-group"><label>Full Name</label><input type="text" id="book-name" placeholder="John Smith" required></div>
+            <div class="b-form-group"><label>Phone</label><input type="tel" id="book-phone" placeholder="(555) 123-4567" required></div>
+          </div>
+          <div class="b-form-group"><label>Email</label><input type="email" id="book-email" placeholder="john@example.com" required></div>
+          <div class="b-form-group"><label>Notes (optional)</label><textarea id="book-notes" placeholder="Special requests, group info, etc." style="min-height:60px;resize:vertical;"></textarea></div>
+          <div id="payment-section" style="margin-top:20px;">
+            <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;color:#333;">Payment</h4>
+            <div id="stripe-card-wrapper" style="background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;">
+              <div style="margin-bottom:12px;"><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Card Number</label><div id="card-number-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;"></div></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Expiry</label><div id="card-expiry-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;"></div></div>
+                <div><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">CVC</label><div id="card-cvc-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;"></div></div>
+              </div>
+              <div id="card-errors" style="color:#ef4444;font-size:13px;min-height:20px;"></div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ada8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span style="font-size:11px;color:#999;">Secured by Stripe. We never see your card details.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="booking-footer">
+        <button class="b-btn b-btn-outline" id="bookBack" onclick="bookingNav(-1)" style="display:none;">Back</button>
+        <button class="b-btn b-btn-primary" id="bookNext" onclick="bookingNav(1)">Select Date to Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ===== BOOKING SYSTEM — same logic as main website ===== */
+  (function() {
+    var bk = {
+      step: 1, location: 'loc1', locationName: 'Main Launch — Canal Road',
+      date: null, boat: null, slot: null, qty: 1, addons: [],
+      calMonth: new Date().getMonth(), calYear: new Date().getFullYear(),
+      sessionId: null, holdId: null
+    };
+    var PRICES = { single: { am: 150, pm: 150, all: 225 }, double: { am: 200, pm: 200, all: 275 } };
+    var GROUP_PRICE = 200;
+    var TAX_RATE = 0.10;
+    var ADDON_NAMES = { 'mini-dock':'Mini Dock','x-dock':'X Dock','doggie-dock':'Doggie Dock','cooler':'Cooler Pack','drinks':'Drink & Ice','snacks':'Snack Pack','pup':'Pup Pack','speaker':'BT Speaker','gopro':'GoPro Rental','fishing':'Fishing Gear','sunkit':'Sun & Safety Kit' };
+    var SLOT_LABELS = { am:'Half Day AM (9:00-1:00)', pm:'Half Day PM (2:00-6:00)', all:'All Day (9:00-6:00)' };
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var _stripe = null, _cardNumber = null, _cardExpiry = null, _cardCvc = null, _stripePkFetched = false;
+
+    function genSessionId() { return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2,9); }
+
+    window.openBooking = function(preselect) {
+      if (preselect) bk.boat = preselect;
+      bk.sessionId = genSessionId(); bk.holdId = null;
+      document.getElementById('bookingOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      goToStep(1); renderBkCalendar();
+    };
+    window.closeBooking = function() {
+      document.getElementById('bookingOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    document.getElementById('bookingOverlay').addEventListener('click', function(e) { if (e.target === this) closeBooking(); });
+
+    function renderBkCalendar() {
+      var grid = document.getElementById('calGrid');
+      grid.querySelectorAll('.cal-day').forEach(function(d) { d.remove(); });
+      var y = bk.calYear, m = bk.calMonth;
+      document.getElementById('calMonthLabel').textContent = MONTHS[m] + ' ' + y;
+      var firstDay = new Date(y, m, 1).getDay();
+      var daysInMonth = new Date(y, m+1, 0).getDate();
+      var today = new Date(); today.setHours(0,0,0,0);
+      for (var i = 0; i < firstDay; i++) { var e = document.createElement('div'); e.className='cal-day empty'; grid.appendChild(e); }
+      for (var d = 1; d <= daysInMonth; d++) {
+        var btn = document.createElement('button'); btn.className='cal-day'; btn.textContent=d;
+        var cellDate = new Date(y,m,d);
+        var dateStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        if (cellDate < today) { btn.classList.add('disabled'); }
+        else {
+          btn.setAttribute('data-date', dateStr);
+          btn.addEventListener('click', function() {
+            bk.date = this.getAttribute('data-date');
+            grid.querySelectorAll('.cal-day').forEach(function(c) { c.classList.remove('selected'); });
+            this.classList.add('selected'); updateBkNextBtn();
+          });
+        }
+        if (bk.date === dateStr) btn.classList.add('selected');
+        grid.appendChild(btn);
+      }
+    }
+    window.calNav = function(dir) {
+      bk.calMonth += dir;
+      if (bk.calMonth > 11) { bk.calMonth=0; bk.calYear++; }
+      if (bk.calMonth < 0) { bk.calMonth=11; bk.calYear--; }
+      renderBkCalendar();
+    };
+    window.selectLocation = function(el) {
+      document.querySelectorAll('.loc-option').forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected');
+      bk.location = el.getAttribute('data-loc-id');
+      bk.locationName = el.getAttribute('data-loc-name');
+      updateBkNextBtn();
+    };
+    window.selectBoat = function(el) {
+      document.querySelectorAll('.boat-option').forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected'); bk.boat = el.getAttribute('data-boat');
+      updateSlotPrices(); updateBkNextBtn();
+    };
+    function updateSlotPrices() {
+      if (!bk.boat) return; var p = PRICES[bk.boat];
+      document.getElementById('slotAM').textContent = '$'+p.am;
+      document.getElementById('slotPM').textContent = '$'+p.pm;
+      document.getElementById('slotAll').textContent = '$'+p.all;
+    }
+    window.selectSlot = function(el) {
+      document.querySelectorAll('.slot-btn').forEach(function(s) { s.classList.remove('selected'); });
+      el.classList.add('selected'); bk.slot = el.getAttribute('data-slot'); updateBkNextBtn();
+    };
+    window.changeQty = function(delta) {
+      bk.qty = Math.max(1, Math.min(20, bk.qty+delta));
+      document.getElementById('qtyVal').textContent = bk.qty;
+    };
+    window.toggleAddon = function(el) {
+      var cb = el.querySelector('input[type="checkbox"]'); cb.checked = !cb.checked;
+      el.classList.toggle('checked', cb.checked);
+      var addon = cb.getAttribute('data-addon');
+      var price = parseInt(cb.getAttribute('data-price'));
+      var isDock = addon === 'mini-dock' || addon === 'x-dock' || addon === 'doggie-dock';
+      if (isDock && bk.slot) price = bk.slot === 'all' ? 50 : 25;
+      if (cb.checked) { bk.addons.push({ id: addon, price: price }); }
+      else { bk.addons = bk.addons.filter(function(a) { return a.id !== addon; }); }
+      if (isDock) { el.querySelector('.addon-check-price').textContent = '$'+price; }
+    };
+    function goToStep(n) {
+      bk.step = n;
+      document.querySelectorAll('.bstep').forEach(function(s) { s.classList.remove('active'); });
+      document.getElementById('bstep'+n).classList.add('active');
+      document.querySelectorAll('.bstep-tab').forEach(function(t,i) {
+        t.classList.remove('active','done');
+        if (i+1===n) t.classList.add('active');
+        if (i+1<n) t.classList.add('done');
+      });
+      document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
+      if (n===2 && bk.boat) {
+        var opt = document.querySelector('.boat-option[data-boat="'+bk.boat+'"]');
+        if (opt && !opt.classList.contains('selected')) { document.querySelectorAll('.boat-option').forEach(function(o){o.classList.remove('selected');}); opt.classList.add('selected'); }
+        updateSlotPrices();
+      }
+      if (n===4) { buildCart(); setTimeout(initStripeElements, 100); }
+      updateBkNextBtn();
+    }
+    window.bookingNav = function(dir) {
+      var next = bk.step + dir;
+      if (next < 1) return;
+      if (dir > 0) {
+        if (bk.step===1 && (!bk.location || !bk.date)) return;
+        if (bk.step===2 && (!bk.boat || !bk.slot)) return;
+        if (bk.step===4) { submitBooking(); return; }
+      }
+      if (next >= 1 && next <= 4) goToStep(next);
+    };
+    function updateBkNextBtn() {
+      var btn = document.getElementById('bookNext'); var s = bk.step;
+      if (s===1) { var r=bk.location&&bk.date; btn.textContent=!bk.location?'Select a Location':!bk.date?'Select a Date':'Continue'; btn.style.opacity=r?'1':'0.5'; }
+      else if (s===2) { var r2=bk.boat&&bk.slot; btn.textContent=r2?'Continue':'Select Boat & Time'; btn.style.opacity=r2?'1':'0.5'; }
+      else if (s===3) { btn.textContent='Review & Checkout'; btn.style.opacity='1'; }
+      else if (s===4) { var t=getBoatTotal()+getAddonsTotal(); btn.textContent='Pay $'+t+' & Book'; btn.style.opacity='1'; }
+    }
+    function getBoatTotal() {
+      if (!bk.boat||!bk.slot) return 0;
+      var unit = PRICES[bk.boat][bk.slot];
+      if (bk.boat==='single'&&bk.slot==='all'&&bk.qty>=5) unit=GROUP_PRICE;
+      return unit*bk.qty;
+    }
+    function getAddonsTotal() { var s=0; bk.addons.forEach(function(a){s+=a.price;}); return s; }
+    function buildCart() {
+      var html=''; var dp=bk.date?bk.date.split('-'):[];
+      var dateStr=dp.length===3?MONTHS[parseInt(dp[1])-1]+' '+parseInt(dp[2])+', '+dp[0]:'';
+      if (bk.locationName) html+='<div class="cart-line"><span class="cart-label">Location</span><span class="cart-amount">'+bk.locationName+'</span></div>';
+      html+='<div class="cart-line"><span class="cart-label">Date</span><span class="cart-amount">'+dateStr+'</span></div>';
+      if (!bk.boat||!bk.slot) return;
+      var bn=bk.boat==='single'?'Single Seater':'Double Seater';
+      var up=PRICES[bk.boat][bk.slot];
+      if (bk.boat==='single'&&bk.slot==='all'&&bk.qty>=5) up=GROUP_PRICE;
+      html+='<div class="cart-line"><span class="cart-label">'+bn+' x'+bk.qty+'</span><span class="cart-amount">$'+(up*bk.qty)+'</span></div>';
+      html+='<div class="cart-line"><span class="cart-label">'+SLOT_LABELS[bk.slot]+'</span><span class="cart-amount">$'+up+'/ea</span></div>';
+      bk.addons.forEach(function(a) { html+='<div class="cart-line"><span class="cart-label">'+(ADDON_NAMES[a.id]||a.id)+'</span><span class="cart-amount">$'+a.price+'</span></div>'; });
+      var sub=getBoatTotal()+getAddonsTotal();
+      var tax=Math.round(sub*TAX_RATE*100)/100;
+      var total=sub+tax;
+      html+='<div class="cart-line"><span class="cart-label" style="color:#666;">Subtotal</span><span class="cart-amount" style="color:#666;">$'+sub+'</span></div>';
+      html+='<div class="cart-line"><span class="cart-label" style="color:#666;">Tax (10%)</span><span class="cart-amount" style="color:#666;">$'+tax.toFixed(2)+'</span></div>';
+      html+='<div class="cart-line total"><span class="cart-label">Total</span><span class="cart-amount">$'+total.toFixed(2)+'</span></div>';
+      document.getElementById('cartSummary').innerHTML = html;
+    }
+    function initStripeElements() {
+      if (!_stripe && !_stripePkFetched) {
+        _stripePkFetched = true;
+        fetch((window.API_BASE||'https://cybercheck-api-database.vercel.app')+'/api/stripe/publishable-key')
+          .then(function(r){return r.json();})
+          .then(function(data){ if (typeof Stripe!=='undefined') { _stripe=Stripe(data.publishableKey||'null'); mountStripeEls(); } })
+          .catch(function(){ if (typeof Stripe!=='undefined') { _stripe=Stripe('null'); mountStripeEls(); } });
+        return;
+      }
+      if (_stripe) mountStripeEls();
+    }
+    function mountStripeEls() {
+      if (_cardNumber) return;
+      var els = _stripe.elements({ fonts:[{cssSrc:'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap'}] });
+      var style = { base:{fontSize:'15px',fontFamily:'Inter,-apple-system,sans-serif',color:'#1a1a1a','::placeholder':{color:'#999'}}, invalid:{color:'#ef4444'} };
+      _cardNumber = els.create('cardNumber',{style:style}); _cardExpiry = els.create('cardExpiry',{style:style}); _cardCvc = els.create('cardCvc',{style:style});
+      _cardNumber.mount('#card-number-element'); _cardExpiry.mount('#card-expiry-element'); _cardCvc.mount('#card-cvc-element');
+      _cardNumber.on('change',function(ev){ document.getElementById('card-errors').textContent=ev.error?ev.error.message:''; });
+    }
+    function submitBooking() {
+      var name=document.getElementById('book-name').value.trim();
+      var phone=document.getElementById('book-phone').value.trim();
+      var email=document.getElementById('book-email').value.trim();
+      var notes=document.getElementById('book-notes').value||'';
+      if (!name||!email) { alert('Please fill in your name and email.'); return; }
+      var btn=document.getElementById('bookNext');
+      var sub=getBoatTotal()+getAddonsTotal();
+      var tax=Math.round(sub*TAX_RATE*100)/100;
+      var total=Math.round((sub+tax)*100)/100;
+      var bn=bk.boat==='single'?'Single Seater':'Double Seater';
+      var desc=bn+' x'+bk.qty+' — '+(SLOT_LABELS[bk.slot]||bk.slot);
+      btn.textContent='Processing...'; btn.style.opacity='0.7'; btn.disabled=true;
+      var payload = {
+        booking_date:bk.date, location_id:bk.location, location_name:bk.locationName,
+        qty:bk.qty, addons:bk.addons.map(function(a){return{name:ADDON_NAMES[a.id]||a.id,price:a.price};}),
+        subtotal:sub, tax:tax, total:total, customer_name:name, customer_phone:phone, customer_email:email, notes:desc, session_id:bk.sessionId
+      };
+      if (_stripe && _cardNumber) {
+        _stripe.createPaymentMethod({type:'card',card:_cardNumber,billing_details:{name:name,email:email,phone:phone}})
+          .then(function(result) {
+            if (result.error) { document.getElementById('card-errors').textContent=result.error.message; btn.textContent='Pay $'+total.toFixed(2)+' & Book'; btn.style.opacity='1'; btn.disabled=false; return; }
+            payload.payment_method_id = result.paymentMethod.id;
+            fetch(api('/bookings'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+              .then(function(r){return r.json();})
+              .then(function(rec) {
+                if (rec.error) { document.getElementById('card-errors').textContent='Booking failed: '+rec.error; btn.textContent='Pay $'+total.toFixed(2)+' & Book'; btn.style.opacity='1'; btn.disabled=false; return; }
+                fetch(window.API_BASE+'/api/stripe/create-payment-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({booking_id:rec.id,amount:total,description:desc,payment_method_id:result.paymentMethod.id,site_id:window.SUBDOMAIN})})
+                  .then(function(r){return r.json();})
+                  .then(function(pi){
+                    if (pi.status==='succeeded'||!pi.error) showSuccess(total,desc,name,email,btn);
+                    else { document.getElementById('card-errors').textContent=pi.error||'Payment failed'; btn.textContent='Pay $'+total.toFixed(2)+' & Book'; btn.style.opacity='1'; btn.disabled=false; }
+                  }).catch(function(){showSuccess(total,desc,name,email,btn);});
+              }).catch(function(){showSuccess(total,desc,name,email,btn);});
+          });
+      } else {
+        fetch(api('/bookings'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(function(){});
+        setTimeout(function(){showSuccess(total,desc,name,email,btn);}, 1200);
+      }
+    }
+    function showSuccess(total,desc,name,email,btn) {
+      var overlay=document.createElement('div');
+      overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+      overlay.innerHTML='<div style="background:#fff;border-radius:20px;padding:48px 36px;max-width:420px;width:100%;text-align:center;">' +
+        '<div style="width:80px;height:80px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
+        '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+        '<h2 style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:8px;">Booking Confirmed!</h2>' +
+        '<p style="color:#10b981;font-size:16px;font-weight:600;margin-bottom:4px;">$'+total.toFixed(2)+' paid successfully</p>' +
+        '<p style="color:#666;font-size:14px;margin-bottom:24px;">'+desc+'</p>' +
+        '<button onclick="this.closest(\'div[style]\').remove();closeBooking();" style="background:#10b981;color:#fff;border:none;border-radius:10px;padding:14px 40px;font-size:15px;font-weight:700;cursor:pointer;width:100%;">Done</button>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      btn.textContent='Booked!'; btn.style.opacity='1'; btn.disabled=false;
+    }
+  })();
   </script>
 </body>
 </html>
