@@ -5266,6 +5266,12 @@
   if (window.speechSynthesis && speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = function() {};
   }
+
+  // Auto-open booking if arriving from links page via #book
+  if (window.location.hash === '#book') {
+    window.history.replaceState(null, '', window.location.pathname);
+    setTimeout(openBooking, 300);
+  }
 })();
 </script>
 </body>

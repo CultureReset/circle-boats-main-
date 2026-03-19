@@ -585,7 +585,7 @@
         <span class="link-arrow">&rsaquo;</span>
       </div>
 
-      <div class="link-item" onclick="openModal('booking')">
+      <div class="link-item" onclick="window.location.href='index.html#book'">
         <span class="link-icon">&#x1F4C5;</span>
         <div class="link-text">Book Now<div class="link-sub">Check availability &amp; reserve</div></div>
         <span class="link-arrow">&rsaquo;</span>
@@ -670,7 +670,7 @@
       <button class="modal-close" onclick="closeModal('fleet')">&times;</button>
       <div class="modal-header">&#x1F6A4; Circle Boats &amp; Docks</div>
 
-      <div class="pkg-item" onclick="openModal('booking')">
+      <div class="pkg-item" onclick="window.location.href='index.html#book'">
         <img src="images/goboat/goboat-main.jpg?v=3" alt="Single Seater" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Single Seater</div>
@@ -679,7 +679,7 @@
         <div class="pkg-price">$150–$225</div>
       </div>
 
-      <div class="pkg-item" onclick="openModal('booking')">
+      <div class="pkg-item" onclick="window.location.href='index.html#book'">
         <img src="images/goboat/goboat-bumpers.jpg?v=3" alt="Double Seater" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Double Seater <span class="pkg-badge">Popular</span></div>
@@ -688,7 +688,7 @@
         <div class="pkg-price">$200–$275</div>
       </div>
 
-      <div class="pkg-item" onclick="openModal('booking')">
+      <div class="pkg-item" onclick="window.location.href='index.html#book'">
         <img src="images/goboat/mini-dock-tow.jpg?v=2" alt="Mini Dock" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Mini Dock</div>
@@ -697,7 +697,7 @@
         <div class="pkg-price">$25–$50</div>
       </div>
 
-      <div class="pkg-item" onclick="openModal('booking')">
+      <div class="pkg-item" onclick="window.location.href='index.html#book'">
         <img src="images/goboat/goboat-accessories.jpg?v=2" alt="X Dock" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">X Dock</div>
@@ -706,7 +706,7 @@
         <div class="pkg-price">$25–$50</div>
       </div>
 
-      <div class="pkg-item" onclick="openModal('booking')">
+      <div class="pkg-item" onclick="window.location.href='index.html#book'">
         <img src="images/goboat/goboat-bumpers.jpg?v=2" alt="Doggie Dock" class="pkg-image">
         <div class="pkg-info">
           <div class="pkg-name">Doggie Dock</div>
@@ -1001,7 +1001,7 @@
     }
 
     // Close modals on outside click
-    var modals = ['about', 'fleet', 'booking', 'gallery', 'reviews', 'hours'];
+    var modals = ['about', 'fleet', 'gallery', 'reviews', 'hours'];
     modals.forEach(function(name) {
       document.getElementById(name + 'Modal').addEventListener('click', function(e) {
         if (e.target === this) closeModal(name);
