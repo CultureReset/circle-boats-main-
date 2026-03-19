@@ -237,56 +237,54 @@
 
   <div class="container">
     <form class="booking-form" id="bookingForm">
-      <!-- Check-in Date -->
+
+      <!-- Date -->
       <div class="form-group">
         <label for="bookingDate">Booking Date *</label>
-        <input
-          type="date"
-          id="bookingDate"
-          name="bookingDate"
-          required
-          min=""
-        >
+        <input type="date" id="bookingDate" name="bookingDate" required min="">
         <div class="error" id="dateError"></div>
       </div>
 
-      <!-- Duration -->
+      <!-- Time Slot -->
       <div class="form-group">
-        <label for="duration">Duration *</label>
-        <select id="duration" name="duration" required>
-          <option value="">Select duration...</option>
-          <option value="2">2 Hours - $100</option>
-          <option value="4">4 Hours - $180</option>
-          <option value="8">Full Day (8 hrs) - $300</option>
-        </select>
+        <label>Time Slot *</label>
+        <div class="slot-grid" id="slotGrid">
+          <div class="slot-btn" data-slot="am">
+            <strong>Half Day AM</strong>
+            <span>9:00 – 1:00</span>
+            <div class="slot-price" id="slotAM">$150</div>
+          </div>
+          <div class="slot-btn" data-slot="pm">
+            <strong>Half Day PM</strong>
+            <span>2:00 – 6:00</span>
+            <div class="slot-price" id="slotPM">$150</div>
+          </div>
+          <div class="slot-btn" data-slot="all">
+            <strong>All Day</strong>
+            <span>9:00 – 6:00</span>
+            <div class="slot-price" id="slotAll">$225</div>
+          </div>
+        </div>
+        <div class="error" id="slotError"></div>
       </div>
 
-      <!-- Boat Selection -->
+      <!-- Boats -->
       <div class="form-group">
-        <label>Select Your Boat *</label>
-        <div class="boat-selector" id="boatSelector"></div>
+        <label>Choose Your Boats * <span style="font-weight:400;color:var(--gray);font-size:13px;">Mix &amp; match, add as many as you like</span></label>
+        <div id="boatList"></div>
         <div class="error" id="boatError"></div>
       </div>
 
-      <!-- Quantity -->
-      <div class="form-group">
-        <label>Number of Boats</label>
-        <div class="qty-selector">
-          <button type="button" class="qty-btn" id="qtyMinus">−</button>
-          <div class="qty-display" id="qtyDisplay">1</div>
-          <button type="button" class="qty-btn" id="qtyPlus">+</button>
-        </div>
-      </div>
-
       <!-- Customer Info -->
-      <div class="form-group">
-        <label for="customerName">Your Name *</label>
-        <input type="text" id="customerName" name="customerName" required>
-      </div>
-
-      <div class="form-group">
-        <label for="customerPhone">Phone Number *</label>
-        <input type="tel" id="customerPhone" name="customerPhone" required>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="customerName">Your Name *</label>
+          <input type="text" id="customerName" name="customerName" required>
+        </div>
+        <div class="form-group">
+          <label for="customerPhone">Phone *</label>
+          <input type="tel" id="customerPhone" name="customerPhone" required>
+        </div>
       </div>
 
       <div class="form-group">
@@ -294,204 +292,276 @@
         <input type="email" id="customerEmail" name="customerEmail" required>
       </div>
 
-      <!-- Special Requests -->
       <div class="form-group">
         <label for="notes">Special Requests (optional)</label>
-        <textarea
-          id="notes"
-          name="notes"
-          style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; min-height: 80px; resize: vertical;"
-        ></textarea>
+        <textarea id="notes" name="notes" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-family:inherit;min-height:80px;resize:vertical;font-size:16px;"></textarea>
       </div>
 
       <!-- Price Summary -->
-      <div class="price-summary">
-        <div class="price-row">
-          <span>Boat Rental:</span>
-          <span id="basePrice">$0</span>
-        </div>
-        <div class="price-row">
-          <span>Quantity:</span>
-          <span id="qtyPrice">1 × $0 = $0</span>
-        </div>
-        <div class="price-row total">
-          <span>Total:</span>
-          <span id="totalPrice">$0</span>
-        </div>
+      <div class="price-summary" id="priceSummary">
+        <div class="price-row total"><span>Total:</span><span id="totalPrice">$0</span></div>
       </div>
 
       <!-- Terms -->
       <div class="form-group">
-        <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
-          <input
-            type="checkbox"
-            id="agreeTerms"
-            name="agreeTerms"
-            style="width: auto; margin-right: 8px;"
-            required
-          >
-          I agree to the terms and will complete the waiver
+        <label style="display:flex;align-items:flex-start;gap:10px;font-weight:normal;cursor:pointer;font-size:14px;">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" style="width:auto;margin-top:2px;flex-shrink:0;" required>
+          <span>I agree to the <a href="#" style="color:var(--teal);">rental terms</a> and understand I will sign a waiver at check-in.</span>
         </label>
         <div class="error" id="termsError"></div>
       </div>
 
-      <button type="submit" class="btn-primary" id="submitBtn">
-        Continue to Checkout →
-      </button>
+      <button type="submit" class="btn-primary" id="submitBtn">Continue to Checkout →</button>
     </form>
   </div>
+
+  <style>
+    .slot-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:8px; }
+    .slot-btn { border:2px solid var(--border); border-radius:8px; padding:14px 10px; text-align:center; cursor:pointer; transition:all .15s; }
+    .slot-btn:hover { border-color:var(--teal); }
+    .slot-btn.selected { border-color:var(--teal); background:rgba(0,173,168,.08); }
+    .slot-btn strong { display:block; font-size:13px; margin-bottom:2px; }
+    .slot-btn span { font-size:11px; color:var(--gray); display:block; }
+    .slot-price { font-weight:700; color:var(--teal); font-size:15px; margin-top:4px; }
+    .boat-row { display:flex; align-items:center; gap:14px; padding:14px 16px; border:2px solid var(--border); border-radius:10px; margin-bottom:10px; transition:border-color .15s; }
+    .boat-row.active { border-color:var(--teal); background:rgba(0,173,168,.06); }
+    .boat-row-img { width:68px; height:52px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+    .boat-row-info { flex:1; }
+    .boat-row-info h4 { font-size:15px; font-weight:700; margin-bottom:2px; color:#1a1a1a; }
+    .boat-row-info p { font-size:12px; color:var(--gray); margin:0; }
+    .boat-row-price { font-size:13px; font-weight:700; color:var(--teal); white-space:nowrap; margin-right:6px; }
+    .qty-ctrl { display:flex; align-items:center; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+    .qty-ctrl button { width:38px; height:38px; border:none; background:#fafafa; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .qty-ctrl button:hover { background:var(--border); }
+    .qty-ctrl span { width:36px; text-align:center; font-weight:700; font-size:15px; }
+    .avail-badge { display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:20px; margin-top:3px; }
+    @media (max-width:600px) {
+      .slot-grid { grid-template-columns:1fr 1fr; }
+      .form-row { grid-template-columns:1fr; }
+      .boat-row { flex-wrap:wrap; gap:10px; }
+      .qty-ctrl button { width:44px; height:44px; }
+    }
+  </style>
 
   <script>
     const API_BASE = window.location.hostname === 'localhost'
       ? 'http://localhost:3000'
       : 'https://cybercheck-api-database.vercel.app';
-
     const SUBDOMAIN = 'beachside-circle-boats';
-    const BOATS = [
-      { id: 'single', name: 'Single Seater', price: 50, capacity: 1, desc: '1 person max' },
-      { id: 'double', name: 'Double Seater', price: 80, capacity: 2, desc: '2 person max' }
-    ];
 
-    let selectedBoat = null;
-    let quantity = 1;
-    let bookingData = {};
-
-    // Initialize
-    function init() {
-      setMinDate();
-      renderBoatSelector();
-      attachEventListeners();
-      updatePricing();
+    function apiUrl(path) {
+      const sep = path.includes('?') ? '&' : '?';
+      return API_BASE + '/api/public' + path + sep + 'subdomain=' + SUBDOMAIN;
     }
 
-    function setMinDate() {
+    const PRICES = {
+      single: { am: 150, pm: 150, all: 225 },
+      double: { am: 200, pm: 200, all: 275 }
+    };
+    const TAX_RATE = 0.10;
+
+    let state = { slot: null, boats: {}, avail: {}, availLoading: false };
+
+    // ── Init ──
+    function init() {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       document.getElementById('bookingDate').min = tomorrow.toISOString().split('T')[0];
-    }
 
-    function renderBoatSelector() {
-      const container = document.getElementById('boatSelector');
-      container.innerHTML = BOATS.map(boat => `
-        <div class="boat-card" data-boat-id="${boat.id}">
-          <div class="boat-card-name">${boat.name}</div>
-          <div class="boat-card-price">$${boat.price}/hr</div>
-          <div class="boat-card-desc">${boat.desc}</div>
-        </div>
-      `).join('');
-
-      container.querySelectorAll('.boat-card').forEach(card => {
-        card.addEventListener('click', () => selectBoat(card.dataset.boatId));
-      });
-    }
-
-    function selectBoat(boatId) {
-      selectedBoat = BOATS.find(b => b.id === boatId);
-      document.querySelectorAll('.boat-card').forEach(card => {
-        card.classList.toggle('selected', card.dataset.boatId === boatId);
-      });
-      updatePricing();
-    }
-
-    function attachEventListeners() {
-      document.getElementById('qtyMinus').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (quantity > 1) quantity--;
-        updateQtyDisplay();
-        updatePricing();
+      document.querySelectorAll('.slot-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.slot = btn.dataset.slot;
+          renderBoats();
+          updateTotal();
+        });
       });
 
-      document.getElementById('qtyPlus').addEventListener('click', (e) => {
-        e.preventDefault();
-        quantity++;
-        updateQtyDisplay();
-        updatePricing();
+      document.getElementById('bookingDate').addEventListener('change', function() {
+        if (this.value) fetchAvail(this.value);
       });
 
-      document.getElementById('duration').addEventListener('change', updatePricing);
       document.getElementById('bookingForm').addEventListener('submit', handleSubmit);
+
+      // Load products from API
+      fetch(apiUrl('/fleet'))
+        .then(r => r.json())
+        .then(data => {
+          if (data.products) {
+            data.products.forEach(p => {
+              const k = p.key || p.name.toLowerCase().split(' ')[0];
+              PRICES[k] = { am: p.halfDayAM || 0, pm: p.halfDayPM || 0, all: p.allDay || 0 };
+            });
+            updateSlotPrices();
+          }
+        }).catch(() => {});
+
+      renderBoats();
     }
 
-    function updateQtyDisplay() {
-      document.getElementById('qtyDisplay').textContent = quantity;
+    function updateSlotPrices() {
+      // Update displayed prices using first boat type as reference
+      const keys = Object.keys(PRICES);
+      if (!keys.length) return;
+      renderBoats();
     }
 
-    function updatePricing() {
-      if (!selectedBoat) return;
-
-      const durationHours = parseInt(document.getElementById('duration').value) || 1;
-      const basePrice = selectedBoat.price * durationHours;
-      const total = basePrice * quantity;
-
-      document.getElementById('basePrice').textContent = `$${basePrice}`;
-      document.getElementById('qtyPrice').textContent = `${quantity} × $${basePrice} = $${quantity * basePrice}`;
-      document.getElementById('totalPrice').textContent = `$${total}`;
-
-      bookingData.basePrice = basePrice;
-      bookingData.totalPrice = total;
-      bookingData.durationHours = durationHours;
+    // ── Availability ──
+    function fetchAvail(date) {
+      state.avail = {}; state.availLoading = true; renderBoats();
+      fetch(apiUrl('/availability') + '&date=' + date)
+        .then(r => r.json())
+        .then(data => {
+          state.availLoading = false;
+          (data.availability || []).forEach(row => {
+            const k = row.fleet_type_name.toLowerCase().split(' ')[0];
+            const sn = (row.time_slot_name || '').toLowerCase();
+            const slot = sn.includes('pm') ? 'pm' : sn.includes('am') ? 'am' : 'all';
+            if (!state.avail[k]) state.avail[k] = {};
+            state.avail[k][slot] = row.blocked ? 0 : row.available;
+          });
+          renderBoats();
+        }).catch(() => { state.availLoading = false; renderBoats(); });
     }
 
-    async function handleSubmit(e) {
-      e.preventDefault();
+    function getAvail(key) {
+      if (!state.avail[key]) return null;
+      if (state.slot) return state.avail[key][state.slot] ?? null;
+      const vals = Object.values(state.avail[key]);
+      return vals.length ? Math.min(...vals) : null;
+    }
 
-      // Validate
-      if (!selectedBoat) {
-        document.getElementById('boatError').textContent = 'Please select a boat';
+    // ── Boats ──
+    const FALLBACK_BOATS = [
+      { key:'single', name:'Single Seater', description:'1 person max', image:'images/goboat/goboat-hero.jpg' },
+      { key:'double', name:'Double Seater', description:'2 person max', image:'images/goboat/goboat-onwater1.jpg' }
+    ];
+
+    function renderBoats() {
+      const container = document.getElementById('boatList');
+      const products = (window._bkProducts && window._bkProducts.length) ? window._bkProducts : FALLBACK_BOATS;
+
+      if (state.availLoading) {
+        container.innerHTML = '<p style="color:#888;font-size:13px;padding:8px 0;">Checking availability…</p>';
         return;
       }
 
-      const form = e.target;
-      const data = {
-        fleet_type_id: selectedBoat.id,
-        booking_date: form.bookingDate.value,
-        duration_hours: bookingData.durationHours,
-        qty: quantity,
-        customer_name: form.customerName.value,
-        customer_phone: form.customerPhone.value,
-        customer_email: form.customerEmail.value,
-        notes: form.notes.value,
-        subdomain: SUBDOMAIN
-      };
-
-      // Save to sessionStorage for checkout page
-      sessionStorage.setItem('bookingData', JSON.stringify({
-        ...data,
-        totalPrice: bookingData.totalPrice,
-        boatName: selectedBoat.name
-      }));
-
-      // Create hold first
-      try {
-        document.getElementById('submitBtn').disabled = true;
-        document.getElementById('submitBtn').classList.add('loading');
-        document.getElementById('submitBtn').textContent = 'Creating booking hold...';
-
-        const holdRes = await fetch(`${API_BASE}/api/public/hold`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-
-        if (!holdRes.ok) {
-          throw new Error(await holdRes.text());
+      container.innerHTML = products.map(p => {
+        const key = p.key || p.name.toLowerCase().split(' ')[0];
+        const qty = state.boats[key] || 0;
+        const price = state.slot && PRICES[key] ? PRICES[key][state.slot] : (PRICES[key] ? PRICES[key].am : 0);
+        const priceStr = state.slot ? '$' + price + '/ea' : 'from $' + (PRICES[key] ? PRICES[key].am : '?');
+        const avail = getAvail(key);
+        let badge = '';
+        if (avail !== null) {
+          const bc = avail === 0 ? '#ef4444' : avail <= 2 ? '#f59e0b' : '#10b981';
+          badge = `<span class="avail-badge" style="color:${bc};background:${bc}18;">${avail === 0 ? 'Sold out' : avail + ' left'}</span>`;
         }
+        const soldOut = avail !== null && avail === 0;
+        return `<div class="boat-row${qty > 0 ? ' active' : ''}" id="brow-${key}"${soldOut ? ' style="opacity:.5;pointer-events:none;"' : ''}>
+          ${p.image ? `<img class="boat-row-img" src="${p.image}" alt="${p.name}">` : ''}
+          <div class="boat-row-info"><h4>${p.name}</h4><p>${p.description || ''}</p>${badge}</div>
+          <span class="boat-row-price">${priceStr}</span>
+          <div class="qty-ctrl">
+            <button type="button" onclick="chgBoat('${key}',-1)">−</button>
+            <span id="bqty-${key}">${qty}</span>
+            <button type="button" onclick="chgBoat('${key}',1)">+</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
 
-        const hold = await holdRes.json();
-        sessionStorage.setItem('holdId', hold.id);
+    function chgBoat(key, delta) {
+      const avail = getAvail(key);
+      const max = avail !== null ? avail : 20;
+      state.boats[key] = Math.max(0, Math.min(max, (state.boats[key] || 0) + delta));
+      const sp = document.getElementById('bqty-' + key);
+      if (sp) sp.textContent = state.boats[key];
+      const row = document.getElementById('brow-' + key);
+      if (row) row.classList.toggle('active', state.boats[key] > 0);
+      updateTotal();
+    }
 
-        // Redirect to checkout
-        window.location.href = 'checkout.html';
-      } catch (err) {
-        console.error('Booking error:', err);
-        alert('Error creating booking: ' + err.message);
-        document.getElementById('submitBtn').disabled = false;
-        document.getElementById('submitBtn').classList.remove('loading');
-        document.getElementById('submitBtn').textContent = 'Continue to Checkout →';
+    function totalQty() {
+      return Object.values(state.boats).reduce((s, v) => s + v, 0);
+    }
+
+    // ── Pricing ──
+    function updateTotal() {
+      let subtotal = 0;
+      const lines = [];
+      Object.entries(state.boats).forEach(([k, qty]) => {
+        if (!qty || !state.slot || !PRICES[k]) return;
+        const unit = PRICES[k][state.slot] || 0;
+        subtotal += unit * qty;
+        lines.push(`<div class="price-row"><span>${k.charAt(0).toUpperCase()+k.slice(1)} Seater ×${qty}</span><span>$${unit * qty}</span></div>`);
+      });
+      const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+      const total = subtotal + tax;
+
+      const el = document.getElementById('priceSummary');
+      if (subtotal > 0) {
+        el.innerHTML = lines.join('') +
+          `<div class="price-row"><span style="color:var(--gray);">Tax (10%)</span><span style="color:var(--gray);">$${tax.toFixed(2)}</span></div>` +
+          `<div class="price-row total"><span>Total</span><span id="totalPrice">$${total.toFixed(2)}</span></div>`;
+      } else {
+        el.innerHTML = `<div class="price-row total"><span>Total</span><span id="totalPrice">$0</span></div>`;
       }
     }
 
-    // Start
+    // ── Submit ──
+    async function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('boatError').textContent = '';
+      document.getElementById('slotError').textContent = '';
+
+      if (!state.slot) { document.getElementById('slotError').textContent = 'Please select a time slot'; return; }
+      if (totalQty() === 0) { document.getElementById('boatError').textContent = 'Please add at least 1 boat'; return; }
+
+      const boatsArr = Object.entries(state.boats)
+        .filter(([, qty]) => qty > 0)
+        .map(([k, qty]) => ({ type: k, qty, price: PRICES[k] ? PRICES[k][state.slot] : 0 }));
+
+      const subtotal = boatsArr.reduce((s, b) => s + b.price * b.qty, 0);
+      const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+      const total = subtotal + tax;
+
+      const desc = boatsArr.map(b => `${b.qty}× ${b.type.charAt(0).toUpperCase()+b.type.slice(1)}`).join(', ');
+
+      const payload = {
+        booking_date: document.getElementById('bookingDate').value,
+        slot: state.slot,
+        boats: boatsArr,
+        qty: totalQty(),
+        subtotal, tax, total,
+        customer_name: document.getElementById('customerName').value,
+        customer_phone: document.getElementById('customerPhone').value,
+        customer_email: document.getElementById('customerEmail').value,
+        notes: document.getElementById('notes').value,
+        subdomain: SUBDOMAIN
+      };
+
+      sessionStorage.setItem('bookingData', JSON.stringify({ ...payload, desc }));
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true; btn.textContent = 'Creating hold…';
+
+      try {
+        const r = await fetch(API_BASE + '/api/public/hold', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const hold = await r.json();
+        if (hold.id) sessionStorage.setItem('holdId', hold.id);
+        window.location.href = 'checkout.html';
+      } catch (err) {
+        alert('Error: ' + err.message);
+        btn.disabled = false; btn.textContent = 'Continue to Checkout →';
+      }
+    }
+
     init();
   </script>
 </body>
