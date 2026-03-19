@@ -352,137 +352,177 @@
       ? 'http://localhost:3000'
       : 'https://cybercheck-api-database.vercel.app';
 
-    const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+    // ── Mode detection: SMS token link vs. legacy session-based flow ──────────
+    const urlParams  = new URLSearchParams(window.location.search);
+    const waiverToken = urlParams.get('token');
+    const isSmsMode  = !!waiverToken;          // arrived via day-of SMS link
+
     const canvas = document.getElementById('signatureCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx    = canvas.getContext('2d');
     let isDrawing = false;
 
-    if (!bookingData) {
-      window.location.href = 'booking.html';
+    // ── Load waiver data when arrived via SMS link ─────────────────────────────
+    async function loadTokenWaiver() {
+      try {
+        const res = await fetch(`${API_BASE}/api/public/waivers/${waiverToken}`);
+        if (res.status === 410) {
+          // Already signed — show success immediately, no form needed
+          document.getElementById('waiverForm').innerHTML =
+            '<div class="success-message" style="font-size:16px;padding:24px;text-align:center;">' +
+            '✅ Waiver already signed. You\'re all set — enjoy your rental!</div>';
+          return;
+        }
+        if (!res.ok) throw new Error('Waiver link not found or expired');
+        const data = await res.json();
+        // Pre-fill name from booking
+        if (data.customer_name) document.getElementById('fullName').value = data.customer_name;
+      } catch (err) {
+        document.getElementById('error-message').textContent = err.message || 'Could not load waiver. Please contact us.';
+        document.getElementById('error-message').style.display = 'block';
+      }
     }
 
-    // Pre-fill customer info
-    document.getElementById('fullName').value = bookingData.customer_name;
-    document.getElementById('email').value = bookingData.customer_email;
-    document.getElementById('phone').value = bookingData.customer_phone;
+    if (isSmsMode) {
+      loadTokenWaiver();
+    } else {
+      // Legacy flow: data comes from sessionStorage (during checkout)
+      const bookingData = JSON.parse(sessionStorage.getItem('bookingData') || 'null');
+      if (!bookingData) {
+        window.location.href = 'booking.html';
+      } else {
+        document.getElementById('fullName').value  = bookingData.customer_name  || '';
+        document.getElementById('email').value     = bookingData.customer_email || '';
+        document.getElementById('phone').value     = bookingData.customer_phone || '';
+      }
+    }
 
-    // Calculate age
+    // ── Age calculator ─────────────────────────────────────────────────────────
     document.getElementById('dateOfBirth').addEventListener('change', (e) => {
-      const dob = new Date(e.target.value);
+      const dob   = new Date(e.target.value);
       const today = new Date();
       let age = today.getFullYear() - dob.getFullYear();
-      const monthDiff = today.getMonth() - dob.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-        age--;
-      }
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
       document.getElementById('age').value = age;
     });
 
-    // Canvas signature
+    // ── Signature canvas ───────────────────────────────────────────────────────
     function resizeCanvas() {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
+      canvas.width  = rect.width;
       canvas.height = rect.height;
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    canvas.addEventListener('mousedown', (e) => {
-      isDrawing = true;
+    function getPos(e) {
       const rect = canvas.getBoundingClientRect();
-      ctx.beginPath();
-      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-    });
+      const src  = e.touches ? e.touches[0] : e;
+      return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+    }
 
-    canvas.addEventListener('mousemove', (e) => {
-      if (!isDrawing) return;
-      const rect = canvas.getBoundingClientRect();
-      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-      ctx.stroke();
-    });
+    canvas.addEventListener('mousedown',  (e) => { isDrawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+    canvas.addEventListener('mousemove',  (e) => { if (!isDrawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+    canvas.addEventListener('mouseup',    ()  => { isDrawing = false; });
+    canvas.addEventListener('mouseleave', ()  => { isDrawing = false; });
 
-    canvas.addEventListener('mouseup', () => { isDrawing = false; });
-    canvas.addEventListener('mouseout', () => { isDrawing = false; });
+    canvas.addEventListener('touchstart',  (e) => { e.preventDefault(); isDrawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+    canvas.addEventListener('touchmove',   (e) => { e.preventDefault(); if (!isDrawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+    canvas.addEventListener('touchend',    ()  => { isDrawing = false; });
 
     document.getElementById('clearSignature').addEventListener('click', (e) => {
       e.preventDefault();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 
-    // Submit
+    // ── Submit ─────────────────────────────────────────────────────────────────
     document.getElementById('waiverForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Check signature
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      const imageData    = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
       const hasSignature = imageData.some((val, i) => i % 4 === 3 && val > 0);
+      const errEl        = document.getElementById('error-message');
 
       if (!hasSignature) {
-        document.getElementById('error-message').textContent = 'Please sign the waiver';
-        document.getElementById('error-message').style.display = 'block';
+        errEl.textContent    = 'Please draw your signature above before submitting.';
+        errEl.style.display  = 'block';
         return;
       }
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Processing...';
+      const submitBtn       = document.getElementById('submitBtn');
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Submitting...';
+      errEl.style.display   = 'none';
 
       try {
-        const waiverData = {
-          full_name: document.getElementById('fullName').value,
-          date_of_birth: document.getElementById('dateOfBirth').value,
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
-          address: document.getElementById('address').value,
-          signature_image_url: canvas.toDataURL('image/png'),
-          acknowledged_at: new Date().toISOString(),
-          subdomain: bookingData.subdomain
+        const payload = {
+          customer_name:  document.getElementById('fullName').value,
+          customer_email: document.getElementById('email').value,
+          signature_data: canvas.toDataURL('image/png'),
+          date_of_birth:  document.getElementById('dateOfBirth').value,
+          acknowledged_at: new Date().toISOString()
         };
 
-        // Submit waiver
-        const waiverRes = await fetch(`${API_BASE}/api/public/waiver`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(waiverData)
-        });
+        if (isSmsMode) {
+          // ── SMS mode: sign the pre-created waiver record via token ───────────
+          const res = await fetch(`${API_BASE}/api/public/waivers/${waiverToken}/sign`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload)
+          });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || 'Could not submit waiver');
+          }
+          // Show inline success (no redirect — they're already done with booking)
+          document.getElementById('waiverForm').innerHTML =
+            '<div class="success-message" style="font-size:18px;padding:32px;text-align:center;">' +
+            '✅ Waiver signed! You\'re all set for today\'s rental. Have a great time on the water! 🛶</div>';
 
-        if (!waiverRes.ok) {
-          throw new Error('Failed to submit waiver');
+        } else {
+          // ── Legacy mode: create waiver then complete booking ─────────────────
+          const bookingData = JSON.parse(sessionStorage.getItem('bookingData') || '{}');
+          const waiverData  = { ...payload, subdomain: bookingData.subdomain };
+
+          const waiverRes = await fetch(`${API_BASE}/api/public/waiver`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(waiverData)
+          });
+          if (!waiverRes.ok) throw new Error('Failed to submit waiver');
+
+          const waiverRecord = await waiverRes.json();
+          sessionStorage.setItem('waiverToken', waiverRecord.token);
+
+          const bookingRes = await fetch(`${API_BASE}/api/public/bookings`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+              ...bookingData,
+              waiver_token:      waiverRecord.token,
+              payment_intent_id: sessionStorage.getItem('paymentIntentId')
+            })
+          });
+          if (!bookingRes.ok) throw new Error('Failed to complete booking');
+
+          const booking = await bookingRes.json();
+          sessionStorage.setItem('confirmationData', JSON.stringify(booking));
+          window.location.href = 'confirmation.html';
         }
 
-        const waiverRecord = await waiverRes.json();
-        sessionStorage.setItem('waiverToken', waiverRecord.token);
-
-        // Create final booking with waiver
-        const finalBooking = {
-          ...bookingData,
-          waiver_token: waiverRecord.token,
-          payment_intent_id: sessionStorage.getItem('paymentIntentId')
-        };
-
-        const bookingRes = await fetch(`${API_BASE}/api/public/bookings`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(finalBooking)
-        });
-
-        if (!bookingRes.ok) {
-          throw new Error('Failed to complete booking');
-        }
-
-        const booking = await bookingRes.json();
-
-        // Redirect to confirmation
-        sessionStorage.setItem('confirmationData', JSON.stringify(booking));
-        window.location.href = 'confirmation.html';
       } catch (err) {
         console.error('Waiver error:', err);
-        document.getElementById('error-message').textContent = err.message;
-        document.getElementById('error-message').style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign & Complete Booking';
+        errEl.textContent    = err.message;
+        errEl.style.display  = 'block';
+        submitBtn.disabled   = false;
+        submitBtn.textContent = isSmsMode ? 'Sign Waiver' : 'Sign & Complete Booking';
       }
     });
+
+    // Update button label for SMS mode
+    if (isSmsMode) {
+      document.getElementById('submitBtn').textContent = 'Sign Waiver';
+    }
   </script>
 </body>
 </html>
