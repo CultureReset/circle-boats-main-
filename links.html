@@ -1628,6 +1628,36 @@
     function genSessionId() { return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2,9); }
     function getTotalBoatQty() { return Object.keys(bk.boats).reduce(function(s,k){return s+(bk.boats[k]||0);},0); }
 
+    var _avail = {};
+    var _availLoading = false;
+
+    function fetchAvailability(date) {
+      if (!date) return;
+      _avail = {}; _availLoading = true;
+      renderBoatOptions();
+      fetch(api('/availability') + '&date=' + date)
+        .then(function(r){return r.json();})
+        .then(function(data){
+          _availLoading = false;
+          (data.availability||[]).forEach(function(row){
+            var key = row.fleet_type_name.toLowerCase().split(' ')[0];
+            var sn = (row.time_slot_name||'').toLowerCase();
+            var slot = sn.indexOf('pm')>-1?'pm':sn.indexOf('am')>-1||sn.indexOf('morning')>-1?'am':'all';
+            if (!_avail[key]) _avail[key]={};
+            _avail[key][slot] = row.blocked ? 0 : row.available;
+          });
+          renderBoatOptions();
+        })
+        .catch(function(){ _availLoading=false; renderBoatOptions(); });
+    }
+
+    function getAvailForKey(key) {
+      if (!_avail[key]) return null;
+      if (bk.slot) return _avail[key][bk.slot]!==undefined ? _avail[key][bk.slot] : null;
+      var vals = Object.values(_avail[key]);
+      return vals.length ? Math.min.apply(null,vals) : null;
+    }
+
     window.openBooking = function(preselect) {
       bk.boats = {}; bk.addons = []; bk.slot = null;
       if (preselect) bk.boats[preselect] = 1;
@@ -1697,14 +1727,25 @@
         { key:'single', name:'Single Seater', description:'1 person • Max 300 lbs • 70" diameter', image:'images/goboat/goboat-beach.jpg' },
         { key:'double', name:'Double Seater', description:'2 people • Max 450 lbs • 89" × 70"', image:'images/goboat/goboat-bumpers.jpg' }
       ];
+      if (_availLoading) {
+        container.innerHTML = '<p style="color:#888;font-size:13px;padding:12px 0;">Checking availability…</p>';
+        return;
+      }
       container.innerHTML = products.map(function(p) {
         var key = p.key || p.name.toLowerCase().split(' ')[0];
         var qty = bk.boats[key] || 0;
         var priceStr = bk.slot && PRICES[key] ? '$'+PRICES[key][bk.slot]+'/ea' : 'from $'+((PRICES[key]&&PRICES[key].am)||(p.halfDayAM!=null?p.halfDayAM:p.halfDay)||'?');
         var img = p.image || '';
-        return '<div class="bk-boat-row'+(qty>0?' active':'')+'" data-boat="'+key+'">' +
+        var avail = getAvailForKey(key);
+        var availBadge = '';
+        if (avail !== null) {
+          var bc = avail===0?'#ef4444':avail<=2?'#f59e0b':'#10b981';
+          availBadge = '<span style="font-size:11px;font-weight:700;color:'+bc+';background:'+bc+'18;padding:2px 7px;border-radius:20px;white-space:nowrap;">'+(avail===0?'Sold out':avail+' left')+'</span>';
+        }
+        var soldOut = avail !== null && avail === 0;
+        return '<div class="bk-boat-row'+(qty>0?' active':'')+(soldOut?'" style="opacity:0.5;pointer-events:none;':'')+'" data-boat="'+key+'">' +
           (img ? '<img class="bk-boat-row-img" src="'+img+'" alt="'+p.name+'">' : '') +
-          '<div class="bk-boat-row-info"><h4>'+p.name+'</h4><p>'+(p.description||'')+'</p></div>' +
+          '<div class="bk-boat-row-info"><h4>'+p.name+'</h4><p>'+(p.description||'')+'</p>'+availBadge+'</div>' +
           '<span class="bk-boat-row-price">'+priceStr+'</span>' +
           '<div class="bk-qty-ctrl">' +
             '<button onclick="changeBoatQty(\''+key+'\',-1)">−</button>' +
@@ -1715,7 +1756,9 @@
       }).join('');
     }
     window.changeBoatQty = function(key, delta) {
-      bk.boats[key] = Math.max(0, Math.min(20, (bk.boats[key]||0) + delta));
+      var avail = getAvailForKey(key);
+      var maxQty = avail !== null ? avail : 20;
+      bk.boats[key] = Math.max(0, Math.min(maxQty, (bk.boats[key]||0) + delta));
       var span = document.getElementById('bkqty-'+key);
       if (span) span.textContent = bk.boats[key];
       var row = document.querySelector('.bk-boat-row[data-boat="'+key+'"]');
@@ -1814,7 +1857,7 @@
         if (i+1<n) t.classList.add('done');
       });
       document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
-      if (n===2) { renderBoatOptions(); updateSlotPrices(); }
+      if (n===2) { fetchAvailability(bk.date); updateSlotPrices(); }
       if (n===3) renderExtrasOptions();
       if (n===4) { buildCart(); setTimeout(initStripeElements, 100); }
       updateBkNextBtn();

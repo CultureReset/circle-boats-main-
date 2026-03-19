@@ -3361,6 +3361,41 @@
       return Object.keys(booking.boats).reduce(function(s, k) { return s + (booking.boats[k] || 0); }, 0);
     }
 
+    // Availability cache: { 'single': { am: 3, pm: 2, all: 1 }, 'double': { ... } }
+    var _avail = {};
+    var _availLoading = false;
+
+    function fetchAvailability(date) {
+      if (!date) return;
+      _avail = {};
+      _availLoading = true;
+      renderBoatOptions(); // show loading state
+      fetch(api('/availability') + '&date=' + date)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          _availLoading = false;
+          (data.availability || []).forEach(function(row) {
+            var key = row.fleet_type_name.toLowerCase().split(' ')[0]; // 'single', 'double'
+            var slotName = (row.time_slot_name || '').toLowerCase();
+            var slot = slotName.indexOf('pm') > -1 ? 'pm'
+                     : slotName.indexOf('am') > -1 || slotName.indexOf('morning') > -1 ? 'am'
+                     : 'all';
+            if (!_avail[key]) _avail[key] = {};
+            _avail[key][slot] = row.blocked ? 0 : row.available;
+          });
+          renderBoatOptions();
+        })
+        .catch(function() { _availLoading = false; renderBoatOptions(); });
+    }
+
+    function getAvailForKey(key) {
+      if (!_avail[key]) return null;
+      if (booking.slot) return _avail[key][booking.slot] !== undefined ? _avail[key][booking.slot] : null;
+      // No slot selected — return minimum across all slots
+      var vals = Object.values(_avail[key]);
+      return vals.length ? Math.min.apply(null, vals) : null;
+    }
+
     /* Open / Close */
     function openBooking(preselect) {
       booking.boats = {};
@@ -3465,16 +3500,28 @@
         { key: 'single', name: 'Single Seater', description: '1 person max', halfDayAM: 150, halfDayPM: 150, allDay: 225, image: 'images/goboat/goboat-hero.jpg' },
         { key: 'double', name: 'Double Seater', description: '2 person max', halfDayAM: 200, halfDayPM: 200, allDay: 275, image: 'images/goboat/goboat-onwater1.jpg' }
       ];
+      if (_availLoading) {
+        container.innerHTML = '<p style="color:var(--gray);font-size:13px;padding:12px 0;">Checking availability…</p>';
+        return;
+      }
       container.innerHTML = products.map(function(p) {
         var key = p.key || p.name.toLowerCase().split(' ')[0];
         var qty = booking.boats[key] || 0;
+        var avail = getAvailForKey(key);
         var priceStr = booking.slot
           ? '$' + (PRICES[key] ? PRICES[key][booking.slot] : (p.allDay || 0)) + '/ea'
           : 'from $' + (p.halfDayAM || p.allDay || 0);
         var img = p.image ? '<img class="bk-boat-row-img" src="' + p.image + '" alt="' + p.name + '">' : '';
-        return '<div class="bk-boat-row' + (qty > 0 ? ' active' : '') + '" id="bkrow-' + key + '">' +
+        var availBadge = '';
+        if (avail !== null) {
+          var badgeColor = avail === 0 ? '#ef4444' : avail <= 2 ? '#f59e0b' : '#10b981';
+          var badgeText = avail === 0 ? 'Sold out' : avail + ' left';
+          availBadge = '<span style="font-size:11px;font-weight:700;color:' + badgeColor + ';background:' + badgeColor + '18;padding:2px 7px;border-radius:20px;white-space:nowrap;">' + badgeText + '</span>';
+        }
+        var soldOut = avail !== null && avail === 0;
+        return '<div class="bk-boat-row' + (qty > 0 ? ' active' : '') + (soldOut ? '" style="opacity:0.5;pointer-events:none;' : '') + '" id="bkrow-' + key + '">' +
           img +
-          '<div class="bk-boat-row-info"><h4>' + p.name + '</h4><p>' + (p.description || '') + '</p></div>' +
+          '<div class="bk-boat-row-info"><h4>' + p.name + '</h4><p>' + (p.description || '') + '</p>' + availBadge + '</div>' +
           '<span class="bk-boat-row-price">' + priceStr + '</span>' +
           '<div class="bk-qty-ctrl">' +
             '<button type="button" onclick="changeBoatQty(\'' + key + '\',-1)">−</button>' +
@@ -3486,7 +3533,9 @@
     }
 
     window.changeBoatQty = function(key, delta) {
-      booking.boats[key] = Math.max(0, Math.min(20, (booking.boats[key] || 0) + delta));
+      var avail = getAvailForKey(key);
+      var maxQty = avail !== null ? avail : 20;
+      booking.boats[key] = Math.max(0, Math.min(maxQty, (booking.boats[key] || 0) + delta));
       var span = document.getElementById('bkqty-' + key);
       if (span) span.textContent = booking.boats[key];
       var row = document.getElementById('bkrow-' + key);
@@ -3495,7 +3544,7 @@
     };
 
     function updateSlotPrices() {
-      // Re-render boat rows to reflect new slot prices
+      // Re-render boat rows to reflect new slot prices + slot-specific availability
       renderBoatOptions();
     }
 
@@ -3610,7 +3659,7 @@
 
       document.getElementById('bookBack').style.display = n > 1 ? '' : 'none';
 
-      if (n === 2) { renderBoatOptions(); updateSlotPrices(); }
+      if (n === 2) { fetchAvailability(booking.date); updateSlotPrices(); }
       if (n === 3) renderExtrasOptions();
 
       if (n === 4) {
