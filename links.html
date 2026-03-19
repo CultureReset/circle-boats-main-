@@ -879,64 +879,6 @@
     </div>
   </div>
 
-  <!-- ========== BOOKING MODAL ========== -->
-  <div class="modal" id="bookingModal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal('booking')">&times;</button>
-      <div class="modal-header">&#x1F4C5; Available Dates &mdash; March 2026</div>
-
-      <!-- Calendar Navigation -->
-      <div class="calendar-nav">
-        <button class="calendar-nav-btn" onclick="calendarPrevMonth()">&laquo; Previous</button>
-        <div class="calendar-month-display" id="monthDisplay">March 2026</div>
-        <button class="calendar-nav-btn" onclick="calendarNextMonth()">Next &raquo;</button>
-      </div>
-
-      <div class="calendar-header" id="calendarHeader"></div>
-      <div class="calendar-grid" id="calendarContainer"></div>
-
-      <!-- Booking Form (appears after date select) -->
-      <div id="bookingForm" style="display:none; background: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 16px;">
-        <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 16px;">&#x1F4CB; Reserve Your Boat</div>
-        <div id="selectedDateDisplay" style="color: #00ada8; font-weight: 600; margin-bottom: 12px;"></div>
-        <div style="display: grid; gap: 12px;">
-          <input type="text" placeholder="Full Name" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-          <input type="tel" placeholder="Phone Number" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-          <input type="email" placeholder="Email" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-          <select style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-            <option value="">Select Boat Type</option>
-            <option value="single">Single Seater ($150 Half / $225 All Day)</option>
-            <option value="double">Double Seater ($200 Half / $275 All Day)</option>
-          </select>
-          <select style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-            <option value="">Select Time Slot</option>
-            <option value="am">Half Day AM (9:00 - 1:00)</option>
-            <option value="pm">Half Day PM (2:00 - 6:00)</option>
-            <option value="all">All Day (9:00 - 6:00)</option>
-          </select>
-          <select style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-            <option value="">Dock Add-on? (Optional)</option>
-            <option value="none">No Dock</option>
-            <option value="mini">Mini Dock (+$50)</option>
-            <option value="x">X Dock (+$50)</option>
-            <option value="doggie">Doggie Dock (+$50)</option>
-          </select>
-          <input type="number" placeholder="How many boats?" min="1" max="20" value="1" style="padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 14px;">
-          <button onclick="submitBooking()" style="padding: 14px; background: #00ada8; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s;">Reserve Now</button>
-        </div>
-      </div>
-
-      <div style="padding: 16px; background: #2a2a2a; border-radius: 12px; text-align: center;">
-        <div style="font-size: 14px; color: #00ada8; font-weight: 600; margin-bottom: 8px;">
-          &#x1F4DE; Call to Book: (601) 325-1205
-        </div>
-        <div style="font-size: 12px; color: #999;">
-          Weekends book fast! Reserve 1&ndash;2 weeks in advance.
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- ========== GALLERY MODAL ========== -->
   <div class="modal" id="galleryModal">
     <div class="modal-content">

@@ -226,7 +226,7 @@ function updateLinksPage(data) {
         data.products.forEach(function(p) {
           var div = document.createElement('div');
           div.className = 'pkg-item';
-          div.setAttribute('onclick', "openModal('booking')");
+          div.setAttribute('onclick', "openBooking()");
           var minP = Math.min(p.halfDayAM || p.halfDay || 0, p.halfDayPM || p.halfDay || 0);
           div.innerHTML = (p.image ? '<img src="' + resolveImageUrl(p.image) + '" alt="' + p.name + '" class="pkg-image">' : '') +
             '<div class="pkg-info">' +
