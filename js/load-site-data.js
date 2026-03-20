@@ -84,6 +84,7 @@ function applyAllData(data) {
   updateGallerySection(data);
   updateReviewsSection(data);
   updateQnASection(data);
+  updateCtaSection(data);
   applyBookingPolicy(data);
   updateSocialSection(data);
   updateContactInterests(data);
@@ -838,6 +839,19 @@ function updateQnASection(data) {
   // Show the section if it was hidden
   var section = document.getElementById('qna');
   if (section) section.style.display = '';
+}
+
+function updateCtaSection(data) {
+  var c = data.cta || {};
+  var title = document.getElementById('cta-title');
+  var subtitle = document.getElementById('cta-subtitle');
+  var btn = document.getElementById('cta-btn');
+  if (title && c.title) title.textContent = c.title;
+  if (subtitle && c.subtitle) subtitle.textContent = c.subtitle;
+  if (btn) {
+    if (c.btnText) btn.textContent = c.btnText;
+    if (c.btnUrl) btn.href = c.btnUrl;
+  }
 }
 
 function applyBookingPolicy(data) {
