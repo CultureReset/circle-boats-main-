@@ -534,14 +534,16 @@ function updateBusinessInfo(data) {
   });
   document.querySelectorAll('[data-bind="business.address"]').forEach(function(el) { el.textContent = sanitizeAddress(b.address); });
   document.querySelectorAll('[data-bind="business.hours"]').forEach(function(el) {
+    el.style.flexDirection = 'column';
+    el.style.gap = '0';
     var structured = data.business._hours_structured;
     if (structured && typeof structured === 'object') {
       var order = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
       var abbr = { monday:'Mon', tuesday:'Tue', wednesday:'Wed', thursday:'Thu', friday:'Fri', saturday:'Sat', sunday:'Sun' };
       var rows = order.filter(function(d) { return structured[d] && !structured[d].closed; })
         .map(function(d) {
-          return '<div style="display:flex;justify-content:space-between;gap:16px;padding:3px 0;border-bottom:1px solid var(--gray-200,#f0f0f0);">' +
-            '<span style="font-weight:600;">' + abbr[d] + '</span>' +
+          return '<div style="display:flex;justify-content:space-between;gap:16px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,0.06);">' +
+            '<span style="font-weight:600;min-width:36px;">' + abbr[d] + '</span>' +
             '<span>' + structured[d].open + '–' + structured[d].close + '</span></div>';
         });
       el.innerHTML = rows.join('');
