@@ -166,6 +166,20 @@ function updateGroupRate(data) {
   if (btn && gr.ctaUrl) btn.href = gr.ctaUrl;
 }
 
+function sanitizeAddress(addr) {
+  if (!addr) return addr;
+  // Deduplicate comma-separated parts (handles repeated ", Orange Beach, AL, 36561")
+  var parts = addr.split(',').map(function(p) { return p.trim(); });
+  var seen = [];
+  var out = parts.filter(function(p) {
+    var lower = p.toLowerCase();
+    if (!p || seen.indexOf(lower) > -1) return false;
+    seen.push(lower);
+    return true;
+  });
+  return out.join(', ');
+}
+
 // ─── Links Page (links.html) ─────────────────────────────────────────────────
 // Only runs when the links.html DOM elements are present
 function updateLinksPage(data) {
@@ -186,14 +200,31 @@ function updateLinksPage(data) {
     if (callBtn) callBtn.textContent = '📞 ' + b.phone;
   }
 
-  // Address in info items
+  // Address in info items — sanitized to strip any duplicated city/state segments
   if (b.address) {
-    document.querySelectorAll('.info-item span').forEach(function(el) {
-      if (el.textContent.indexOf('Canal Road') > -1 || el.textContent.indexOf('Orange Beach') > -1) {
-        el.textContent = b.address;
-      }
-    });
+    var cleanAddr = sanitizeAddress(b.address);
+    var addrEl = document.getElementById('links-address');
+    if (addrEl) {
+      addrEl.textContent = cleanAddr;
+    } else {
+      document.querySelectorAll('.info-item span').forEach(function(el) {
+        if (el.textContent.indexOf('Canal Road') > -1 || el.textContent.indexOf('Orange Beach') > -1) {
+          el.textContent = cleanAddr;
+        }
+      });
+    }
   }
+
+  // Avatar
+  var avatarImg = document.getElementById('profile-avatar-img');
+  if (avatarImg) {
+    var logoSrc = (b.logo) || (data.hero && data.hero.image) || '';
+    if (logoSrc) avatarImg.src = logoSrc;
+  }
+
+  // Status badge — hours note or default
+  var badge = document.getElementById('status-badge');
+  if (badge && b.hoursNote) badge.innerHTML = '&#x1F7E2; ' + b.hoursNote;
 
   // ── Rebuild link buttons from links_page.links ──
   var lp = data.links_page;
@@ -216,7 +247,23 @@ function updateLinksPage(data) {
           '<span class="link-arrow">&rsaquo;</span>' +
         '</a>';
       }
-      // Modal-opening links
+      // Booking link — opens booking modal
+      if (l.id === 'booking') {
+        return '<div class="link-item" onclick="openBooking()">' +
+          '<span class="link-icon">' + (l.icon || '📅') + '</span>' +
+          '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
+          '<span class="link-arrow">&rsaquo;</span>' +
+        '</div>';
+      }
+      // Fleet link
+      if (l.id === 'fleet') {
+        return '<div class="link-item" onclick="openModal(\'fleet\')">' +
+          '<span class="link-icon">' + (l.icon || '🚤') + '</span>' +
+          '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
+          '<span class="link-arrow">&rsaquo;</span>' +
+        '</div>';
+      }
+      // Other modal-opening links
       return '<div class="link-item" onclick="openModal(\'' + l.id + '\')">' +
         '<span class="link-icon">' + (l.icon || '📌') + '</span>' +
         '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
@@ -304,17 +351,31 @@ function updateLinksPage(data) {
     });
   }
 
-  // ── About modal — update description and what's included ──
-  if (data.about) {
-    var aboutDesc = document.querySelector('#aboutModal p');
-    if (aboutDesc && data.about.description) aboutDesc.textContent = data.about.description;
+  // ── About modal — populate from dashboard data ──
+  var aboutDescEl = document.getElementById('about-modal-desc');
+  if (aboutDescEl && data.about && data.about.description) aboutDescEl.textContent = data.about.description;
+
+  var wiGrid = document.getElementById('whats-included-grid');
+  if (wiGrid && data.whats_included && data.whats_included.length) {
+    wiGrid.innerHTML = data.whats_included.map(function(item) {
+      return '<div>&#x2705; ' + item + '</div>';
+    }).join('');
   }
-  if (data.whats_included && data.whats_included.length) {
-    var wiGrid = document.querySelector('#aboutModal .modal-content div[style*="grid-template-columns: repeat(2)"]');
-    if (wiGrid) {
-      wiGrid.innerHTML = data.whats_included.map(function(item) {
-        return '<div>&#x2705; ' + item + '</div>';
-      }).join('');
+
+  // About modal contact info
+  var aboutPhone = document.getElementById('about-modal-phone');
+  if (aboutPhone && b.phone) aboutPhone.textContent = b.phone;
+  var aboutAddr = document.getElementById('about-modal-addr');
+  if (aboutAddr && b.address) aboutAddr.innerHTML = sanitizeAddress(b.address).replace(/, (AL|Orange Beach)/g, '<br>$&').replace(/^/, '');
+
+  // Hours modal
+  if (b.hours) {
+    var hoursList = document.getElementById('hours-list');
+    if (hoursList) {
+      var lines = typeof b.hours === 'string'
+        ? b.hours.split('\n').filter(function(l) { return l.trim(); })
+        : [];
+      if (lines.length) hoursList.innerHTML = lines.map(function(l) { return '<div class="hours-row">' + l + '</div>'; }).join('');
     }
   }
 }
