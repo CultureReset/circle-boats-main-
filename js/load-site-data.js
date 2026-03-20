@@ -299,7 +299,7 @@ function updateLinksPage(data) {
     if (aboutDesc && data.about.description) aboutDesc.textContent = data.about.description;
   }
   if (data.whats_included && data.whats_included.length) {
-    var wiGrid = document.querySelector('#aboutModal .modal-content div[style*="grid-template-columns: repeat(2"]');
+    var wiGrid = document.querySelector('#aboutModal .modal-content div[style*="grid-template-columns: repeat(2)"]');
     if (wiGrid) {
       wiGrid.innerHTML = data.whats_included.map(function(item) {
         return '<div>&#x2705; ' + item + '</div>';
