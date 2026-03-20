@@ -1350,15 +1350,16 @@
 
     .map-embed {
       width: 100%;
-      height: 180px;
+      height: 200px;
       border-radius: var(--radius);
-      background: var(--bg);
+      overflow: hidden;
       border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gray-light);
-      font-size: 14px;
+    }
+    .map-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
     }
 
     /* ===== FOOTER ===== */
@@ -3001,7 +3002,13 @@
           <div class="info-card">
             <h4><span class="icon">&#128205;</span> Location</h4>
             <div class="info-row" data-bind="business.address">25856 Canal Road, Unit A<br>Orange Beach, AL 36561</div>
-            <div class="map-embed">Map &mdash; Orange Beach, AL</div>
+            <div class="map-embed">
+              <iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-87.5836%2C30.2744%2C-87.5436%2C30.3144&amp;layer=mapnik&amp;marker=30.2944%2C-87.5636"
+                title="Beachside Circle Boats — Orange Beach, AL"
+                loading="lazy"
+                allowfullscreen></iframe>
+            </div>
           </div>
           <div class="info-card">
             <h4><span class="icon">&#128222;</span> Contact</h4>
