@@ -848,10 +848,7 @@ function updateCtaSection(data) {
   var btn = document.getElementById('cta-btn');
   if (title && c.title) title.textContent = c.title;
   if (subtitle && c.subtitle) subtitle.textContent = c.subtitle;
-  if (btn) {
-    if (c.btnText) btn.textContent = c.btnText;
-    if (c.btnUrl) btn.href = c.btnUrl;
-  }
+  if (btn && c.btnText) btn.textContent = c.btnText;
 }
 
 function applyBookingPolicy(data) {
