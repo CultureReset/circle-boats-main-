@@ -183,7 +183,6 @@
       transform: none;
       box-shadow: none;
     }
-    -webkit-tap-highlight-color: transparent;
     .link-icon {
       font-size: 32px;
       flex-shrink: 0;
@@ -550,11 +549,12 @@
 
   /* ===== BOOKING OVERLAY (same as main website) ===== */
   .booking-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000;
-    opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.55); z-index: 2000;
+    align-items: center; justify-content: center; padding: 20px;
   }
-  .booking-overlay.active { opacity: 1; visibility: visible; }
+  .booking-overlay.active { display: flex; }
   .booking-modal {
     --teal: #00ada8; --teal-dark: #009590; --teal-light: rgba(0,173,168,0.08);
     --teal-border: rgba(0,173,168,0.2); --dark: #333333; --gray: #666666;
@@ -1327,14 +1327,14 @@
         <p>Select a date, choose your boat, and add extras.</p>
       </div>
       <div class="booking-steps-nav">
-        <div class="bstep-tab active" data-step="1">1. Date</div>
+        <div class="bstep-tab" data-step="1">1. Date</div>
         <div class="bstep-tab" data-step="2">2. Boat &amp; Time</div>
         <div class="bstep-tab" data-step="3">3. Extras</div>
         <div class="bstep-tab" data-step="4">4. Checkout</div>
       </div>
       <div class="booking-body">
         <!-- STEP 1: LOCATION + DATE -->
-        <div class="bstep active" id="bstep1">
+        <div class="bstep" id="bstep1">
           <div class="loc-section-label">📍 Choose Launch Location</div>
           <div id="booking-locations">
             <div class="loc-option selected" data-loc-id="loc1" data-loc-name="Main Launch — Canal Road" onclick="selectLocation(this)">
