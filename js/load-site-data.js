@@ -5,7 +5,7 @@
 // ============================================
 
 const CACHE_KEY = 'beachside_site_data';
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 30 * 1000; // 30 seconds — keeps website fresh after dashboard saves
 
 async function loadWebsiteData() {
   let data = null;
