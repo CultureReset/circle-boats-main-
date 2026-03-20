@@ -1157,6 +1157,15 @@
       padding: 24px 20px;
       text-align: center;
       transition: box-shadow 0.3s;
+      overflow: hidden;
+    }
+
+    .addon-card-img {
+      display: block;
+      width: calc(100% + 40px);
+      margin: -24px -20px 16px;
+      aspect-ratio: 4/3;
+      object-fit: cover;
     }
 
     .addon-card:hover {
@@ -2332,6 +2341,7 @@
       /* Add-ons — 2 columns */
       .addons-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .addon-card { padding: 18px 14px; }
+      .addon-card-img { width: calc(100% + 28px); margin: -18px -14px 14px; }
 
       /* Gallery — 2 columns */
       .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
@@ -2469,6 +2479,7 @@
 
       /* Addon cards */
       .addon-card { padding: 16px 12px; }
+      .addon-card-img { width: calc(100% + 24px); margin: -16px -12px 14px; }
       .addon-icon { font-size: 28px; margin-bottom: 8px; }
       .addon-price { font-size: 18px; }
 
