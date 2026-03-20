@@ -2694,12 +2694,12 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section class="section" id="about">
+  <!-- ABOUT — hidden until dashboard content is set -->
+  <section class="section" id="about" style="display:none;">
     <div class="container">
       <div class="section-header">
-        <h2 data-bind="pages.about.title">About Beachside Circle Boats</h2>
-        <p data-bind="pages.about.subtitle">Experience a new way to explore Orange Beach</p>
+        <h2 data-bind="pages.about.title"></h2>
+        <p data-bind="pages.about.subtitle"></p>
       </div>
 
       <!-- About photo — hidden until set from dashboard -->
@@ -2707,35 +2707,12 @@
         <img src="" alt="About us" style="width:100%;height:100%;object-fit:contain;display:block;" loading="lazy">
       </div>
 
-      <div style="background:#f9fafb;border-radius:12px;padding:32px;border:1px solid #e5e5e5;">
-        <p id="about-description" style="font-size:15px;line-height:1.8;color:#333;margin-bottom:16px;">
-          Beachside Circle Boats brings a whole new way to experience Orange Beach. Our portable, eco-friendly electric circle boats are perfect for cruising the intercoastal waterways — no gas, no noise, just pure fun on the water.
+      <div id="about-text-block" style="background:#f9fafb;border-radius:12px;padding:32px;border:1px solid #e5e5e5;">
+        <p id="about-description" style="font-size:15px;line-height:1.8;color:#333;margin-bottom:16px;"></p>
+        <p id="about-perfect-for-wrap" style="font-size:15px;line-height:1.8;color:#333;margin-bottom:20px;display:none;">
+          <strong style="color:#1a1a1a;">Perfect For:</strong> <span id="about-perfect-for"></span>
         </p>
-        <p style="font-size:15px;line-height:1.8;color:#333;margin-bottom:20px;">
-          <strong style="color:#1a1a1a;">Perfect For:</strong> <span id="about-perfect-for">Families, couples, birthday parties, group outings, fishing, or just relaxing on the water. No boating license needed!</span>
-        </p>
-        <div id="about-features-grid" class="about-features-grid">
-          <div class="about-feature-item">
-            <div class="about-feature-icon">⚡</div>
-            <h4>Eco-Friendly</h4>
-            <p>Zero emissions, zero noise pollution. 35lb thrust electric motors.</p>
-          </div>
-          <div class="about-feature-item">
-            <div class="about-feature-icon">💪</div>
-            <h4>Stable &amp; Safe</h4>
-            <p>Low center of gravity. Life jackets included. No license needed.</p>
-          </div>
-          <div class="about-feature-item">
-            <div class="about-feature-icon">🎒</div>
-            <h4>Portable</h4>
-            <p>Inflatable design. We can bring boats to your private dock or event.</p>
-          </div>
-          <div class="about-feature-item">
-            <div class="about-feature-icon">🌊</div>
-            <h4>Gulf Coast Views</h4>
-            <p>Explore Orange Beach coastline and intercoastal waterways.</p>
-          </div>
-        </div>
+        <div id="about-features-grid" class="about-features-grid"></div>
       </div>
     </div>
   </section>
@@ -2858,18 +2835,16 @@
     </div>
   </section>
 
-  <!-- WHY CIRCLE BOATS -->
-  <section class="section" id="about">
+  <!-- WHY CIRCLE BOATS — hidden until dashboard features are set -->
+  <section class="section" id="why-circle-section" style="display:none;">
     <div class="container">
       <div class="section-header">
-        <div class="section-tag">Why Circle Boats</div>
-        <h2 data-bind="pages.about.title">A New Way to Experience the Gulf</h2>
-        <p data-bind="pages.about.subtitle">Portable inflatable boats that combine fun, safety, and sustainability.</p>
+        <div class="section-tag" id="why-circle-tag">Why Circle Boats</div>
+        <h2 id="why-circle-title"></h2>
+        <p id="why-circle-subtitle"></p>
       </div>
       <div class="features-grid">
         <!-- Populated from dashboard via /api/site-data -->
-        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
-        <div class="skeleton-card mini"></div><div class="skeleton-card mini"></div><div class="skeleton-card mini"></div>
       </div>
     </div>
   </section>

@@ -93,36 +93,44 @@ function applyAllData(data) {
 }
 
 function updateAboutSection(data) {
-  if (!data.about) return;
-  var a = data.about;
+  var section = document.getElementById('about');
+  if (!section) return;
+  var a = data.about || {};
+  var hasContent = a.title || a.description || (a.features && a.features.length);
+  if (!hasContent) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
   if (a.title) document.querySelectorAll('[data-bind="pages.about.title"]').forEach(function(el) { el.textContent = a.title; });
   if (a.subtitle) document.querySelectorAll('[data-bind="pages.about.subtitle"]').forEach(function(el) { el.textContent = a.subtitle; });
 
-  // Photo block — full-width square, full image visible (object-fit: contain)
+  // Photo block
   var imgWrap = document.getElementById('about-photo-wrap');
   if (imgWrap) {
     if (a.image) {
       imgWrap.style.display = 'block';
       var img = imgWrap.querySelector('img');
-      if (img) {
-        img.src = a.image;
-        img.alt = a.title || 'About us';
-      }
+      if (img) { img.src = a.image; img.alt = a.title || 'About us'; }
     } else {
       imgWrap.style.display = 'none';
     }
   }
 
-  // Text block
+  // Description
   var descEl = document.getElementById('about-description');
-  if (descEl && a.description) descEl.textContent = a.description;
-  var forEl = document.getElementById('about-perfect-for');
-  if (forEl && a.perfectFor) forEl.textContent = a.perfectFor;
+  if (descEl) descEl.textContent = a.description || '';
 
-  // Feature highlights grid — rebuild with images when set from dashboard
-  if (a.features && a.features.length) {
-    var grid = document.getElementById('about-features-grid');
-    if (grid) {
+  // Perfect For line — only show when set
+  var forWrap = document.getElementById('about-perfect-for-wrap');
+  var forEl = document.getElementById('about-perfect-for');
+  if (forEl && forWrap) {
+    if (a.perfectFor) { forEl.textContent = a.perfectFor; forWrap.style.display = ''; }
+    else { forWrap.style.display = 'none'; }
+  }
+
+  // Feature highlights grid
+  var grid = document.getElementById('about-features-grid');
+  if (grid) {
+    if (a.features && a.features.length) {
       grid.innerHTML = a.features.map(function(f) {
         var hasImg = f.image && f.image.length > 0;
         return '<div class="about-feature-item">' +
@@ -133,6 +141,8 @@ function updateAboutSection(data) {
           '<p>' + (f.description || '') + '</p>' +
         '</div>';
       }).join('');
+    } else {
+      grid.innerHTML = '';
     }
   }
 }
@@ -559,21 +569,33 @@ function updateStepsSection(data) {
 }
 
 function updateFeaturesSection(data) {
-  const container = document.querySelector('.features-grid');
-  if (!container) return;
+  var section = document.getElementById('why-circle-section');
+  var container = section ? section.querySelector('.features-grid') : document.querySelector('.features-grid');
+  if (!section && !container) return;
   if (!data.features || !data.features.length) {
-    container.innerHTML = '';
+    if (section) section.style.display = 'none';
+    if (container) container.innerHTML = '';
     return;
   }
-  container.innerHTML = data.features.map(f => `
-    <div class="feature-card">
-      ${f.image
-        ? `<img src="${f.image}" alt="${f.title}" style="width:64px;height:64px;object-fit:cover;border-radius:10px;margin-bottom:10px;">`
-        : `<span class="feature-icon">${f.icon || ''}</span>`}
-      <h3>${f.title}</h3>
-      <p>${f.description}</p>
-    </div>
-  `).join('');
+  if (section) {
+    section.style.display = '';
+    var sec = data.features_section || {};
+    var titleEl = document.getElementById('why-circle-title');
+    var subEl = document.getElementById('why-circle-subtitle');
+    if (titleEl) titleEl.textContent = sec.title || '';
+    if (subEl) subEl.textContent = sec.subtitle || '';
+  }
+  if (container) {
+    container.innerHTML = data.features.map(function(f) {
+      return '<div class="feature-card">' +
+        (f.image
+          ? '<img src="' + f.image + '" alt="' + (f.title || '') + '" style="width:64px;height:64px;object-fit:cover;border-radius:10px;margin-bottom:10px;">'
+          : '<span class="feature-icon">' + (f.icon || '') + '</span>') +
+        '<h3>' + (f.title || '') + '</h3>' +
+        '<p>' + (f.description || '') + '</p>' +
+      '</div>';
+    }).join('');
+  }
 }
 
 function updateLocationsSection(data) {
