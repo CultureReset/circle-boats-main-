@@ -646,9 +646,14 @@ function updateGallerySection(data) {
   const container = document.querySelector('.gallery-grid');
   if (!container) return;
 
-  // Store all images and sections globally
+  // Store all images and sections globally — deduplicate to keep one of each
+  var seen = new Set();
   _allGalleryImages = data.gallery.map(function(img) {
     return resolveImageUrl(typeof img === 'string' ? img : img.url);
+  }).filter(function(url) {
+    if (!url || seen.has(url)) return false;
+    seen.add(url);
+    return true;
   });
   _gallerySections = data.gallery_sections || [];
 
