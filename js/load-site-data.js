@@ -232,43 +232,28 @@ function updateLinksPage(data) {
   if (lp && lp.links && container) {
     var enabledLinks = lp.links.filter(function(l) { return l.enabled; });
     container.innerHTML = enabledLinks.map(function(l) {
-      if (l.id === 'website') {
-        return '<a href="' + (l.url || 'index.html') + '" class="link-item">' +
-          '<span class="link-icon">' + (l.icon || '🌐') + '</span>' +
-          '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
-          '<span class="link-arrow">&rsaquo;</span>' +
-        '</a>';
-      }
-      // Custom external links
-      if (l.url && l.id !== 'website') {
-        return '<a href="' + l.url + '" class="link-item" target="_blank" rel="noopener">' +
-          '<span class="link-icon">' + (l.icon || '🔗') + '</span>' +
-          '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
-          '<span class="link-arrow">&rsaquo;</span>' +
-        '</a>';
-      }
-      // Booking link — opens booking modal
+      var icon = '<span class="link-icon">' + (l.icon || '📌') + '</span>';
+      var text = '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>';
+      var arrow = '<span class="link-arrow">&rsaquo;</span>';
+      // Named modal/action links — check ID first so a stored url never overrides these
       if (l.id === 'booking') {
-        return '<div class="link-item" onclick="openBooking()">' +
-          '<span class="link-icon">' + (l.icon || '📅') + '</span>' +
-          '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
-          '<span class="link-arrow">&rsaquo;</span>' +
-        '</div>';
+        return '<div class="link-item" onclick="openBooking()">' + icon + text + arrow + '</div>';
       }
-      // Fleet link
       if (l.id === 'fleet') {
-        return '<div class="link-item" onclick="openModal(\'fleet\')">' +
-          '<span class="link-icon">' + (l.icon || '🚤') + '</span>' +
-          '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
-          '<span class="link-arrow">&rsaquo;</span>' +
-        '</div>';
+        return '<div class="link-item" onclick="openModal(\'fleet\')">' + icon + text + arrow + '</div>';
       }
-      // Other modal-opening links
-      return '<div class="link-item" onclick="openModal(\'' + l.id + '\')">' +
-        '<span class="link-icon">' + (l.icon || '📌') + '</span>' +
-        '<div class="link-text">' + l.label + (l.sub ? '<div class="link-sub">' + l.sub + '</div>' : '') + '</div>' +
-        '<span class="link-arrow">&rsaquo;</span>' +
-      '</div>';
+      if (l.id === 'about' || l.id === 'gallery' || l.id === 'reviews' || l.id === 'hours') {
+        return '<div class="link-item" onclick="openModal(\'' + l.id + '\')">' + icon + text + arrow + '</div>';
+      }
+      if (l.id === 'website') {
+        return '<a href="' + (l.url || 'index.html') + '" class="link-item">' + icon + text + arrow + '</a>';
+      }
+      // Custom external links (any link with a URL that isn't a known ID)
+      if (l.url) {
+        return '<a href="' + l.url + '" class="link-item" target="_blank" rel="noopener">' + icon + text + arrow + '</a>';
+      }
+      // Fallback: generic modal
+      return '<div class="link-item" onclick="openModal(\'' + l.id + '\')">' + icon + text + arrow + '</div>';
     }).join('');
   }
 
