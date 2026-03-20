@@ -613,7 +613,7 @@ function updateAddonsSection(data) {
   if (!container) return;
   container.innerHTML = data.addons.map(a => `
     <div class="addon-card">
-      ${a.image_url ? `<img src="${a.image_url}" alt="${a.name}" style="width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:12px;">` : `<span class="addon-icon">${a.icon || '🎁'}</span>`}
+      ${(a.image_url || a.image) ? `<img src="${a.image_url || a.image}" alt="${a.name}" style="width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:12px;">` : `<span class="addon-icon">${a.icon || '🎁'}</span>`}
       <h4>${a.name}</h4>
       <p class="addon-desc">${a.description}</p>
       <div class="addon-price">$${a.price}<span class="addon-unit"> ${a.unit || ''}</span></div>
