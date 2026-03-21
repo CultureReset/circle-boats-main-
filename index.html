@@ -3372,9 +3372,14 @@
       _avail = {};
       _availLoading = true;
       renderBoatOptions(); // show loading state
+      // Safety timeout — never leave boats stuck in "Checking availability" state
+      var availTimeout = setTimeout(function() {
+        if (_availLoading) { _availLoading = false; renderBoatOptions(); }
+      }, 8000);
       fetch(api('/availability') + '&date=' + date)
         .then(function(r) { return r.json(); })
         .then(function(data) {
+          clearTimeout(availTimeout);
           _availLoading = false;
           (data.availability || []).forEach(function(row) {
             var key = row.fleet_type_name.toLowerCase().split(' ')[0]; // 'single', 'double'
@@ -3387,7 +3392,7 @@
           });
           renderBoatOptions();
         })
-        .catch(function() { _availLoading = false; renderBoatOptions(); });
+        .catch(function() { clearTimeout(availTimeout); _availLoading = false; renderBoatOptions(); });
     }
 
     function getAvailForKey(key) {
@@ -3495,13 +3500,16 @@
     }
 
     /* Boat Options — rendered dynamically from SITE_DATA */
+    var BOAT_FALLBACK = [
+      { key: 'single', name: 'Single Seater', description: '1 person max', halfDayAM: 150, halfDayPM: 150, allDay: 225, image: 'images/goboat/goboat-hero.jpg' },
+      { key: 'double', name: 'Double Seater', description: '2 person max', halfDayAM: 200, halfDayPM: 200, allDay: 275, image: 'images/goboat/goboat-onwater1.jpg' }
+    ];
+
     function renderBoatOptions() {
       var container = document.getElementById('bk-boat-list');
       if (!container) return;
-      var products = (window.SITE_DATA && window.SITE_DATA.products) || [
-        { key: 'single', name: 'Single Seater', description: '1 person max', halfDayAM: 150, halfDayPM: 150, allDay: 225, image: 'images/goboat/goboat-hero.jpg' },
-        { key: 'double', name: 'Double Seater', description: '2 person max', halfDayAM: 200, halfDayPM: 200, allDay: 275, image: 'images/goboat/goboat-onwater1.jpg' }
-      ];
+      var apiProducts = window.SITE_DATA && window.SITE_DATA.products;
+      var products = (apiProducts && apiProducts.length > 0) ? apiProducts : BOAT_FALLBACK;
       if (_availLoading) {
         container.innerHTML = '<p style="color:var(--gray);font-size:13px;padding:12px 0;">Checking availability…</p>';
         return;
