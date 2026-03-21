@@ -679,7 +679,7 @@ function updateLocationsSection(data) {
       var hasImg = l.image && l.image.length > 0;
       return '<div class="location-card" style="' + (hasImg ? 'padding:0;overflow:hidden;' : '') + '">' +
         (hasImg
-          ? '<img src="' + l.image + '" alt="' + (l.name || '') + '" style="width:100%;height:200px;object-fit:cover;display:block;" loading="lazy"><div style="padding:20px 24px;">'
+          ? '<img src="' + l.image + '" alt="' + (l.name || '') + '" style="width:100%;aspect-ratio:1/1;object-fit:contain;background:#f5f7fa;display:block;" loading="lazy"><div style="padding:20px 24px;">'
           : '<div class="location-pin">📍</div><div>') +
         '<h3>' + l.name + '</h3>' +
         '<p class="location-address">' + (l.address || '') + '</p>' +
