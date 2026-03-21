@@ -5,26 +5,30 @@
 // ============================================
 
 const CACHE_KEY = 'beachside_site_data';
-const CACHE_TTL = 30 * 1000; // 30 seconds — keeps website fresh after dashboard saves
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes — refresh in background, never block page load
 
 async function loadWebsiteData() {
-  let data = null;
+  let cached = null;
+  let cachedAt = null;
 
-  // 1. Try localStorage cache first (instant, works offline)
   try {
-    const cached = localStorage.getItem(CACHE_KEY);
-    const cachedAt = localStorage.getItem(CACHE_KEY + '_ts');
-    if (cached && cachedAt && (Date.now() - parseInt(cachedAt)) < CACHE_TTL) {
-      data = JSON.parse(cached);
-      applyAllData(data);
-      // Refresh in background so next visit gets fresh data
-      fetchAndCache().then(fresh => { if (fresh) applyAllData(fresh); });
-      return;
-    }
+    const raw = localStorage.getItem(CACHE_KEY);
+    const ts = localStorage.getItem(CACHE_KEY + '_ts');
+    if (raw) { cached = JSON.parse(raw); cachedAt = ts ? parseInt(ts) : 0; }
   } catch (e) {}
 
-  // 2. Fetch fresh from API
-  data = await fetchAndCache();
+  if (cached) {
+    // Always show cached data instantly — never block on network
+    applyAllData(cached);
+    // Refresh in background if cache is stale
+    if (!cachedAt || (Date.now() - cachedAt) > CACHE_TTL) {
+      fetchAndCache().then(fresh => { if (fresh) applyAllData(fresh); });
+    }
+    return;
+  }
+
+  // First ever load — no cache yet, must fetch
+  const data = await fetchAndCache();
   if (data) applyAllData(data);
 }
 
