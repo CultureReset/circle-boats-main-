@@ -265,6 +265,7 @@
       margin-bottom: 24px;
       padding-right: 40px;
       color: #1a1a1a;
+    }
 
     /* Gallery */
     .gallery-grid {
@@ -562,8 +563,9 @@
     --radius: 8px; --radius-lg: 16px;
     background: #ffffff; color: #333333;
     border-radius: 16px; width: 100%; max-width: 720px;
-    max-height: 90vh; overflow-y: auto; position: relative;
+    max-height: 90vh; overflow: hidden; position: relative;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column;
   }
   .booking-close {
     position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
@@ -571,17 +573,17 @@
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     color: #333; z-index: 5;
   }
-  .booking-header { padding: 28px 32px 0; }
+  .booking-header { padding: 28px 32px 0; flex-shrink: 0; }
   .booking-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; color: #333; }
   .booking-header p { font-size: 14px; color: #666; }
-  .booking-steps-nav { display: flex; padding: 20px 32px 0; }
+  .booking-steps-nav { display: flex; padding: 20px 32px 0; flex-shrink: 0; }
   .bstep-tab {
     flex: 1; text-align: center; padding: 10px 8px; font-size: 12px; font-weight: 600;
     color: #999; border-bottom: 2px solid #e8e8e8; cursor: pointer; transition: all 0.2s;
   }
   .bstep-tab.active { color: #00ada8; border-color: #00ada8; }
   .bstep-tab.done { color: #009590; border-color: #00ada8; }
-  .booking-body { padding: 24px 32px 28px; }
+  .booking-body { padding: 24px 32px 28px; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .bstep { display: none; } .bstep.active { display: block; }
   .loc-section-label { font-size: 13px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
   .loc-option {
@@ -663,7 +665,7 @@
   .cart-line.total { border-top: 2px solid #e8e8e8; margin-top: 8px; padding-top: 12px; font-weight: 700; font-size: 18px; }
   .cart-line.total .cart-amount { color: #00ada8; }
   .cart-label { color: #666; } .cart-amount { font-weight: 600; color: #333; }
-  .booking-footer { padding: 0 32px 28px; display: flex; justify-content: space-between; gap: 12px; }
+  .booking-footer { padding: 0 32px 28px; display: flex; justify-content: space-between; gap: 12px; flex-shrink: 0; }
   .booking-footer .b-btn { flex: 1; justify-content: center; }
   .b-btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -1449,9 +1451,11 @@
       if (!date) return;
       _avail = {}; _availLoading = true;
       renderBoatOptions();
+      var timeout = setTimeout(function(){ _availLoading = false; renderBoatOptions(); }, 8000);
       fetch(api('/availability') + '&date=' + date)
         .then(function(r){return r.json();})
         .then(function(data){
+          clearTimeout(timeout);
           _availLoading = false;
           (data.availability||[]).forEach(function(row){
             var key = row.fleet_type_name.toLowerCase().split(' ')[0];
@@ -1462,7 +1466,7 @@
           });
           renderBoatOptions();
         })
-        .catch(function(){ _availLoading=false; renderBoatOptions(); });
+        .catch(function(){ clearTimeout(timeout); _availLoading=false; renderBoatOptions(); });
     }
 
     function getAvailForKey(key) {
@@ -1537,10 +1541,12 @@
           PRICES[k] = { am: p.halfDayAM!=null?p.halfDayAM:(p.halfDay||0), pm: p.halfDayPM!=null?p.halfDayPM:(p.halfDay||0), all: p.allDay||0 };
         });
       }
-      var products = (window.SITE_DATA && window.SITE_DATA.products) || [
+      var apiProducts = (window.SITE_DATA && window.SITE_DATA.products);
+      var BOAT_FALLBACK = [
         { key:'single', name:'Single Seater', description:'1 person • Max 300 lbs • 70" diameter', image:'images/goboat/goboat-beach.jpg' },
         { key:'double', name:'Double Seater', description:'2 people • Max 450 lbs • 89" × 70"', image:'images/goboat/goboat-bumpers.jpg' }
       ];
+      var products = (apiProducts && apiProducts.length > 0) ? apiProducts : BOAT_FALLBACK;
       if (_availLoading) {
         container.innerHTML = '<p style="color:#888;font-size:13px;padding:12px 0;">Checking availability…</p>';
         return;
