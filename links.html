@@ -1449,7 +1449,7 @@
 
     function fetchAvailability(date) {
       if (!date) return;
-      _avail = {}; _availLoading = true;
+      _avail = {}; _availLoading = false; // show boats immediately, update availability in background
       renderBoatOptions();
       var timeout = setTimeout(function(){ _availLoading = false; renderBoatOptions(); }, 8000);
       fetch(api('/availability') + '&date=' + date)

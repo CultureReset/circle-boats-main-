@@ -3378,9 +3378,8 @@
     function fetchAvailability(date) {
       if (!date) return;
       _avail = {};
-      _availLoading = true;
-      renderBoatOptions(); // show loading state
-      // Safety timeout — never leave boats stuck in "Checking availability" state
+      _availLoading = false; // show boats immediately, update availability in background
+      renderBoatOptions();
       var availTimeout = setTimeout(function() {
         if (_availLoading) { _availLoading = false; renderBoatOptions(); }
       }, 8000);
