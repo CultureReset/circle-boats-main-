@@ -982,7 +982,7 @@ function reobserveFadeIns() {
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.product-card, .step-card, .feature-card, .addon-card, .gallery-item, .dock-card, .location-card, .review-card, .qna-item').forEach(function(el) {
-    if (el.style.opacity === '0') return; // already observed by the inline script
+    if (el.style.opacity !== '') return; // already animated or being observed — don't reset
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
