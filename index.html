@@ -1563,6 +1563,11 @@
       visibility: visible;
     }
 
+    /* Prevent background scroll when modal is open */
+    body.booking-open {
+      overflow: hidden;
+    }
+
     .booking-modal {
       background: var(--white);
       border-radius: var(--radius-lg);
@@ -2455,7 +2460,7 @@
         max-height: 100vh;
         border-radius: 0;
         height: 100vh;
-        overflow-y: auto;
+        overflow: hidden;
       }
       .booking-overlay { align-items: stretch; }
       .booking-header { padding: 14px 14px 0; }
