@@ -4883,6 +4883,7 @@
       var subtotal = getBoatTotal() + getAddonsTotal();
       var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
       var total = Math.round((subtotal + tax) * 100) / 100;
+      var chargeAmount = total;
       var boatParts2 = Object.keys(booking.boats).filter(function(k){ return booking.boats[k]>0; }).map(function(k){ return booking.boats[k]+'× '+k.charAt(0).toUpperCase()+k.slice(1); });
       var desc = boatParts2.join(', ') + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
 
