@@ -3157,6 +3157,14 @@
             <textarea id="book-notes" placeholder="Special requests, group info, etc." style="min-height:60px;"></textarea>
           </div>
 
+          <!-- Consent + Privacy -->
+          <div style="margin-top:14px;margin-bottom:4px;">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#555;line-height:1.5;">
+              <input type="checkbox" id="sms-consent" style="margin-top:3px;flex-shrink:0;">
+              <span>I agree to receive SMS booking confirmations and reminders. Message &amp; data rates may apply. Reply STOP to opt out. See our <a href="privacy.html" target="_blank" style="color:#00ada8;">Privacy Policy</a> &amp; <a href="terms.html" target="_blank" style="color:#00ada8;">Terms</a>.</span>
+            </label>
+          </div>
+
           <!-- STRIPE PAYMENT FORM (embedded - looks like part of the site) -->
           <div id="payment-section" style="margin-top:20px;">
             <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Payment</h4>
@@ -4846,6 +4854,12 @@
 
       if (!name || !email) {
         alert('Please fill in your name and email.');
+        return;
+      }
+
+      var smsConsent = document.getElementById('sms-consent');
+      if (smsConsent && !smsConsent.checked) {
+        alert('Please agree to the terms and SMS consent to continue.');
         return;
       }
 
