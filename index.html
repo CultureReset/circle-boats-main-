@@ -4174,9 +4174,14 @@
       }
     }
 
-    function showPaymentSuccess(total, desc, name, email, btn, noPayment) {
+    function showPaymentSuccess(total, desc, name, email, btn, noPayment, bookingId) {
       // Hold was converted to a booking — clear it so closeBooking doesn't try to release
       booking.holdId = null;
+
+      // Generate short confirmation number from booking ID
+      var confirmNum = bookingId
+        ? 'BCB-' + String(bookingId).replace(/-/g, '').substring(0, 8).toUpperCase()
+        : 'BCB-' + Date.now().toString(36).toUpperCase();
 
       var payLine = noPayment
         ? '<p style="color:#10b981;font-size:15px;font-weight:600;margin-bottom:4px;">No payment required — pay when you arrive</p>'
@@ -4195,8 +4200,12 @@
           '<h2 style="font-size:24px;font-weight:800;color:#1a1a1a;margin-bottom:8px;">Booking Confirmed!</h2>' +
           payLine +
           '<p style="color:#666;font-size:14px;margin-bottom:4px;">' + desc + '</p>' +
-          '<p style="color:#999;font-size:13px;margin-bottom:24px;">Confirmation sent to <strong>' + email + '</strong></p>' +
-          '<div style="padding:14px 16px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;margin-bottom:28px;">' +
+          '<p style="color:#999;font-size:13px;margin-bottom:16px;">Confirmation sent to <strong>' + email + '</strong></p>' +
+          '<div style="padding:12px 16px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;margin-bottom:12px;">' +
+            '<p style="color:#166534;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin:0 0 4px;">Confirmation Number</p>' +
+            '<p style="color:#166534;font-size:22px;font-weight:800;letter-spacing:2px;margin:0;">' + confirmNum + '</p>' +
+          '</div>' +
+          '<div style="padding:12px 16px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;margin-bottom:28px;">' +
             '<p style="color:#166534;font-size:13px;margin:0;line-height:1.5;">📱 A confirmation text has been sent to your phone.<br>Check your email for booking details and waiver.</p>' +
           '</div>' +
           '<button onclick="document.getElementById(\'payment-success-overlay\').remove();closeBooking();resetBookingState();" ' +
@@ -4893,6 +4902,10 @@
         resetBtn();
         if (errEl) errEl.textContent = msg || 'Something went wrong. Please try again.';
       }
+      function markBookingFailed(bookingId) {
+        if (!bookingId) return;
+        fetch(api('/bookings/' + bookingId + '/payment-failed'), { method: 'POST' }).catch(function(){});
+      }
 
       // Build booking payload
       var boatsPayload = Object.keys(booking.boats).filter(function(k) { return booking.boats[k] > 0; }).map(function(k) {
@@ -4967,28 +4980,30 @@
           .then(function(r) { return r.json(); })
           .then(function(piResult) {
             if (piResult.error) {
+              markBookingFailed(bookingRecord.id);
               showErr(piResult.error);
               return;
             }
             if (piResult.status === 'succeeded') {
-              showPaymentSuccess(chargeAmount, desc, name, email, btn);
+              showPaymentSuccess(chargeAmount, desc, name, email, btn, false, bookingRecord.id);
             } else if (piResult.client_secret) {
               // 3D Secure / additional auth
               _stripe.confirmCardPayment(piResult.client_secret).then(function(confirmResult) {
                 if (confirmResult.error) {
+                  markBookingFailed(bookingRecord.id);
                   showErr(confirmResult.error.message);
                 } else {
-                  showPaymentSuccess(chargeAmount, desc, name, email, btn);
+                  showPaymentSuccess(chargeAmount, desc, name, email, btn, false, bookingRecord.id);
                 }
               });
             } else {
-              showPaymentSuccess(chargeAmount, desc, name, email, btn);
+              markBookingFailed(bookingRecord.id);
+              showErr('Payment could not be completed. Please try again.');
             }
           })
           .catch(function(err) {
             console.error('PaymentIntent error:', err);
-            // Booking saved — show success, payment failed silently
-            showPaymentSuccess(chargeAmount, desc, name, email, btn);
+            showErr('Connection error processing payment. Please try again.');
           });
         })
         .catch(function(err) {
