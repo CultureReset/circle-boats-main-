@@ -4610,6 +4610,7 @@
       var sep = path.indexOf('?') > -1 ? '&' : '?';
       return API_BASE + '/api/public' + path + sep + 'subdomain=' + SUBDOMAIN;
     }
+    window.api = api;
 
     // ---- CACHING LAYER — reduces API calls, faster repeat loads ----
     var CACHE_TTL = {
@@ -4873,6 +4874,13 @@
       }
 
       // Build booking payload
+      var boatsPayload = Object.keys(booking.boats).filter(function(k) { return booking.boats[k] > 0; }).map(function(k) {
+        return { type: k, qty: booking.boats[k], price: PRICES[k] ? PRICES[k][booking.slot] || 0 : 0 };
+      });
+      var addonsPayload = booking.addons.map(function(a) {
+        var qty = a.qty || 1;
+        return { name: qty > 1 ? a.name + ' ×' + qty : a.name, price: a.price * qty };
+      });
       var payload = {
         fleet_type_id: null,
         time_slot_id: null,
