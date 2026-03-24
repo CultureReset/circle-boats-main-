@@ -3304,7 +3304,7 @@
       };
 
       // Send to API
-      fetch('https://cybercheck-api-database.vercel.app/api/contact', {
+      fetch(api('/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(contactData)
