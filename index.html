@@ -3604,7 +3604,8 @@
       if (docks.length) {
         html += '<p class="bk-section-label">Add a Dock</p>';
         var freeDoc = totalQty >= 4;
-        docks.forEach(function(dk) {
+        docks.forEach(function(dk, dkIdx) {
+          if (!dk.id) dk.id = dk.name.toLowerCase().replace(/\s+/g, '-') || ('dock-' + dkIdx);
           var dockPrice = freeDoc ? 0 : (booking.slot === 'all' ? (dk.allDay || 50) : (dk.halfDay || 25));
           var priceLabel = freeDoc ? '<span style="color:#10b981;font-weight:700;">FREE</span>' : '$' + dockPrice;
           var existing = booking.addons.find(function(a) { return a.id === 'dock-' + dk.id; });
