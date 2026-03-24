@@ -3293,12 +3293,6 @@
       var btn = e.target.querySelector('button[type="submit"]');
       var form = e.target;
 
-      var contactConsent = document.getElementById('contact-sms-consent');
-      if (contactConsent && !contactConsent.checked) {
-        alert('Please agree to the SMS consent to continue.');
-        return;
-      }
-
       // Collect custom field answers
       var customAnswers = {};
       form.querySelectorAll('[data-custom-field]').forEach(function(el) {
