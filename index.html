@@ -2791,7 +2791,7 @@
       </div>
 
       <!-- Group promo -->
-      <div class="dock-promo">
+      <div class="dock-promo" id="dock-promo-banner">
         <strong>Rent 4+ boats and get a FREE dock for the day!</strong>
         &nbsp;&mdash;&nbsp;
         <span>Any dock type. Automatically applied at checkout.</span>
@@ -3625,9 +3625,15 @@
           '</div>';
         });
         if (freeDoc) {
-          html += '<p style="font-size:12px;color:#10b981;font-weight:600;margin:-4px 0 12px;">🎉 4+ boats = FREE dock!</p>';
+          var promoItems = (window.SITE_DATA && window.SITE_DATA.promotions && window.SITE_DATA.promotions.items) || [];
+          var activePromo = promoItems.find(function(p){ return p.enabled !== false; });
+          var promoText = activePromo ? activePromo.title : 'Rent 4+ boats = FREE dock!';
+          html += '<p style="font-size:12px;color:#10b981;font-weight:600;margin:-4px 0 12px;">🎉 ' + promoText + '</p>';
         } else {
-          html += '<p style="font-size:12px;color:var(--gray);margin:-4px 0 12px;">Rent 4+ boats = FREE dock!</p>';
+          var promoItems2 = (window.SITE_DATA && window.SITE_DATA.promotions && window.SITE_DATA.promotions.items) || [];
+          var activePromo2 = promoItems2.find(function(p){ return p.enabled !== false; });
+          var promoText2 = activePromo2 ? activePromo2.title : 'Rent 4+ boats = FREE dock!';
+          html += '<p style="font-size:12px;color:var(--gray);margin:-4px 0 12px;">' + promoText2 + '</p>';
         }
       }
 

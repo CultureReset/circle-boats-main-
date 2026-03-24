@@ -93,6 +93,7 @@ function applyAllData(data) {
   updateSocialSection(data);
   updateContactInterests(data);
   updateLinksPage(data);
+  updatePromotions(data);
   // Re-apply fade-in animations to newly created elements
   reobserveFadeIns();
 }
@@ -918,6 +919,24 @@ function updateCtaSection(data) {
   if (title && c.title) title.textContent = c.title;
   if (subtitle && c.subtitle) subtitle.textContent = c.subtitle;
   if (btn && c.btnText) btn.textContent = c.btnText;
+}
+
+function updatePromotions(data) {
+  var promos = (data.promotions && data.promotions.items) || [];
+  var banner = document.getElementById('dock-promo-banner');
+  if (!banner) return;
+
+  // Find the first enabled promo with threshold 0 (always show) or use the first enabled one
+  var active = promos.find(function(p) { return p.enabled !== false && (!p.threshold || p.threshold === 0); })
+            || promos.find(function(p) { return p.enabled !== false; });
+
+  if (active && active.title) {
+    var strong = banner.querySelector('strong');
+    var span = banner.querySelector('span');
+    if (strong) strong.textContent = active.title;
+    if (span) span.textContent = active.subtitle || '';
+    banner.style.display = '';
+  }
 }
 
 function applyBookingPolicy(data) {
