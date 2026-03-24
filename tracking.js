@@ -8,7 +8,7 @@
   var SUBDOMAIN = 'beachside-circle-boats'; // Replace with your subdomain
   var API_BASE = window.location.origin.indexOf('localhost') > -1
     ? 'http://localhost:3001'
-    : window.location.origin;
+    : (window.API_BASE || 'https://cybercheck-api-database.vercel.app');
 
   // Session management
   var sessionId = getSessionId();
