@@ -3021,6 +3021,12 @@
               <label for="contact-message">Message</label>
               <textarea id="contact-message" placeholder="Tell us about your plans, preferred dates, or any questions..."></textarea>
             </div>
+            <div style="margin-bottom:14px;">
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#555;line-height:1.5;">
+                <input type="checkbox" id="contact-sms-consent" style="margin-top:3px;flex-shrink:0;">
+                <span>I agree to receive SMS updates and replies regarding my inquiry. Message &amp; data rates may apply. Reply STOP to opt out. See our <a href="privacy.html" target="_blank" style="color:#00ada8;">Privacy Policy</a> &amp; <a href="terms.html" target="_blank" style="color:#00ada8;">Terms</a>.</span>
+              </label>
+            </div>
             <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
           </form>
         </div>
@@ -3286,6 +3292,12 @@
       e.preventDefault();
       var btn = e.target.querySelector('button[type="submit"]');
       var form = e.target;
+
+      var contactConsent = document.getElementById('contact-sms-consent');
+      if (contactConsent && !contactConsent.checked) {
+        alert('Please agree to the SMS consent to continue.');
+        return;
+      }
 
       // Collect custom field answers
       var customAnswers = {};
