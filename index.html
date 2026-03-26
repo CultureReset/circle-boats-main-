@@ -3397,6 +3397,9 @@
 
     var GROUP_PRICE = 200; // 5+ singles all day
     var TAX_RATE = 0.10;
+    var MAINTENANCE_FEE_RATE = 0.01;
+    var PROCESSING_FEE_PCT = 0.029;  // Square/Stripe online rate
+    var PROCESSING_FEE_FLAT = 0.30;  // Square/Stripe flat fee per transaction
 
     var SLOT_LABELS = {
       am: 'Half Day AM (9:00-1:00)',
@@ -3801,13 +3804,20 @@
         } else if (mode === 'deposit') {
           var subtotalD = getBoatTotal() + getAddonsTotal();
           var taxD = Math.round(subtotalD * TAX_RATE * 100) / 100;
-          var totalD = Math.round((subtotalD + taxD) * 100) / 100;
+          var maintD = Math.round((subtotalD + taxD) * MAINTENANCE_FEE_RATE * 100) / 100;
+          var baseD = subtotalD + taxD + maintD;
+          var procD = Math.round((baseD * PROCESSING_FEE_PCT + PROCESSING_FEE_FLAT) * 100) / 100;
+          var totalD = Math.round((baseD + procD) * 100) / 100;
           var pct = policy.depositPct || 25;
           var deposit = Math.round(totalD * pct) / 100;
           btn.textContent = policy.buttonLabel || ('Pay $' + deposit.toFixed(2) + ' Deposit & Book');
         } else {
           var subtotalF = getBoatTotal() + getAddonsTotal();
-          var totalF = Math.round((subtotalF + Math.round(subtotalF * TAX_RATE * 100) / 100) * 100) / 100;
+          var taxF = Math.round(subtotalF * TAX_RATE * 100) / 100;
+          var maintF = Math.round((subtotalF + taxF) * MAINTENANCE_FEE_RATE * 100) / 100;
+          var baseF = subtotalF + taxF + maintF;
+          var procF = Math.round((baseF * PROCESSING_FEE_PCT + PROCESSING_FEE_FLAT) * 100) / 100;
+          var totalF = Math.round((baseF + procF) * 100) / 100;
           btn.textContent = policy.buttonLabel || ('Pay $' + totalF.toFixed(2) + ' & Book');
         }
         btn.style.opacity = '1';
@@ -3868,9 +3878,14 @@
 
       var subtotal = getBoatTotal() + getAddonsTotal();
       var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
-      var total = subtotal + tax;
-      html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Subtotal</span><span class="cart-amount" style="color:var(--gray);">$' + subtotal + '</span></div>';
+      var maintFee = Math.round((subtotal + tax) * MAINTENANCE_FEE_RATE * 100) / 100;
+      var procBase = subtotal + tax + maintFee;
+      var procFee = Math.round((procBase * PROCESSING_FEE_PCT + PROCESSING_FEE_FLAT) * 100) / 100;
+      var total = Math.round((procBase + procFee) * 100) / 100;
+      html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Subtotal</span><span class="cart-amount" style="color:var(--gray);">$' + subtotal.toFixed(2) + '</span></div>';
       html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Tax (10%)</span><span class="cart-amount" style="color:var(--gray);">$' + tax.toFixed(2) + '</span></div>';
+      html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Service Fee (1%)</span><span class="cart-amount" style="color:var(--gray);">$' + maintFee.toFixed(2) + '</span></div>';
+      html += '<div class="cart-line"><span class="cart-label" style="color:var(--gray);">Processing Fee (2.9%+$0.30)</span><span class="cart-amount" style="color:var(--gray);">$' + procFee.toFixed(2) + '</span></div>';
       html += '<div class="cart-line total"><span class="cart-label">Total</span><span class="cart-amount">$' + total.toFixed(2) + '</span></div>';
 
       document.getElementById('cartSummary').innerHTML = html;
@@ -4016,7 +4031,11 @@
       var btn = document.getElementById('bookNext');
       var subtotal = getBoatTotal() + getAddonsTotal();
       var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
-      var total = Math.round((subtotal + tax) * 100) / 100;
+      var maintFee = Math.round((subtotal + tax) * MAINTENANCE_FEE_RATE * 100) / 100;
+      var procBase = subtotal + tax + maintFee;
+      var procFee = Math.round((procBase * PROCESSING_FEE_PCT + PROCESSING_FEE_FLAT) * 100) / 100;
+      var total = Math.round((procBase + procFee) * 100) / 100;
+      var fee = maintFee; // alias for payload
 
       // Determine charge amount based on payment policy
       var policy = window.BOOKING_POLICY || {};
@@ -4976,6 +4995,9 @@
     // ---- Wire submitBooking to POST to backend + charge card ----
     var _origSubmitBooking = submitBooking;
     submitBooking = function() {
+      // Square payments are handled by the original submitBooking which has full Square support
+      if (_paymentProcessor === 'square') { _origSubmitBooking(); return; }
+
       var name = document.getElementById('book-name').value.trim();
       var phone = document.getElementById('book-phone').value.trim();
       var email = document.getElementById('book-email').value.trim();
@@ -4994,7 +5016,10 @@
       var btn = document.getElementById('bookNext');
       var subtotal = getBoatTotal() + getAddonsTotal();
       var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
-      var total = Math.round((subtotal + tax) * 100) / 100;
+      var maintFee2 = Math.round((subtotal + tax) * MAINTENANCE_FEE_RATE * 100) / 100;
+      var procBase2 = subtotal + tax + maintFee2;
+      var procFee2 = Math.round((procBase2 * PROCESSING_FEE_PCT + PROCESSING_FEE_FLAT) * 100) / 100;
+      var total = Math.round((procBase2 + procFee2) * 100) / 100;
       var chargeAmount = total;
       var boatParts2 = Object.keys(booking.boats).filter(function(k){ return booking.boats[k]>0; }).map(function(k){ return booking.boats[k]+'× '+k.charAt(0).toUpperCase()+k.slice(1); });
       var desc = boatParts2.join(', ') + ' — ' + (SLOT_LABELS[booking.slot] || booking.slot);
