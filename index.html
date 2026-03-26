@@ -4102,6 +4102,13 @@
       }
 
       // Square payment path
+      if (_paymentProcessor === 'square' && !_squareCard) {
+        document.getElementById('card-errors').textContent = 'Payment form is still loading. Please wait a moment and try again.';
+        btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+        return;
+      }
       if (_paymentProcessor === 'square' && _squareCard) {
         _squareCard.tokenize().then(function(result) {
           if (result.status !== 'OK') {
@@ -4390,6 +4397,7 @@
         '<div class="form-group" style="margin-bottom:10px;"><label>Notes (optional)</label><textarea id="book-notes" placeholder="Special requests, group info, etc." style="min-height:60px;"></textarea></div>' +
         '<div id="payment-section" style="margin-top:20px;">' +
         '<h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Payment</h4>' +
+        '<div id="square-card-container" style="display:none;background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;"></div>' +
         '<div id="stripe-card-wrapper" style="background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;">' +
         '<div style="margin-bottom:12px;"><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Card Number</label><div id="card-number-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div></div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">' +
@@ -4397,8 +4405,13 @@
         '<div><label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">CVC</label><div id="card-cvc-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div></div>' +
         '</div>' +
         '<div id="card-errors" style="color:#ef4444;font-size:13px;min-height:20px;"></div>' +
-        '<div style="display:flex;align-items:center;gap:6px;margin-top:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ada8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span style="font-size:11px;color:#999;">Secured by Stripe. We never see your card details.</span></div>' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-top:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ada8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span id="payment-security-label" style="font-size:11px;color:#999;">Secured payment. We never see your card details.</span></div>' +
         '</div></div>';
+
+      // Reset and re-mount payment form after rebuild
+      _cardNumber = null; _cardExpiry = null; _cardCvc = null; _squareCard = null;
+      _payConfigFetched = false;
+      initStripeElements();
     }
 
     /* ============================================
