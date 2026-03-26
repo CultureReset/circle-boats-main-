@@ -17,6 +17,15 @@
   <meta name="twitter:image" content="https://beachsidecircleboats.com/images/goboat/goboat-onwater1.jpg">
   <script src="tracking.js"></script>
   <script src="js/load-site-data.js"></script>
+  <script>
+    // Fix iOS Safari: window.innerHeight = actual visible height (excludes browser toolbar)
+    function setRealVh() {
+      document.documentElement.style.setProperty('--real-vh', window.innerHeight + 'px');
+    }
+    setRealVh();
+    window.addEventListener('resize', setRealVh);
+    window.addEventListener('orientationchange', function(){ setTimeout(setRealVh, 100); });
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -2389,8 +2398,8 @@
       .booking-overlay { padding: 0; align-items: flex-end; }
       .booking-modal {
         max-width: 100%;
-        max-height: 100dvh;
-        height: 100dvh;
+        max-height: var(--real-vh, 100svh);
+        height: var(--real-vh, 100svh);
         border-radius: 16px 16px 0 0;
         overflow: hidden;
       }
@@ -2462,9 +2471,9 @@
 
       /* Booking modal — true full screen */
       .booking-modal {
-        max-height: 100vh;
+        max-height: var(--real-vh, 100svh);
         border-radius: 0;
-        height: 100vh;
+        height: var(--real-vh, 100svh);
         overflow: hidden;
       }
       .booking-overlay { align-items: stretch; }
