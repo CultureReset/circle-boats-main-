@@ -227,6 +227,21 @@
       .order-summary {
         position: static;
       }
+      .container { padding: 20px 16px 120px; }
+      #submit-button {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        padding: 18px;
+        font-size: 17px;
+        z-index: 100;
+        padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      }
+      .btn-secondary {
+        margin-bottom: 80px;
+      }
     }
   </style>
 </head>
