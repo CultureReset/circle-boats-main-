@@ -4135,7 +4135,7 @@
             .then(function(r) { return r.json(); })
             .then(function(bResult) {
               var bookingId = bResult.booking && bResult.booking.id;
-              return fetch(api('/square/create-payment'), {
+              return fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/square/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
