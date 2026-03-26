@@ -3795,8 +3795,9 @@
           var deposit = Math.round(totalD * pct) / 100;
           btn.textContent = policy.buttonLabel || ('Pay $' + deposit.toFixed(2) + ' Deposit & Book');
         } else {
-          var t = getBoatTotal() + getAddonsTotal();
-          btn.textContent = policy.buttonLabel || ('Pay $' + t + ' & Book');
+          var subtotalF = getBoatTotal() + getAddonsTotal();
+          var totalF = Math.round((subtotalF + Math.round(subtotalF * TAX_RATE * 100) / 100) * 100) / 100;
+          btn.textContent = policy.buttonLabel || ('Pay $' + totalF.toFixed(2) + ' & Book');
         }
         btn.style.opacity = '1';
       }
