@@ -1574,7 +1574,7 @@
       width: 100%;
       max-width: 720px;
       max-height: 90vh;
-      overflow: clip;
+      overflow: hidden;
       position: relative;
       box-shadow: 0 20px 60px rgba(0,0,0,0.2);
       display: flex;
@@ -1646,10 +1646,11 @@
 
     .booking-body {
       padding: 24px 32px 28px;
-      overflow-y: scroll;
+      overflow-y: auto;
       flex: 1;
       min-height: 0;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
     }
 
     .bstep { display: none; }
@@ -2391,7 +2392,7 @@
         max-height: 100dvh;
         height: 100dvh;
         border-radius: 16px 16px 0 0;
-        overflow: clip;
+        overflow: hidden;
       }
       .booking-header { padding: 16px 16px 0; }
       .booking-header h2 { font-size: 20px; }
