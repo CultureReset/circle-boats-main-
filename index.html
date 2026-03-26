@@ -3485,7 +3485,7 @@
     }
 
     document.getElementById('bookingOverlay').addEventListener('click', function(e) {
-      if (e.target === this) closeBooking();
+      if (e.target === this && booking.step !== 4) closeBooking();
     });
 
     /* Calendar */
