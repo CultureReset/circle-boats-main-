@@ -364,49 +364,74 @@
     document.getElementById('total-display').textContent = `$${bookingData.totalPrice}`;
     document.getElementById('amount-display').textContent = bookingData.totalPrice;
 
-    // Stripe
-    const stripe = Stripe('pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q');
-    const elements = stripe.elements();
-    const cardElement = elements.create('card');
-    cardElement.mount('#card-element');
+    // Fetch payment config for this site
+    const siteSubdomain = typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats';
+    const payConfig = await fetch(`${API_BASE}/api/payment-config?subdomain=${siteSubdomain}`)
+      .then(r => r.json())
+      .catch(() => ({ processor: 'stripe', stripePublicKey: '' }));
 
-    cardElement.addEventListener('change', (event) => {
-      const displayError = document.getElementById('error-message');
-      if (event.error) {
-        displayError.textContent = event.error.message;
-        displayError.style.display = 'block';
-      } else {
-        displayError.style.display = 'none';
-      }
-    });
+    let paymentHandler;
 
-    // Submit
-    document.getElementById('payment-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    if (payConfig.processor === 'square') {
+      // Load Square Web Payments SDK dynamically
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://web.squarecdn.com/v1/square.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      const payments = Square.payments(payConfig.squareAppId, payConfig.squareLocationId);
+      const card = await payments.card();
+      await card.attach('#card-element');
 
-      const submitButton = document.getElementById('submit-button');
-      submitButton.disabled = true;
-      submitButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
+      paymentHandler = async () => {
+        const result = await card.tokenize();
+        if (result.status !== 'OK') throw new Error(result.errors?.[0]?.message || 'Card tokenization failed');
+        const payRes = await fetch(`${API_BASE}/api/square/create-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source_id: result.token,
+            amount: bookingData.totalPrice,
+            booking_id: bookingData.id,
+            site_id: siteSubdomain,
+            description: `${bookingData.boatName} rental - ${bookingData.qty} boat(s)`
+          })
+        }).then(r => r.json());
+        if (!payRes.success) throw new Error(payRes.error || 'Payment failed');
+        return payRes.payment_id;
+      };
 
-      try {
-        // Create PaymentIntent via API
+    } else {
+      // Default: Stripe
+      const stripe = Stripe(payConfig.stripePublicKey || '');
+      const elements = stripe.elements();
+      const cardElement = elements.create('card');
+      cardElement.mount('#card-element');
+
+      cardElement.addEventListener('change', (event) => {
+        const displayError = document.getElementById('error-message');
+        if (event.error) {
+          displayError.textContent = event.error.message;
+          displayError.style.display = 'block';
+        } else {
+          displayError.style.display = 'none';
+        }
+      });
+
+      paymentHandler = async () => {
         const intentRes = await fetch(`${API_BASE}/api/stripe/create-payment-intent`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             amount: bookingData.totalPrice,
-            site_id: typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats',
+            site_id: siteSubdomain,
             description: `${bookingData.boatName} rental - ${bookingData.qty} boat(s)`
           })
         });
-
-        if (!intentRes.ok) {
-          throw new Error('Failed to create payment intent');
-        }
-
+        if (!intentRes.ok) throw new Error('Failed to create payment intent');
         const { client_secret: clientSecret } = await intentRes.json();
-
-        // Confirm payment
         const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
             card: cardElement,
@@ -417,17 +442,22 @@
             }
           }
         });
+        if (error) throw error;
+        return paymentIntent.id;
+      };
+    }
 
-        if (error) {
-          throw error;
-        }
-
-        if (paymentIntent.status === 'succeeded') {
-          // Payment successful - save to session and redirect
-          sessionStorage.setItem('paymentIntentId', paymentIntent.id);
-          sessionStorage.setItem('confirmedBooking', 'true');
-          window.location.href = 'waiver-form.html';
-        }
+    // Submit handler — identical for both processors
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitButton = document.getElementById('submit-button');
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
+      try {
+        const paymentId = await paymentHandler();
+        sessionStorage.setItem('paymentIntentId', paymentId);
+        sessionStorage.setItem('confirmedBooking', 'true');
+        window.location.href = 'waiver-form.html';
       } catch (err) {
         console.error('Payment error:', err);
         document.getElementById('error-message').textContent = err.message;

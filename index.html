@@ -2395,7 +2395,7 @@
       .booking-steps-nav { padding: 12px 16px 0; }
       .bstep-tab { padding: 10px 12px; font-size: 12px; }
       .booking-body { padding: 16px; min-height: 0; }
-      .booking-footer { padding: 0 16px 16px; }
+      .booking-footer { padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px)); }
 
       /* Calendar & time slots */
       .cal-day { min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 13px; padding: 6px 2px; }
@@ -2468,7 +2468,7 @@
       .booking-steps-nav { padding: 10px 14px 0; }
       .bstep-tab { padding: 8px 10px; font-size: 11px; }
       .booking-body { padding: 14px; min-height: 0; }
-      .booking-footer { padding: 0 14px 14px; }
+      .booking-footer { padding: 0 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
 
       /* Calendar even tighter */
       .cal-day { min-height: 40px; font-size: 12px; padding: 4px 0; }
@@ -2661,6 +2661,8 @@
   </style>
   <!-- Stripe.js — loads securely from Stripe's CDN -->
   <script src="https://js.stripe.com/v3/"></script>
+  <!-- Square Web Payments SDK -->
+  <script src="https://web.squarecdn.com/v1/square.js"></script>
 </head>
 <body>
 
@@ -3171,32 +3173,33 @@
             </label>
           </div>
 
-          <!-- STRIPE PAYMENT FORM (embedded - looks like part of the site) -->
+          <!-- PAYMENT FORM — dynamically shows Square or Stripe -->
           <div id="payment-section" style="margin-top:20px;">
             <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Payment</h4>
-            <div id="stripe-card-wrapper" style="background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;">
-              <!-- Card number row -->
-              <div style="margin-bottom:12px;">
-                <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Card Number</label>
-                <div id="card-number-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;transition:border-color 0.2s;"></div>
-              </div>
-              <!-- Expiry + CVC row -->
-              <div class="stripe-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-                <div>
-                  <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Expiry</label>
-                  <div id="card-expiry-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div>
+            <div id="payment-card-wrapper" style="background:#f9fafb;border:1px solid #e5e5e5;border-radius:8px;padding:16px;">
+              <!-- Square card container -->
+              <div id="square-card-container" style="display:none;"></div>
+              <!-- Stripe card elements -->
+              <div id="stripe-card-fields">
+                <div style="margin-bottom:12px;">
+                  <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Card Number</label>
+                  <div id="card-number-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;transition:border-color 0.2s;"></div>
                 </div>
-                <div>
-                  <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">CVC</label>
-                  <div id="card-cvc-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div>
+                <div class="stripe-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">Expiry</label>
+                    <div id="card-expiry-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:6px;">CVC</label>
+                    <div id="card-cvc-element" style="padding:11px 14px;background:white;border:1px solid #e5e5e5;border-radius:6px;font-size:15px;"></div>
+                  </div>
                 </div>
               </div>
-              <!-- Error display -->
               <div id="card-errors" style="color:#ef4444;font-size:13px;min-height:20px;"></div>
-              <!-- Security badge -->
               <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ada8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span style="font-size:11px;color:#999;">Secured by Stripe. We never see your card details.</span>
+                <span id="payment-security-label" style="font-size:11px;color:#999;">Secured payment. We never see your card details.</span>
               </div>
             </div>
           </div>
@@ -3881,42 +3884,71 @@
     var _cardNumber = null;
     var _cardExpiry = null;
     var _cardCvc = null;
+    var _squareCard = null;
+    var _paymentProcessor = 'stripe';
+    var _payConfigFetched = false;
+    var _payConfig = null;
 
-    var _stripePkFetched = false;
-
-    // Initialize Stripe Elements when step 4 loads
+    // Initialize payment form when step 4 loads — checks payment-config first
     function initStripeElements() {
-      if (!_stripe && !_stripePkFetched) {
-        _stripePkFetched = true;
-        // Fetch publishable key from platform API
+      if (_payConfigFetched) return;
+      _payConfigFetched = true;
+
+      var apiBase = window.API_BASE || 'https://cybercheck-api-database.vercel.app';
+      var siteParam = window.SUBDOMAIN ? '?subdomain=' + window.SUBDOMAIN : '';
+
+      fetch(apiBase + '/api/public/payment-config' + siteParam)
+        .then(function(r) { return r.json(); })
+        .then(function(config) {
+          _payConfig = config;
+          _paymentProcessor = config.processor || 'stripe';
+          if (_paymentProcessor === 'square' && config.squareAppId) {
+            mountSquareCard(config);
+          } else {
+            initStripe(config.stripePublicKey);
+          }
+        })
+        .catch(function() {
+          initStripe(null);
+        });
+    }
+
+    function mountSquareCard(config) {
+      if (_squareCard) return;
+      if (typeof Square === 'undefined') { initStripe(null); return; }
+
+      document.getElementById('stripe-card-fields').style.display = 'none';
+      document.getElementById('square-card-container').style.display = 'block';
+      document.getElementById('payment-security-label').textContent = 'Secured by Square. We never see your card details.';
+
+      var payments = Square.payments(config.squareAppId, config.squareLocationId);
+      payments.card().then(function(card) {
+        _squareCard = card;
+        card.attach('#square-card-container');
+      }).catch(function(err) {
+        document.getElementById('card-errors').textContent = 'Could not load payment form: ' + err.message;
+      });
+    }
+
+    function initStripe(pk) {
+      if (_stripe) { mountStripeElements(); return; }
+      if (!pk) {
         fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/stripe/publishable-key')
           .then(function(r) { return r.json(); })
           .then(function(data) {
-            var pk = data.publishableKey || 'null';
             if (typeof Stripe !== 'undefined') {
-              _stripe = Stripe(pk);
+              _stripe = Stripe(data.publishableKey || 'null');
               mountStripeElements();
             }
-          })
-          .catch(function() {
-            // Fallback to test key for development
-            if (typeof Stripe !== 'undefined') {
-              _stripe = Stripe('null');
-              mountStripeElements();
-            }
+          }).catch(function() {
+            if (typeof Stripe !== 'undefined') { _stripe = Stripe('null'); mountStripeElements(); }
           });
         return;
       }
-
-      if (!_stripe) {
-        if (typeof Stripe !== 'undefined') {
-          _stripe = Stripe('null');
-        } else {
-          return;
-        }
+      if (typeof Stripe !== 'undefined') {
+        _stripe = Stripe(pk);
+        mountStripeElements();
       }
-
-      mountStripeElements();
     }
 
     function mountStripeElements() {
@@ -4033,6 +4065,66 @@
         .then(function(r) { return r.json(); })
         .then(function() { showPaymentSuccess(0, desc, name, email, btn, true); })
         .catch(function() { showPaymentSuccess(0, desc, name, email, btn, true); });
+        return;
+      }
+
+      // Square payment path
+      if (_paymentProcessor === 'square' && _squareCard) {
+        _squareCard.tokenize().then(function(result) {
+          if (result.status !== 'OK') {
+            document.getElementById('card-errors').textContent = result.errors?.[0]?.message || 'Card error';
+            btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
+            btn.style.opacity = '1';
+            btn.disabled = false;
+            return;
+          }
+          var bookingPayload = {
+            fleet_type_id: booking.fleetTypeId || null,
+            time_slot_id: booking.timeSlotId || null,
+            booking_date: booking.date,
+            location_id: booking.location || null,
+            location_name: booking.locationName || null,
+            qty: getTotalBoatQty(),
+            boats: boatsPayload,
+            addons: addonsPayload,
+            subtotal: subtotal,
+            tax: tax,
+            total: total,
+            amount_paid: chargeAmount,
+            payment_mode: payMode,
+            customer_name: name,
+            customer_phone: phone,
+            customer_email: email,
+            notes: desc,
+            session_id: booking.sessionId
+          };
+          fetch(api('/bookings'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bookingPayload) })
+            .then(function(r) { return r.json(); })
+            .then(function(bResult) {
+              var bookingId = bResult.booking && bResult.booking.id;
+              return fetch(api('/square/create-payment'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  source_id: result.token,
+                  amount: chargeAmount,
+                  booking_id: bookingId,
+                  site_id: window.SUBDOMAIN || '',
+                  description: desc
+                })
+              }).then(function(r) { return r.json(); })
+                .then(function(payResult) {
+                  if (!payResult.success) throw new Error(payResult.error || 'Payment failed');
+                  showPaymentSuccess(chargeAmount, desc, name, email, btn);
+                });
+            })
+            .catch(function(err) {
+              document.getElementById('card-errors').textContent = err.message || 'Payment failed';
+              btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
+              btn.style.opacity = '1';
+              btn.disabled = false;
+            });
+        });
         return;
       }
 
