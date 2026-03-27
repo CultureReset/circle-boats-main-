@@ -4144,9 +4144,12 @@
             .then(function(r) { return r.json(); })
             .then(function(bResult) {
               var bookingId = bResult.id || (bResult.booking && bResult.booking.id);
+              var controller = new AbortController();
+              var timer = setTimeout(function() { controller.abort(); }, 20000);
               return fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/square/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify({
                   source_id: result.token,
                   amount: chargeAmount,
@@ -4154,14 +4157,15 @@
                   site_id: window.SUBDOMAIN || '',
                   description: desc
                 })
-              }).then(function(r) { return r.json(); })
+              }).then(function(r) { clearTimeout(timer); return r.json(); })
                 .then(function(payResult) {
                   if (!payResult.success) throw new Error(payResult.error || 'Payment failed');
                   showPaymentSuccess(chargeAmount, desc, name, email, btn);
                 });
             })
             .catch(function(err) {
-              document.getElementById('card-errors').textContent = err.message || 'Payment failed';
+              var errEl = document.getElementById('card-errors');
+              if (errEl) errEl.textContent = err.name === 'AbortError' ? 'Payment timed out. Please try again.' : (err.message || 'Payment failed');
               btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
               btn.style.opacity = '1';
               btn.disabled = false;
