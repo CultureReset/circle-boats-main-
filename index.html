@@ -3961,20 +3961,16 @@
         });
       }
 
-      if (typeof Square !== 'undefined') {
-        initSquare();
-      } else {
-        var sdkUrl = config.squareMode === 'sandbox'
-          ? 'https://sandbox.web.squarecdn.com/v1/square.js'
-          : 'https://web.squarecdn.com/v1/square.js';
-        var s = document.createElement('script');
-        s.src = sdkUrl;
-        s.onload = initSquare;
-        s.onerror = function() {
-          document.getElementById('card-errors').textContent = 'Could not load Square payment SDK';
-        };
-        document.head.appendChild(s);
-      }
+      var sdkUrl = config.squareMode === 'sandbox'
+        ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+        : 'https://web.squarecdn.com/v1/square.js';
+      var s = document.createElement('script');
+      s.src = sdkUrl;
+      s.onload = function() { setTimeout(initSquare, 150); };
+      s.onerror = function() {
+        document.getElementById('card-errors').textContent = 'Could not load Square payment SDK';
+      };
+      document.head.appendChild(s);
     }
 
     function initStripe(pk) {
@@ -4906,6 +4902,14 @@
         // Update price displays on product cards
         var priceAmounts = document.querySelectorAll('.price-amount');
         var productCards = document.querySelectorAll('.product-card');
+
+        // Update slot price button displays
+        var slotAmEl = document.getElementById('slotAM');
+        var slotPmEl = document.getElementById('slotPM');
+        var slotAllEl = document.getElementById('slotAll');
+        if (slotAmEl)  slotAmEl.textContent  = '$' + (PRICES.single.am  || 150);
+        if (slotPmEl)  slotPmEl.textContent  = '$' + (PRICES.single.pm  || 150);
+        if (slotAllEl) slotAllEl.textContent = '$' + (PRICES.single.all || 225);
 
         // Update boat row prices if booking modal is open
         if (getTotalBoatQty() > 0) updateSlotPrices();
