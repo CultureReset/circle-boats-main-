@@ -2674,8 +2674,7 @@
   </style>
   <!-- Stripe.js — loads securely from Stripe's CDN -->
   <script src="https://js.stripe.com/v3/"></script>
-  <!-- Square Web Payments SDK -->
-  <script src="https://web.squarecdn.com/v1/square.js"></script>
+  <!-- Square Web Payments SDK — loaded dynamically in mountSquareCard() based on sandbox/production mode -->
 </head>
 <body>
 
@@ -3946,19 +3945,36 @@
 
     function mountSquareCard(config) {
       if (_squareCard) return;
-      if (typeof Square === 'undefined') { initStripe(null); return; }
 
       document.getElementById('stripe-card-fields').style.display = 'none';
       document.getElementById('square-card-container').style.display = 'block';
       document.getElementById('payment-security-label').textContent = 'Secured by Square. We never see your card details.';
 
-      var payments = Square.payments(config.squareAppId, config.squareLocationId);
-      payments.card().then(function(card) {
-        _squareCard = card;
-        card.attach('#square-card-container');
-      }).catch(function(err) {
-        document.getElementById('card-errors').textContent = 'Could not load payment form: ' + err.message;
-      });
+      // Load correct SDK based on sandbox/production mode
+      function initSquare() {
+        var payments = Square.payments(config.squareAppId, config.squareLocationId);
+        payments.card().then(function(card) {
+          _squareCard = card;
+          card.attach('#square-card-container');
+        }).catch(function(err) {
+          document.getElementById('card-errors').textContent = 'Could not load payment form: ' + err.message;
+        });
+      }
+
+      if (typeof Square !== 'undefined') {
+        initSquare();
+      } else {
+        var sdkUrl = config.squareMode === 'sandbox'
+          ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+          : 'https://web.squarecdn.com/v1/square.js';
+        var s = document.createElement('script');
+        s.src = sdkUrl;
+        s.onload = initSquare;
+        s.onerror = function() {
+          document.getElementById('card-errors').textContent = 'Could not load Square payment SDK';
+        };
+        document.head.appendChild(s);
+      }
     }
 
     function initStripe(pk) {

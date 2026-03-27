@@ -388,10 +388,13 @@
     let paymentHandler;
 
     if (payConfig.processor === 'square') {
-      // Load Square Web Payments SDK dynamically
+      // Load Square Web Payments SDK dynamically (sandbox uses different URL)
+      const sqSdkUrl = payConfig.squareMode === 'sandbox'
+        ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+        : 'https://web.squarecdn.com/v1/square.js';
       await new Promise((resolve, reject) => {
         const s = document.createElement('script');
-        s.src = 'https://web.squarecdn.com/v1/square.js';
+        s.src = sqSdkUrl;
         s.onload = resolve;
         s.onerror = reject;
         document.head.appendChild(s);
