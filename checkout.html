@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout | Beachside Circle Boats</title>
+  <link rel="icon" type="image/jpeg" href="images/logo/circleboat logo.jpg">
+  <meta property="og:title" content="Checkout | Beachside Circle Boats">
+  <meta property="og:image" content="https://beachsidecircleboats.com/images/logo/circleboat%20logo.jpg">
   <script src="https://js.stripe.com/v3/"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -395,7 +398,7 @@
       await new Promise((resolve, reject) => {
         const s = document.createElement('script');
         s.src = sqSdkUrl;
-        s.onload = resolve;
+        s.onload = () => setTimeout(resolve, 150);
         s.onerror = reject;
         document.head.appendChild(s);
       });
