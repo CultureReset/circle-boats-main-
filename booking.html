@@ -360,13 +360,28 @@
     };
     const TAX_RATE = 0.10;
 
-    let state = { slot: null, boats: {}, avail: {}, availLoading: false };
+    let state = { slot: null, boats: {}, avail: {}, availLoading: false, blackoutRanges: [] };
+
+    function isBlackedOut(dateStr) {
+      return state.blackoutRanges.some(r => dateStr >= r.date_from && dateStr <= r.date_to);
+    }
+
+    function getBlackoutLabel(dateStr) {
+      const match = state.blackoutRanges.find(r => dateStr >= r.date_from && dateStr <= r.date_to);
+      return match ? (match.label || 'Unavailable') : null;
+    }
 
     // ── Init ──
     function init() {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       document.getElementById('bookingDate').min = tomorrow.toISOString().split('T')[0];
+
+      // Load blackout dates
+      fetch(apiUrl('/blackout-dates'))
+        .then(r => r.json())
+        .then(data => { state.blackoutRanges = data.blackout_dates || []; })
+        .catch(() => {});
 
       document.querySelectorAll('.slot-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -379,6 +394,13 @@
       });
 
       document.getElementById('bookingDate').addEventListener('change', function() {
+        const dateErr = document.getElementById('dateError');
+        if (this.value && isBlackedOut(this.value)) {
+          dateErr.textContent = 'Sorry, ' + getBlackoutLabel(this.value) + ' — this date is not available for booking.';
+          this.value = '';
+          return;
+        }
+        dateErr.textContent = '';
         if (this.value) fetchAvail(this.value);
       });
 
@@ -516,6 +538,11 @@
       document.getElementById('boatError').textContent = '';
       document.getElementById('slotError').textContent = '';
 
+      const bookingDate = document.getElementById('bookingDate').value;
+      if (bookingDate && isBlackedOut(bookingDate)) {
+        document.getElementById('dateError').textContent = 'Sorry, ' + getBlackoutLabel(bookingDate) + ' — this date is not available for booking.';
+        return;
+      }
       if (!state.slot) { document.getElementById('slotError').textContent = 'Please select a time slot'; return; }
       if (totalQty() === 0) { document.getElementById('boatError').textContent = 'Please add at least 1 boat'; return; }
 
