@@ -3408,17 +3408,12 @@
     // ── Blackout Dates ──
     var _blackoutRanges = [];
 
-    fetch(api('/blackout-dates'))
-      .then(function(r) { return r.json(); })
-      .then(function(d) { _blackoutRanges = d.blackout_dates || []; renderCalendar(); })
-      .catch(function() {});
-
     function isBlackedOut(dateStr) {
-      return _blackoutRanges.some(function(r) { return dateStr >= r.date_from && dateStr <= r.date_to; });
+      return (window._blackoutRanges || []).some(function(r) { return dateStr >= r.date_from && dateStr <= r.date_to; });
     }
 
     function getBlackoutLabel(dateStr) {
-      var match = _blackoutRanges.find(function(r) { return dateStr >= r.date_from && dateStr <= r.date_to; });
+      var match = (window._blackoutRanges || []).find(function(r) { return dateStr >= r.date_from && dateStr <= r.date_to; });
       return match ? (match.label || 'Unavailable') : null;
     }
 
@@ -4856,6 +4851,12 @@
       return API_BASE + '/api/public' + path + sep + 'subdomain=' + SUBDOMAIN;
     }
     window.api = api;
+
+    // ── Load blackout dates now that api() is available ──
+    fetch(api('/blackout-dates'))
+      .then(function(r) { return r.json(); })
+      .then(function(d) { window._blackoutRanges = d.blackout_dates || []; })
+      .catch(function() {});
 
     // ---- CACHING LAYER — reduces API calls, faster repeat loads ----
     var CACHE_TTL = {
