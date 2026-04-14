@@ -235,6 +235,16 @@
     </div>
   </header>
 
+  <!-- Blackout Date Popup -->
+  <div id="blackout-popup" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,.55);">
+    <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+      <div style="font-size:48px;margin-bottom:12px;">🚫</div>
+      <h2 style="font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Not Available</h2>
+      <p id="blackout-popup-msg" style="font-size:15px;color:#555;margin-bottom:24px;line-height:1.5;">Sorry, we are not accepting bookings on this date.</p>
+      <button onclick="closeBlackoutPopup()" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-weight:600;cursor:pointer;width:100%;">Choose Another Date</button>
+    </div>
+  </div>
+
   <div class="container">
     <form class="booking-form" id="bookingForm">
 
@@ -371,6 +381,20 @@
       return match ? (match.label || 'Unavailable') : null;
     }
 
+    function showBlackoutPopup(dateStr) {
+      const label = getBlackoutLabel(dateStr);
+      const msg = label && label !== 'Unavailable'
+        ? 'We are closed for <strong>' + label + '</strong> and not accepting bookings on this date. Please choose another date.'
+        : 'We are not accepting bookings on this date. Please choose another date.';
+      document.getElementById('blackout-popup-msg').innerHTML = msg;
+      document.getElementById('blackout-popup').style.display = 'flex';
+    }
+
+    function closeBlackoutPopup() {
+      document.getElementById('blackout-popup').style.display = 'none';
+      document.getElementById('bookingDate').focus();
+    }
+
     // ── Init ──
     function init() {
       const tomorrow = new Date();
@@ -396,7 +420,7 @@
       document.getElementById('bookingDate').addEventListener('change', function() {
         const dateErr = document.getElementById('dateError');
         if (this.value && isBlackedOut(this.value)) {
-          dateErr.textContent = 'Sorry, ' + getBlackoutLabel(this.value) + ' — this date is not available for booking.';
+          showBlackoutPopup(this.value);
           this.value = '';
           return;
         }
@@ -541,7 +565,7 @@
       const bookingDate = document.getElementById('bookingDate').value;
       if (!bookingDate) { document.getElementById('dateError').textContent = 'Please select a date'; return; }
       if (isBlackedOut(bookingDate)) {
-        document.getElementById('dateError').textContent = 'Sorry, ' + getBlackoutLabel(bookingDate) + ' — this date is not available for booking.';
+        showBlackoutPopup(bookingDate);
         return;
       }
       if (!state.slot) { document.getElementById('slotError').textContent = 'Please select a time slot'; return; }
