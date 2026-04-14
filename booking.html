@@ -606,6 +606,11 @@
           body: JSON.stringify(payload)
         });
         const hold = await r.json();
+        if (!r.ok) {
+          showBlackoutPopup(payload.booking_date);
+          btn.disabled = false; btn.textContent = 'Continue to Checkout →';
+          return;
+        }
         if (hold.id) sessionStorage.setItem('holdId', hold.id);
         window.location.href = 'checkout.html';
       } catch (err) {
