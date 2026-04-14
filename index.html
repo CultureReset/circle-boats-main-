@@ -3072,6 +3072,16 @@
   </section>
 
   <!-- BOOKING MODAL -->
+  <!-- Blackout Date Popup -->
+  <div id="blackout-popup-overlay" style="display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;background:rgba(0,0,0,.6);">
+    <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+      <div style="font-size:48px;margin-bottom:12px;">🚫</div>
+      <h2 style="font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Not Available</h2>
+      <p id="blackout-popup-msg" style="font-size:15px;color:#555;margin-bottom:24px;line-height:1.5;"></p>
+      <button onclick="document.getElementById('blackout-popup-overlay').style.display='none';" style="background:#00ada8;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-weight:600;cursor:pointer;width:100%;">Choose Another Date</button>
+    </div>
+  </div>
+
   <div class="booking-overlay" id="bookingOverlay">
     <div class="booking-modal">
       <button class="booking-close" onclick="closeBooking()">&times;</button>
@@ -3386,6 +3396,33 @@
       holdId: null
     };
 
+    // ── Blackout Dates ──
+    var _blackoutRanges = [];
+
+    fetch(api('/blackout-dates'))
+      .then(function(r) { return r.json(); })
+      .then(function(d) { _blackoutRanges = d.blackout_dates || []; renderCalendar(); })
+      .catch(function() {});
+
+    function isBlackedOut(dateStr) {
+      return _blackoutRanges.some(function(r) { return dateStr >= r.date_from && dateStr <= r.date_to; });
+    }
+
+    function getBlackoutLabel(dateStr) {
+      var match = _blackoutRanges.find(function(r) { return dateStr >= r.date_from && dateStr <= r.date_to; });
+      return match ? (match.label || 'Unavailable') : null;
+    }
+
+    function showBlackoutPopup(dateStr) {
+      var label = getBlackoutLabel(dateStr);
+      var msg = label && label !== 'Unavailable'
+        ? 'We are closed for <strong>' + label + '</strong> and not accepting bookings on this date. Please choose another date.'
+        : 'We are not accepting bookings on this date. Please choose another date.';
+      var popup = document.getElementById('blackout-popup-overlay');
+      document.getElementById('blackout-popup-msg').innerHTML = msg;
+      popup.style.display = 'flex';
+    }
+
     // Generate a unique session ID for hold tracking
     function generateSessionId() {
       return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -3513,10 +3550,17 @@
         btn.className = 'cal-day';
         btn.textContent = d;
         var cellDate = new Date(y, m, d);
+        var cellDateStr = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
         if (cellDate < today) {
           btn.classList.add('disabled');
+        } else if (isBlackedOut(cellDateStr)) {
+          btn.classList.add('disabled');
+          btn.title = getBlackoutLabel(cellDateStr) || 'Not available';
+          btn.style.background = '#f3f4f6';
+          btn.style.color = '#ccc';
+          btn.style.textDecoration = 'line-through';
         } else {
-          btn.setAttribute('data-date', y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'));
+          btn.setAttribute('data-date', cellDateStr);
           btn.addEventListener('click', function() {
             booking.date = this.getAttribute('data-date');
             grid.querySelectorAll('.cal-day').forEach(function(c) { c.classList.remove('selected'); });
@@ -3772,6 +3816,13 @@
 
       if (dir > 0) {
         if (booking.step === 1 && (!booking.location || !booking.date)) return;
+        if (booking.step === 1 && booking.date && isBlackedOut(booking.date)) {
+          showBlackoutPopup(booking.date);
+          booking.date = null;
+          document.querySelectorAll('#calGrid .cal-day').forEach(function(c) { c.classList.remove('selected'); });
+          updateNextBtn();
+          return;
+        }
         if (booking.step === 2 && (!booking.slot || getTotalBoatQty() === 0)) return;
         if (booking.step === 4) {
           submitBooking();
