@@ -1737,6 +1737,14 @@
       pointer-events: none;
     }
 
+    .cal-day.blackout {
+      color: #ccc !important;
+      background: #f3f4f6 !important;
+      text-decoration: line-through;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
     .cal-day.empty {
       pointer-events: none;
     }
@@ -3554,11 +3562,8 @@
         if (cellDate < today) {
           btn.classList.add('disabled');
         } else if (isBlackedOut(cellDateStr)) {
-          btn.classList.add('disabled');
+          btn.classList.add('blackout');
           btn.title = getBlackoutLabel(cellDateStr) || 'Not available';
-          btn.style.background = '#f3f4f6';
-          btn.style.color = '#ccc';
-          btn.style.textDecoration = 'line-through';
         } else {
           btn.setAttribute('data-date', cellDateStr);
           btn.addEventListener('click', function() {
