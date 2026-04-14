@@ -612,6 +612,7 @@
   .cal-day:hover { background: rgba(0,173,168,0.08); }
   .cal-day.selected { background: #00ada8; color: #fff; font-weight: 600; }
   .cal-day.disabled { color: #e8e8e8; pointer-events: none; }
+  .cal-day.blackout { color:#f87171!important; background:#fff1f1!important; text-decoration:line-through; pointer-events:none; border:1px solid #fecaca!important; }
   .cal-day.empty { pointer-events: none; }
   .boat-option {
     border: 2px solid #e8e8e8; border-radius: 12px; padding: 16px;
@@ -1321,6 +1322,16 @@
   </script>
 
   <!-- ===== FULL BOOKING OVERLAY ===== -->
+  <!-- Blackout Date Popup -->
+  <div id="blackout-popup-links" style="display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;background:rgba(0,0,0,.6);">
+    <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+      <div style="font-size:48px;margin-bottom:12px;">🚫</div>
+      <h2 style="font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Not Available</h2>
+      <p id="blackout-popup-links-msg" style="font-size:15px;color:#555;margin-bottom:24px;line-height:1.5;"></p>
+      <button onclick="document.getElementById('blackout-popup-links').style.display='none';" style="background:#00ada8;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-weight:600;cursor:pointer;width:100%;">Choose Another Date</button>
+    </div>
+  </div>
+
   <div class="booking-overlay" id="bookingOverlay">
     <div class="booking-modal">
       <button class="booking-close" onclick="closeBooking()">&times;</button>
@@ -1441,6 +1452,29 @@
       return base + '/api/public' + path + sep + 'subdomain=' + sub;
     }
 
+    // ── Blackout Dates ──
+    var _blackoutRanges = [];
+    fetch(api('/blackout-dates'))
+      .then(function(r){return r.json();})
+      .then(function(d){ _blackoutRanges = d.blackout_dates || []; renderBkCalendar(); })
+      .catch(function(){});
+    function isBlackedOut(dateStr) {
+      return _blackoutRanges.some(function(r){ return dateStr >= r.date_from && dateStr <= r.date_to; });
+    }
+    function getBlackoutLabel(dateStr) {
+      var match = _blackoutRanges.find(function(r){ return dateStr >= r.date_from && dateStr <= r.date_to; });
+      return match ? (match.label || 'Unavailable') : null;
+    }
+    function showBlackoutPopup(dateStr) {
+      var label = getBlackoutLabel(dateStr);
+      var msg = label && label !== 'Unavailable'
+        ? 'We are closed for <strong>'+label+'</strong> and not accepting bookings on this date. Please choose another date.'
+        : 'We are not accepting bookings on this date. Please choose another date.';
+      var el = document.getElementById('blackout-popup-links');
+      document.getElementById('blackout-popup-links-msg').innerHTML = msg;
+      el.style.display = 'flex';
+    }
+
     function genSessionId() { return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2,9); }
     function getTotalBoatQty() { return Object.keys(bk.boats).reduce(function(s,k){return s+(bk.boats[k]||0);},0); }
 
@@ -1505,7 +1539,10 @@
         var cellDate = new Date(y,m,d);
         var dateStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
         if (cellDate < today) { btn.classList.add('disabled'); }
-        else {
+        else if (isBlackedOut(dateStr)) {
+          btn.classList.add('blackout');
+          btn.title = getBlackoutLabel(dateStr) || 'Not available';
+        } else {
           btn.setAttribute('data-date', dateStr);
           btn.addEventListener('click', function() {
             bk.date = this.getAttribute('data-date');
@@ -1687,6 +1724,12 @@
       if (next < 1) return;
       if (dir > 0) {
         if (bk.step===1 && (!bk.location || !bk.date)) return;
+        if (bk.step===1 && bk.date && isBlackedOut(bk.date)) {
+          showBlackoutPopup(bk.date);
+          bk.date = null;
+          document.querySelectorAll('#calGrid .cal-day').forEach(function(c){c.classList.remove('selected');});
+          updateBkNextBtn(); return;
+        }
         if (bk.step===2 && (!bk.slot || getTotalBoatQty() === 0)) return;
         if (bk.step===4) { submitBooking(); return; }
       }
