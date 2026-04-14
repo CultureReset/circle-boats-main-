@@ -539,7 +539,8 @@
       document.getElementById('slotError').textContent = '';
 
       const bookingDate = document.getElementById('bookingDate').value;
-      if (bookingDate && isBlackedOut(bookingDate)) {
+      if (!bookingDate) { document.getElementById('dateError').textContent = 'Please select a date'; return; }
+      if (isBlackedOut(bookingDate)) {
         document.getElementById('dateError').textContent = 'Sorry, ' + getBlackoutLabel(bookingDate) + ' — this date is not available for booking.';
         return;
       }
