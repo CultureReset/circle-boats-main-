@@ -295,6 +295,19 @@
           <input type="hidden" id="payment-intent-id">
         </div>
 
+        <!-- Waiver -->
+        <div class="form-section" style="padding:16px 0 0;">
+          <div class="section-title">Liability Waiver</div>
+          <div id="waiver-text-box" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;max-height:220px;overflow-y:scroll;font-size:12px;color:#555;line-height:1.7;margin-bottom:12px;">
+            Loading waiver...
+          </div>
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#374151;line-height:1.5;">
+            <input type="checkbox" id="waiverConsent" style="margin-top:3px;flex-shrink:0;accent-color:#0ea5e9;" required>
+            <span>I have read and agree to the liability waiver above. I also agree to receive booking confirmations and updates from Circle Boats via SMS and email. Message &amp; data rates may apply. Reply STOP to opt out.</span>
+          </label>
+          <div id="waiver-error" style="display:none;color:#dc2626;font-size:12px;margin-top:6px;">Please scroll through and check the box above to continue.</div>
+        </div>
+
         <!-- Buttons -->
         <button type="submit" class="btn-primary" id="submit-button">
           Pay $<span id="amount-display">0</span>
@@ -372,6 +385,22 @@
     document.getElementById('customerName').value = bookingData.customer_name;
     document.getElementById('customerEmail').value = bookingData.customer_email;
     document.getElementById('customerPhone').value = bookingData.customer_phone;
+
+    // Load waiver text
+    const siteSubdomainForWaiver = typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats';
+    fetch(`${API_BASE}/api/dashboard/waivers/template?subdomain=${siteSubdomainForWaiver}`)
+      .then(r => r.json())
+      .then(data => {
+        const box = document.getElementById('waiver-text-box');
+        if (data && data.waiver_text) {
+          box.innerHTML = data.waiver_text.replace(/\n/g, '<br>');
+        } else {
+          box.textContent = 'By proceeding with this booking you agree to assume all risks associated with watercraft rental and release Beachside Circle Boat Rentals and Sales from any liability.';
+        }
+      })
+      .catch(() => {
+        document.getElementById('waiver-text-box').textContent = 'By proceeding with this booking you agree to assume all risks associated with watercraft rental and release Beachside Circle Boat Rentals and Sales from any liability.';
+      });
 
     // Populate summary
     document.getElementById('detail-date').textContent = new Date(bookingData.booking_date).toLocaleDateString();
@@ -471,6 +500,14 @@
     // Submit handler — identical for both processors
     document.getElementById('payment-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const waiverBox = document.getElementById('waiverConsent');
+      const waiverErr = document.getElementById('waiver-error');
+      if (!waiverBox.checked) {
+        waiverErr.style.display = 'block';
+        waiverBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      waiverErr.style.display = 'none';
       const submitButton = document.getElementById('submit-button');
       submitButton.disabled = true;
       submitButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
@@ -478,7 +515,18 @@
         const paymentId = await paymentHandler();
         sessionStorage.setItem('paymentIntentId', paymentId);
         sessionStorage.setItem('confirmedBooking', 'true');
-        window.location.href = 'waiver-form.html';
+        // Record waiver acknowledgment silently
+        fetch(`${API_BASE}/api/public/waiver`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer_name: bookingData.customer_name,
+            customer_email: bookingData.customer_email,
+            signature_data: 'checkbox-acknowledged',
+            subdomain: siteSubdomainForWaiver
+          })
+        }).catch(() => {});
+        window.location.href = 'confirmation.html';
       } catch (err) {
         console.error('Payment error:', err);
         document.getElementById('error-message').textContent = err.message;
