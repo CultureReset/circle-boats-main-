@@ -4230,10 +4230,11 @@
             sms_consent: smsConsentGiven,
             sms_consent_text: smsConsentGiven ? smsConsentLabel : null
           };
+          var _sqBookingId = null;
           fetch(api('/bookings'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bookingPayload) })
             .then(function(r) { return r.json(); })
             .then(function(bResult) {
-              var bookingId = bResult.id || (bResult.booking && bResult.booking.id);
+              _sqBookingId = bResult.id || (bResult.booking && bResult.booking.id);
               var controller = new AbortController();
               var timer = setTimeout(function() { controller.abort(); }, 20000);
               return fetch((window.API_BASE || 'https://cybercheck-api-database.vercel.app') + '/api/square/create-payment', {
@@ -4243,7 +4244,7 @@
                 body: JSON.stringify({
                   source_id: result.token,
                   amount: chargeAmount,
-                  booking_id: bookingId,
+                  booking_id: _sqBookingId,
                   site_id: window.SUBDOMAIN || '',
                   description: desc
                 })
@@ -4254,6 +4255,7 @@
                 });
             })
             .catch(function(err) {
+              if (_sqBookingId && typeof markBookingFailed === 'function') markBookingFailed(_sqBookingId);
               var errEl = document.getElementById('card-errors');
               if (errEl) errEl.textContent = err.name === 'AbortError' ? 'Payment timed out. Please try again.' : (err.message || 'Payment failed');
               btn.textContent = 'Pay $' + chargeAmount.toFixed(2) + ' & Book';
