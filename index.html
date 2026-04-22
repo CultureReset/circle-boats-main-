@@ -3044,11 +3044,18 @@
               <label for="contact-message">Message</label>
               <textarea id="contact-message" placeholder="Tell us about your plans, preferred dates, or any questions..."></textarea>
             </div>
-            <div style="margin-bottom:14px;">
-              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#555;line-height:1.5;">
-                <input type="checkbox" id="contact-sms-consent" style="margin-top:3px;flex-shrink:0;">
-                <span>I agree to receive SMS updates and replies regarding my inquiry. Message &amp; data rates may apply. Reply STOP to opt out. See our <a href="privacy.html" target="_blank" style="color:#00ada8;">Privacy Policy</a> &amp; <a href="terms.html" target="_blank" style="color:#00ada8;">Terms</a>.</span>
+            <!-- SMS Consent (two-step opt-in for TCPA) -->
+            <div style="margin-top:6px;margin-bottom:14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px;">
+              <div style="font-weight:700;font-size:13px;color:#166534;margin-bottom:10px;">📱 SMS Replies (optional)</div>
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#374151;line-height:1.5;margin-bottom:10px;">
+                <input type="checkbox" id="contact-sms-consent" style="margin-top:3px;flex-shrink:0;accent-color:#16a34a;">
+                <span>I agree to receive SMS updates and replies from <strong>Beachside Circle Boats</strong> regarding this inquiry at the phone number above. Message &amp; data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. See our <a href="privacy.html" target="_blank" style="color:#00ada8;">Privacy Policy</a> &amp; <a href="terms.html" target="_blank" style="color:#00ada8;">Terms</a>.</span>
               </label>
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#374151;line-height:1.5;">
+                <input type="checkbox" id="contact-sms-consent-confirm" style="margin-top:3px;flex-shrink:0;accent-color:#16a34a;">
+                <span>I confirm the phone number above is correct and I am authorized to receive text messages on it.</span>
+              </label>
+              <div style="font-size:11px;color:#6b7280;margin-top:8px;">Both boxes must be checked to receive SMS. Leave blank to get email only.</div>
             </div>
             <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message</button>
           </form>
@@ -3343,7 +3350,8 @@
       });
 
       var contactConsentEl = form.querySelector('#contact-sms-consent');
-      var contactSmsConsent = !!(contactConsentEl && contactConsentEl.checked);
+      var contactConfirmEl = form.querySelector('#contact-sms-consent-confirm');
+      var contactSmsConsent = !!(contactConsentEl && contactConsentEl.checked && contactConfirmEl && contactConfirmEl.checked);
       var contactConsentText = contactConsentEl ? (contactConsentEl.closest('label')?.innerText || '') : '';
 
       var contactData = {
@@ -5278,7 +5286,8 @@
       var phone = document.getElementById('contact-phone') ? document.getElementById('contact-phone').value.trim() : '';
       var message = document.getElementById('contact-message') ? document.getElementById('contact-message').value.trim() : '';
       var contactConsentEl2 = document.getElementById('contact-sms-consent');
-      var contactSmsConsent2 = !!(contactConsentEl2 && contactConsentEl2.checked);
+      var contactConfirmEl2 = document.getElementById('contact-sms-consent-confirm');
+      var contactSmsConsent2 = !!(contactConsentEl2 && contactConsentEl2.checked && contactConfirmEl2 && contactConfirmEl2.checked);
       var contactConsentText2 = contactConsentEl2 ? (contactConsentEl2.closest('label')?.innerText || '') : '';
 
       btn.textContent = 'Sending...';
