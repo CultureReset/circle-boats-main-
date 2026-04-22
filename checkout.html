@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpeg" href="images/logo/circleboat logo.jpg">
   <meta property="og:title" content="Checkout | Beachside Circle Boats">
   <meta property="og:image" content="https://beachsidecircleboats.com/images/logo/circleboat%20logo.jpg">
-  <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://web.squarecdn.com/v1/square.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -371,71 +371,65 @@
   </div>
 
   <script>
-    const API_BASE = window.location.hostname === 'localhost'
-      ? 'http://localhost:3000'
-      : 'https://cybercheck-api-database.vercel.app';
+    (async function() {
+      const API_BASE = 'https://cybercheck-api-database.vercel.app';
 
-    const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+      const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
 
-    if (!bookingData) {
-      window.location.href = 'booking.html';
-    }
+      if (!bookingData) {
+        window.location.href = 'booking.html';
+        return;
+      }
 
-    // Populate form
-    document.getElementById('customerName').value = bookingData.customer_name;
-    document.getElementById('customerEmail').value = bookingData.customer_email;
-    document.getElementById('customerPhone').value = bookingData.customer_phone;
+      // Populate form
+      document.getElementById('customerName').value = bookingData.customer_name;
+      document.getElementById('customerEmail').value = bookingData.customer_email;
+      document.getElementById('customerPhone').value = bookingData.customer_phone;
 
-    // Load waiver text
-    const siteSubdomainForWaiver = typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats';
-    fetch(`${API_BASE}/api/dashboard/waivers/template?subdomain=${siteSubdomainForWaiver}`)
-      .then(r => r.json())
-      .then(data => {
-        const box = document.getElementById('waiver-text-box');
-        if (data && data.waiver_text) {
-          box.innerHTML = data.waiver_text.replace(/\n/g, '<br>');
-        } else {
-          box.textContent = 'By proceeding with this booking you agree to assume all risks associated with watercraft rental and release Beachside Circle Boat Rentals and Sales from any liability.';
-        }
-      })
-      .catch(() => {
-        document.getElementById('waiver-text-box').textContent = 'By proceeding with this booking you agree to assume all risks associated with watercraft rental and release Beachside Circle Boat Rentals and Sales from any liability.';
-      });
+      // Load waiver text
+      const siteSubdomainForWaiver = typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats';
+      fetch(`${API_BASE}/api/dashboard/waivers/template?subdomain=${siteSubdomainForWaiver}`)
+        .then(r => r.json())
+        .then(data => {
+          const box = document.getElementById('waiver-text-box');
+          if (data && data.waiver_text) {
+            box.innerHTML = data.waiver_text.replace(/\n/g, '<br>');
+          } else {
+            box.textContent = 'By proceeding with this booking you agree to assume all risks associated with watercraft rental and release Beachside Circle Boat Rentals and Sales from any liability.';
+          }
+        })
+        .catch(() => {
+          document.getElementById('waiver-text-box').textContent = 'By proceeding with this booking you agree to assume all risks associated with watercraft rental and release Beachside Circle Boat Rentals and Sales from any liability.';
+        });
 
-    // Populate summary
-    document.getElementById('detail-date').textContent = new Date(bookingData.booking_date).toLocaleDateString();
-    document.getElementById('detail-boat').textContent = bookingData.boatName;
-    document.getElementById('detail-duration').textContent = `${bookingData.duration_hours} hours`;
-    document.getElementById('detail-qty').textContent = bookingData.qty;
-    document.getElementById('subtotal-display').textContent = `$${bookingData.totalPrice}`;
-    document.getElementById('total-display').textContent = `$${bookingData.totalPrice}`;
-    document.getElementById('amount-display').textContent = bookingData.totalPrice;
+      // Populate summary
+      document.getElementById('detail-date').textContent = new Date(bookingData.booking_date).toLocaleDateString();
+      document.getElementById('detail-boat').textContent = bookingData.boatName;
+      document.getElementById('detail-duration').textContent = `${bookingData.duration_hours} hours`;
+      document.getElementById('detail-qty').textContent = bookingData.qty;
+      document.getElementById('subtotal-display').textContent = `$${bookingData.totalPrice}`;
+      document.getElementById('total-display').textContent = `$${bookingData.totalPrice}`;
+      document.getElementById('amount-display').textContent = bookingData.totalPrice;
 
-    // Fetch payment config for this site
-    const siteSubdomain = typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats';
-    const payConfig = await fetch(`${API_BASE}/api/payment-config?subdomain=${siteSubdomain}`)
-      .then(r => r.json())
-      .catch(() => ({ processor: 'stripe', stripePublicKey: '' }));
+      // Fetch Square credentials from API
+      const siteSubdomain = typeof SUBDOMAIN !== 'undefined' ? SUBDOMAIN : 'beachside-circle-boats';
+      const payConfig = await fetch(`${API_BASE}/api/public/payment-config?subdomain=${siteSubdomain}`)
+        .then(r => r.json())
+        .catch(() => ({}));
 
-    let paymentHandler;
+      if (!payConfig.squareAppId || !payConfig.squareLocationId) {
+        document.getElementById('error-message').textContent = 'Payment system is not configured. Please contact us to complete your booking.';
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('submit-button').disabled = true;
+        return;
+      }
 
-    if (payConfig.processor === 'square') {
-      // Load Square Web Payments SDK dynamically (sandbox uses different URL)
-      const sqSdkUrl = payConfig.squareMode === 'sandbox'
-        ? 'https://sandbox.web.squarecdn.com/v1/square.js'
-        : 'https://web.squarecdn.com/v1/square.js';
-      await new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = sqSdkUrl;
-        s.onload = () => setTimeout(resolve, 150);
-        s.onerror = reject;
-        document.head.appendChild(s);
-      });
+      // Square SDK is loaded statically — initialize directly
       const payments = Square.payments(payConfig.squareAppId, payConfig.squareLocationId);
       const card = await payments.card();
       await card.attach('#card-element');
 
-      paymentHandler = async () => {
+      const paymentHandler = async () => {
         const result = await card.tokenize();
         if (result.status !== 'OK') throw new Error(result.errors?.[0]?.message || 'Card tokenization failed');
         const payRes = await fetch(`${API_BASE}/api/square/create-payment`, {
@@ -453,88 +447,45 @@
         return payRes.payment_id;
       };
 
-    } else {
-      // Default: Stripe
-      const stripe = Stripe(payConfig.stripePublicKey || '');
-      const elements = stripe.elements();
-      const cardElement = elements.create('card');
-      cardElement.mount('#card-element');
-
-      cardElement.addEventListener('change', (event) => {
-        const displayError = document.getElementById('error-message');
-        if (event.error) {
-          displayError.textContent = event.error.message;
-          displayError.style.display = 'block';
-        } else {
-          displayError.style.display = 'none';
+      // Submit handler — identical for both processors
+      document.getElementById('payment-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const waiverBox = document.getElementById('waiverConsent');
+        const waiverErr = document.getElementById('waiver-error');
+        if (!waiverBox.checked) {
+          waiverErr.style.display = 'block';
+          waiverBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        waiverErr.style.display = 'none';
+        const submitButton = document.getElementById('submit-button');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
+        try {
+          const paymentId = await paymentHandler();
+          sessionStorage.setItem('paymentIntentId', paymentId);
+          sessionStorage.setItem('confirmedBooking', 'true');
+          // Record waiver acknowledgment silently
+          fetch(`${API_BASE}/api/public/waiver`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customer_name: bookingData.customer_name,
+              customer_email: bookingData.customer_email,
+              signature_data: 'checkbox-acknowledged',
+              subdomain: siteSubdomainForWaiver
+            })
+          }).catch(() => {});
+          window.location.href = 'confirmation.html';
+        } catch (err) {
+          console.error('Payment error:', err);
+          document.getElementById('error-message').textContent = err.message;
+          document.getElementById('error-message').style.display = 'block';
+          submitButton.disabled = false;
+          submitButton.textContent = `Pay $${bookingData.totalPrice}`;
         }
       });
-
-      paymentHandler = async () => {
-        const intentRes = await fetch(`${API_BASE}/api/stripe/create-payment-intent`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: bookingData.totalPrice,
-            site_id: siteSubdomain,
-            description: `${bookingData.boatName} rental - ${bookingData.qty} boat(s)`
-          })
-        });
-        if (!intentRes.ok) throw new Error('Failed to create payment intent');
-        const { client_secret: clientSecret } = await intentRes.json();
-        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: bookingData.customer_name,
-              email: bookingData.customer_email,
-              phone: bookingData.customer_phone
-            }
-          }
-        });
-        if (error) throw error;
-        return paymentIntent.id;
-      };
-    }
-
-    // Submit handler — identical for both processors
-    document.getElementById('payment-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const waiverBox = document.getElementById('waiverConsent');
-      const waiverErr = document.getElementById('waiver-error');
-      if (!waiverBox.checked) {
-        waiverErr.style.display = 'block';
-        waiverBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-      waiverErr.style.display = 'none';
-      const submitButton = document.getElementById('submit-button');
-      submitButton.disabled = true;
-      submitButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
-      try {
-        const paymentId = await paymentHandler();
-        sessionStorage.setItem('paymentIntentId', paymentId);
-        sessionStorage.setItem('confirmedBooking', 'true');
-        // Record waiver acknowledgment silently
-        fetch(`${API_BASE}/api/public/waiver`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            customer_name: bookingData.customer_name,
-            customer_email: bookingData.customer_email,
-            signature_data: 'checkbox-acknowledged',
-            subdomain: siteSubdomainForWaiver
-          })
-        }).catch(() => {});
-        window.location.href = 'confirmation.html';
-      } catch (err) {
-        console.error('Payment error:', err);
-        document.getElementById('error-message').textContent = err.message;
-        document.getElementById('error-message').style.display = 'block';
-        submitButton.disabled = false;
-        submitButton.textContent = `Pay $${bookingData.totalPrice}`;
-      }
-    });
+    })();
   </script>
 </body>
 </html>
