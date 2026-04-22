@@ -3342,13 +3342,19 @@
         customAnswers[label] = el.type === 'checkbox' ? el.checked : el.value;
       });
 
+      var contactConsentEl = form.querySelector('#contact-sms-consent');
+      var contactSmsConsent = !!(contactConsentEl && contactConsentEl.checked);
+      var contactConsentText = contactConsentEl ? (contactConsentEl.closest('label')?.innerText || '') : '';
+
       var contactData = {
         name: form.querySelector('#contact-name')?.value || '',
         email: form.querySelector('#contact-email')?.value || '',
         phone: form.querySelector('#contact-phone')?.value || '',
         interest: form.querySelector('#contact-interest')?.value || '',
         message: form.querySelector('#contact-message')?.value || '',
-        custom: customAnswers
+        custom: customAnswers,
+        sms_consent: contactSmsConsent,
+        sms_consent_text: contactSmsConsent ? contactConsentText : null
       };
 
       // Send to API
@@ -5271,13 +5277,16 @@
       var email = document.getElementById('contact-email').value.trim();
       var phone = document.getElementById('contact-phone') ? document.getElementById('contact-phone').value.trim() : '';
       var message = document.getElementById('contact-message') ? document.getElementById('contact-message').value.trim() : '';
+      var contactConsentEl2 = document.getElementById('contact-sms-consent');
+      var contactSmsConsent2 = !!(contactConsentEl2 && contactConsentEl2.checked);
+      var contactConsentText2 = contactConsentEl2 ? (contactConsentEl2.closest('label')?.innerText || '') : '';
 
       btn.textContent = 'Sending...';
 
       fetch(api('/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, email: email, phone: phone, message: message })
+        body: JSON.stringify({ name: name, email: email, phone: phone, message: message, sms_consent: contactSmsConsent2, sms_consent_text: contactSmsConsent2 ? contactConsentText2 : null })
       })
       .then(function(r) { return r.json(); })
       .then(function(data) {
