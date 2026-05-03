@@ -34,13 +34,12 @@ async function loadWebsiteData() {
 
 async function fetchAndCache() {
   try {
-    const base = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? `${window.location.protocol}//${window.location.hostname}:3000`
-      : 'https://cybercheck-api-database.vercel.app';
+    const base = 'https://cybercheck-api-database.vercel.app';
 
     const res = await fetch(`${base}/api/site-data`);
     if (!res.ok) throw new Error(res.status);
     const data = await res.json();
+    console.log('Site data loaded:', data);
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
     localStorage.setItem(CACHE_KEY + '_ts', Date.now().toString());
     return data;
