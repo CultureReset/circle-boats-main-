@@ -366,7 +366,6 @@
       try {
         const res = await fetch(`${API_BASE}/api/public/waivers/${waiverToken}`);
         if (res.status === 410) {
-          // Already signed — show success immediately, no form needed
           document.getElementById('waiverForm').innerHTML =
             '<div class="success-message" style="font-size:16px;padding:24px;text-align:center;">' +
             '✅ Waiver already signed. You\'re all set — enjoy your rental!</div>';
@@ -376,6 +375,11 @@
         const data = await res.json();
         // Pre-fill name from booking
         if (data.customer_name) document.getElementById('fullName').value = data.customer_name;
+        // Render waiver text into the content area
+        const contentEl = document.querySelector('.waiver-content');
+        if (contentEl && data.waiver_text) {
+          contentEl.innerHTML = data.waiver_text.replace(/\n/g, '<br>');
+        }
       } catch (err) {
         document.getElementById('error-message').textContent = err.message || 'Could not load waiver. Please contact us.';
         document.getElementById('error-message').style.display = 'block';

@@ -479,6 +479,11 @@
           window.location.href = 'confirmation.html';
         } catch (err) {
           console.error('Payment error:', err);
+          if (bookingData.id) {
+            fetch(`${API_BASE}/api/public/bookings/${bookingData.id}/payment-failed?subdomain=${siteSubdomain}`, {
+              method: 'POST'
+            }).catch(() => {});
+          }
           document.getElementById('error-message').textContent = err.message;
           document.getElementById('error-message').style.display = 'block';
           submitButton.disabled = false;
