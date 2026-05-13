@@ -160,18 +160,19 @@ async function loadProfile() {
     }
   }
 
-  document.getElementById('prof-outdoor-seating').checked = p.outdoor_seating || false;
-  document.getElementById('prof-live-music').checked = p.live_music || false;
-  document.getElementById('prof-delivery').checked = p.delivery || false;
-  document.getElementById('prof-dine-in').checked = p.dine_in || false;
-  document.getElementById('prof-takeout').checked = p.takeout || false;
-  document.getElementById('prof-good-for-groups').checked = p.good_for_groups || false;
-  document.getElementById('prof-good-for-children').checked = p.good_for_children || false;
-  document.getElementById('prof-wheelchair').checked = p.wheelchair_accessible || false;
-  document.getElementById('prof-parking').checked = p.parking || false;
-  document.getElementById('prof-serves-beer').checked = p.serves_beer || false;
-  document.getElementById('prof-serves-wine').checked = p.serves_wine || false;
-  document.getElementById('prof-serves-cocktails').checked = p.serves_cocktails || false;
+  function setChk(id, val) { var el = document.getElementById(id); if (el) el.checked = val || false; }
+  setChk('prof-outdoor-seating', p.outdoor_seating);
+  setChk('prof-live-music', p.live_music);
+  setChk('prof-delivery', p.delivery);
+  setChk('prof-dine-in', p.dine_in);
+  setChk('prof-takeout', p.takeout);
+  setChk('prof-good-for-groups', p.good_for_groups);
+  setChk('prof-good-for-children', p.good_for_children);
+  setChk('prof-wheelchair', p.wheelchair_accessible);
+  setChk('prof-parking', p.parking);
+  setChk('prof-serves-beer', p.serves_beer);
+  setChk('prof-serves-wine', p.serves_wine);
+  setChk('prof-serves-cocktails', p.serves_cocktails);
 
   // Ensure hours is properly initialized
   if (!_profileData.hours || typeof _profileData.hours !== 'object') {
