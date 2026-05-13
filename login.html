@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Circle Boats</title>
+
+  <!-- Google OAuth SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Facebook OAuth SDK -->
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 440px;
+      padding: 48px 40px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-text {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .welcome-text h1 {
+      font-size: 24px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .welcome-text p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: 8px;
+    }
+
+    .forgot-password a {
+      color: #667eea;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 24px;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 32px 0;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .divider span {
+      padding: 0 16px;
+    }
+
+    .social-login {
+      display: grid;
+      gap: 12px;
+    }
+
+    .btn-social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      background: white;
+      color: #333;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-social:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .btn-social img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid #e0e0e0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 32px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <div class="logo-icon">⛵</div>
+      <div class="logo-text">Circle Boats</div>
+    </div>
+
+    <div class="welcome-text">
+      <h1>Welcome</h1>
+      <p>Sign in or create your account</p>
+    </div>
+
+    <div id="auth-tabs" style="display:flex;margin-bottom:24px;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button class="tab-btn active" onclick="showTab('login')" style="flex:1;padding:10px;border:none;background:#667eea;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Log In</button>
+      <button class="tab-btn" onclick="showTab('signup')" style="flex:1;padding:10px;border:none;background:transparent;color:#666;font-size:14px;font-weight:500;cursor:pointer;">Sign Up</button>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@business.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+        <div class="forgot-password">
+          <a onclick="handleForgot()" style="cursor:pointer;">Forgot password?</a>
+        </div>
+      </div>
+
+      <div id="signup-fields" style="display:none;">
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" id="business-name" placeholder="Your Business Name">
+        </div>
+        <div class="form-group">
+          <label>Business Type</label>
+          <select id="business-type" style="width:100%;padding:14px 16px;border:2px solid #e0e0e0;border-radius:8px;font-size:15px;">
+            <option value="restaurant">Restaurant / Food Service</option>
+            <option value="rental">Rental / Charter</option>
+            <option value="salon">Salon / Spa</option>
+            <option value="shop">Retail Shop</option>
+            <option value="service">Service Business</option>
+            <option value="hotel">Hotel / Lodging</option>
+            <option value="events">Events / Entertainment</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn-login">Sign In</button>
+    </form>
+
+    <div id="divider" class="divider">
+      <span>Or continue with</span>
+    </div>
+
+    <div id="google-btn">
+      <button class="btn-social" onclick="signInWithGoogle()" style="width:100%;">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+
+    <div id="google-setup" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid #e0e0e0;">
+      <p style="color:#666;font-size:14px;margin-bottom:16px;">One more step — tell us about your business:</p>
+      <div class="form-group">
+        <label>Business Name</label>
+        <input type="text" id="google-biz-name" placeholder="Your Business Name">
+      </div>
+      <div class="form-group">
+        <label>Business Type</label>
+        <select id="google-biz-type" style="width:100%;padding:14px 16px;border:2px solid #e0e0e0;border-radius:8px;font-size:15px;">
+          <option value="restaurant">Restaurant / Food Service</option>
+          <option value="rental">Rental / Charter</option>
+          <option value="salon">Salon / Spa</option>
+          <option value="shop">Retail Shop</option>
+          <option value="service">Service Business</option>
+          <option value="hotel">Hotel / Lodging</option>
+          <option value="events">Events / Entertainment</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button id="google-setup-btn" class="btn-login" onclick="finishGoogleSetup()">Create My Dashboard</button>
+    </div>
+
+    <div id="signup-link" class="signup-link">
+      New to Circle Boats? <a onclick="showTab('signup')" style="cursor:pointer;">Create an account</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    window.CC_API_BASE = 'https://cybercheck-api-database.vercel.app';
+  </script>
+  <script src="js/supabase-client.js?v=5"></script>
+  <script src="js/cc.js?v=5"></script>
+  <script>
+    function login(e,p){ return CC.login(e,p); }
+    function signup(e,p,b,t){ return CC.signup({email:e,password:p,businessName:b,businessType:t}); }
+    function resetPassword(e){ return CC.resetPassword ? CC.resetPassword(e) : Promise.resolve(); }
+  </script>
+  <script>
+    var currentMode = 'login';
+
+    var CIRCLE_BOATS_SITE_ID = '22222222-2222-2222-2222-222222222222';
+
+    function getDashboardUrl(biz, subdomain) {
+      var suffix = subdomain ? '?user=' + encodeURIComponent(subdomain) : '';
+      if (biz && biz.site_id === CIRCLE_BOATS_SITE_ID) return '/dashboard' + suffix;
+      return '/dashboard' + suffix;
+    }
+
+    // Check if already logged in
+    (async function() {
+      if (!supabase || !supabase.auth) return;
+      try {
+        var { data } = await supabase.auth.getSession();
+        if (data && data.session) {
+          var biz = await getSupabaseBusiness();
+          if (biz) { window.location.href = getDashboardUrl(biz, biz.subdomain); return; }
+          showGoogleSetup();
+        }
+      } catch(e) {}
+    })();
+
+    // Catch Google OAuth redirect back
+    if (supabase && supabase.auth) {
+      supabase.auth.onAuthStateChange(async function(event, session) {
+        if (event === 'SIGNED_IN' && session) {
+          var biz = await getSupabaseBusiness();
+          if (biz) { window.location.href = getDashboardUrl(biz, biz.subdomain); }
+          else { showGoogleSetup(); }
+        }
+      });
+    }
+
+    function showGoogleSetup() {
+      document.getElementById('google-setup').style.display = 'block';
+      document.getElementById('auth-form').style.display = 'none';
+      document.getElementById('auth-tabs').style.display = 'none';
+      document.getElementById('divider').style.display = 'none';
+      document.getElementById('google-btn').style.display = 'none';
+      document.getElementById('signup-link').style.display = 'none';
+    }
+
+    function showTab(tab) {
+      currentMode = tab;
+      document.querySelectorAll('.tab-btn').forEach(function(btn, i) {
+        btn.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'signup'));
+      });
+      document.getElementById('signup-fields').style.display = tab === 'signup' ? 'block' : 'none';
+      document.getElementById('submit-btn').textContent = tab === 'login' ? 'Sign In' : 'Create Account';
+    }
+
+    function showErr(msg) {
+      var el = document.getElementById('err-msg');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'err-msg';
+        el.style.cssText = 'background:#fee2e2;color:#dc2626;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;';
+        document.getElementById('loginForm').prepend(el);
+      }
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function hideErr() {
+      var el = document.getElementById('err-msg');
+      if (el) el.style.display = 'none';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      hideErr();
+      var btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = currentMode === 'login' ? 'Signing in...' : 'Creating account...';
+
+      var email = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value;
+
+      try {
+        if (currentMode === 'signup') {
+          var bizName = document.getElementById('business-name').value.trim();
+          var bizType = document.getElementById('business-type').value;
+          if (!bizName) { showErr('Business name is required'); btn.disabled = false; btn.textContent = 'Create Account'; return; }
+          var result = await signup(email, password, bizName, bizType);
+          if (result && result.error) { showErr(result.error); btn.disabled = false; btn.textContent = 'Create Account'; return; }
+          // Auto login after signup
+          var loginResult = await login(email, password);
+          if (loginResult && !loginResult.error) {
+            var subdomain = (loginResult.business && loginResult.business.subdomain) || '';
+            window.location.href = getDashboardUrl(loginResult.business, subdomain);
+            return;
+          }
+          showErr('Account created — please log in.');
+          showTab('login');
+          document.getElementById('email').value = email;
+        } else {
+          var result = await login(email, password);
+          if (result && result.error) { showErr(result.error); btn.disabled = false; btn.textContent = 'Sign In'; return; }
+          var role = result.user && result.user.role;
+          if (role === 'admin') {
+            try { localStorage.setItem('cc_admin_token', result.token); localStorage.setItem('cc_user_role', 'admin'); localStorage.removeItem('cc_token'); } catch(e) {}
+            window.location.href = 'admin.html';
+          } else {
+            var subdomain = (result.business && result.business.subdomain) || '';
+            window.location.href = getDashboardUrl(result.business, subdomain);
+          }
+        }
+      } catch(err) {
+        showErr(err.message || 'Something went wrong');
+      }
+      btn.disabled = false;
+      btn.textContent = currentMode === 'login' ? 'Sign In' : 'Create Account';
+    });
+
+    async function handleForgot() {
+      var email = document.getElementById('email').value.trim();
+      if (!email) { showErr('Enter your email first'); return; }
+      try {
+        await resetPassword(email);
+        var el = document.getElementById('err-msg');
+        if (el) el.style.display = 'none';
+        alert('Password reset link sent to ' + email);
+      } catch(e) { showErr(e.message); }
+    }
+
+    function signInWithGoogle() {
+      if (!supabase || !supabase.auth) { showErr('Auth not loaded'); return; }
+      supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+    }
+
+    async function finishGoogleSetup() {
+      var bizName = document.getElementById('google-biz-name').value.trim();
+      var bizType = document.getElementById('google-biz-type').value;
+      if (!bizName) { showErr('Business name is required'); return; }
+
+      var btn = document.getElementById('google-setup-btn');
+      btn.disabled = true;
+      btn.textContent = 'Setting up...';
+
+      try {
+        var { data: sd } = await supabase.auth.getSession();
+        var token = sd && sd.session && sd.session.access_token;
+        if (!token) { showErr('Session expired — please sign in again'); btn.disabled = false; btn.textContent = 'Create My Dashboard'; return; }
+
+        var res = await fetch(window.CC_API_BASE + '/api/auth/create-profile', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ businessName: bizName, businessType: bizType })
+        });
+        var data = await res.json();
+        if (data.error) { showErr(data.error); btn.disabled = false; btn.textContent = 'Create My Dashboard'; return; }
+        if (data.token) localStorage.setItem('cc_token', data.token);
+        var subdomain = (data.business && data.business.subdomain) || '';
+        window.location.href = getDashboardUrl(data.business, subdomain);
+      } catch(e) {
+        showErr('Setup failed: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = 'Create My Dashboard';
+      }
+    }
+  </script>
+</body>
+</html>

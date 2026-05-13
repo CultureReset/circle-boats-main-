@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Dashboard - CyberCheck</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/analytics-seo-social.css">
+  <link rel="stylesheet" href="css/ai-assistant.css">
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <div class="layout sidebar-collapsed" id="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 id="sidebar-biz-name">Loading...</h2>
+        <div class="biz-type" id="sidebar-biz-type">Boat Rental</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active" data-page="overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Overview</span>
+        </div>
+        <div class="nav-item" data-page="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Business Profile</span>
+        </div>
+        <div class="nav-item" data-page="media">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Media Library</span>
+        </div>
+        <div class="nav-item" data-page="pages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Pages</span>
+        </div>
+        <div class="nav-item" data-page="staff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span>Staff / Team</span>
+        </div>
+
+
+        <!-- QR Codes -->
+        <div class="nav-item" data-page="qr-codes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h.01M18 14h.01M14 18h.01M18 18h.01M21 14v4a3 3 0 01-3 3h-4"/></svg>
+          <span>My QR Codes</span>
+        </div>
+
+        <!-- Rentals -->
+        <div class="nav-section-label">Rentals</div>
+        <div class="nav-item" data-page="inventory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          <span>Fleet</span>
+        </div>
+        <div class="nav-item" data-page="availability">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Availability</span>
+        </div>
+        <div class="nav-item" data-page="blackout-dates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          <span>Blackout Dates</span>
+        </div>
+        <div class="nav-item" data-page="addons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Add-ons & Docks</span>
+        </div>
+        <div class="nav-item" data-page="locations">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Locations</span>
+        </div>
+        <div class="nav-item" data-page="bookings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+          <span>Bookings</span>
+        </div>
+
+        <div class="nav-item" data-page="waivers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Waivers</span>
+        </div>
+        <div class="nav-item" data-page="waitlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          <span>Waitlist</span>
+        </div>
+
+        <!-- Customers & Marketing -->
+        <div class="nav-section-label">Customers</div>
+        <div class="nav-item" data-page="customers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <span>Customer Database</span>
+        </div>
+        <div class="nav-item" data-page="coupons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          <span>Coupons & Promos</span>
+        </div>
+
+        <!-- Messaging & AI -->
+        <div class="nav-section-label">Messaging & AI</div>
+        <div class="nav-item" data-page="messaging">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>SMS & Notifications</span>
+        </div>
+
+        <!-- Reviews & Feedback -->
+        <div class="nav-section-label">Reviews</div>
+        <div class="nav-item" data-page="reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>Reviews & Feedback</span>
+        </div>
+
+        <!-- Marketing & Growth -->
+        <div class="nav-section-label">Marketing</div>
+        <div class="nav-item" data-page="analytics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21H4.6c-.56 0-.6-.44-.6-1V3"/><path d="M9 18v-6"/><path d="M13 18V9"/><path d="M17 18v-3"/></svg>
+          <span>Analytics</span>
+        </div>
+        <div class="nav-item" data-page="seo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <span>SEO Manager</span>
+        </div>
+        <div class="nav-item" data-page="social">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          <span>Social Media</span>
+        </div>
+        <div class="nav-item" data-page="faq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>FAQ</span>
+        </div>
+
+        <!-- App Store -->
+        <div class="nav-section-label">Platform</div>
+        <div class="nav-item" onclick="location.href='app-store.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9h18v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path d="M3 9l2.45-4.9A2 2 0 017.24 3h9.52a2 2 0 011.8 1.1L21 9"/><path d="M12 3v6"/></svg>
+          <span>App Store</span>
+        </div>
+
+        <!-- Settings & Billing -->
+        <div class="nav-section-label">Settings</div>
+        <div class="nav-item" data-page="billing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <span>Billing & Plan</span>
+        </div>
+        <div class="nav-item" data-page="theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span>Theme & Design</span>
+        </div>
+        <div class="nav-item" data-page="connections">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          <span>Connections</span>
+        </div>
+        <div class="nav-item" data-page="website-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h6"/><path d="M3 15h6"/></svg>
+          <span>Website Content</span>
+        </div>
+        <div class="nav-item" data-page="site-editor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span>Site Editor</span>
+        </div>
+        <div class="nav-item" data-page="domain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          <span>Domain</span>
+        </div>
+        <div class="nav-item" data-page="publish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+          <span>Publish</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" onclick="toggleSidebar()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="topbar-title" id="topbar-title">Overview</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-view-site" onclick="viewLiveSite()">View Site</button>
+          <button class="btn-logout" onclick="logout()">Log Out</button>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- OVERVIEW -->
+        <div class="page-section active" id="page-overview">
+          <div class="stats-row">
+            <div class="stat-card"><div class="stat-label">Revenue This Month</div><div class="stat-value" id="stat-revenue">$0.00</div></div>
+            <div class="stat-card"><div class="stat-label">Bookings Today</div><div class="stat-value" id="stat-today">0</div></div>
+            <div class="stat-card"><div class="stat-label">Total Customers</div><div class="stat-value" id="stat-customers">0</div></div>
+            <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" id="stat-pending">0</div></div>
+            <div class="stat-card" style="display:none;"><div class="stat-label">Fleet Items</div><div class="stat-value" id="stat-items">0</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Quick Actions</h3></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="navigateTo('profile')">Edit Profile</button>
+              <button class="btn btn-outline" onclick="navigateTo('inventory')">Manage Fleet</button>
+              <button class="btn btn-outline" onclick="navigateTo('addons')">Add-ons & Docks</button>
+              <button class="btn btn-outline" onclick="navigateTo('media')">Upload Media</button>
+              <button class="btn btn-outline" onclick="navigateTo('bookings')">View Bookings</button>
+              <button class="btn btn-outline" onclick="navigateTo('connections')">Connect Payments</button>
+              <button class="btn btn-outline" onclick="navigateTo('messaging')">SMS & Messaging</button>
+              <button class="btn btn-outline" onclick="navigateTo('reviews')">Reviews</button>
+              <button class="btn btn-outline" onclick="navigateTo('customers')">Customers</button>
+              <button class="btn btn-outline" onclick="navigateTo('coupons')">Promos</button>
+              <button class="btn btn-outline" onclick="navigateTo('waivers')">Waivers</button>
+              <button class="btn btn-success" onclick="navigateTo('publish')">Publish Site</button>
+            </div>
+          </div>
+          <div class="card" id="setup-checklist-card" style="display:none;">
+            <div class="card-header"><h3>Setup Checklist</h3><span id="setup-checklist-pct" style="font-size:13px;color:var(--text-dim);"></span></div>
+            <div style="background:var(--card-border);border-radius:4px;height:6px;margin-bottom:16px;"><div id="setup-progress-bar" style="height:6px;border-radius:4px;background:var(--primary);width:0%;transition:width 0.4s;"></div></div>
+            <div id="setup-checklist-items"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Rental Time Slots</h3></div>
+            <div id="overview-time-slots"><p style="color:var(--text-dim);padding:8px 0;">Loading...</p></div>
+          </div>
+        </div>
+
+        <!-- BUSINESS PROFILE -->
+        <div class="page-section" id="page-profile">
+          <div class="card">
+            <div class="card-header"><h3>Business Information</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Business Name</label><input type="text" id="prof-name"></div>
+              <div class="form-group"><label>Tagline / Subtitle</label><input type="text" id="prof-tagline" placeholder="Short description shown under your name"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Phone</label><input type="tel" id="prof-phone"></div>
+              <div class="form-group"><label>Email</label><input type="email" id="prof-email"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Website</label><input type="url" id="prof-website" placeholder="https://"></div>
+              <div class="form-group"><label>Price Range</label>
+                <select id="prof-price-range">
+                  <option value="">Select...</option>
+                  <option value="$">$ · Budget</option>
+                  <option value="$$">$$ · Moderate</option>
+                  <option value="$$$">$$$ · Upscale</option>
+                  <option value="$$$$">$$$$ · Fine Dining</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label>About / Description</label><textarea id="prof-description" rows="4" placeholder="Tell people about your business..."></textarea></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>🖼️ Cover Image</h3></div>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+              <img id="prof-hero-preview" src="" style="width:160px;height:90px;border-radius:8px;background:var(--card-border);object-fit:cover;display:none;">
+              <div>
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('prof-hero-input').click()">📷 Upload Cover Photo</button>
+                <input type="file" id="prof-hero-input" accept="image/*" style="display:none" onchange="uploadHeroImage(this)">
+                <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;">This is the main image shown on your GCR listing</p>
+                <input type="url" id="prof-hero-url" placeholder="Or paste image URL" style="margin-top:8px;width:100%;max-width:400px;" oninput="document.getElementById('prof-hero-preview').src=this.value;document.getElementById('prof-hero-preview').style.display=this.value?'':'none'">
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Address & Directions</h3></div>
+            <div class="form-group"><label>Street Address</label><input type="text" id="prof-address"></div>
+            <div class="form-row">
+              <div class="form-group"><label>City</label><input type="text" id="prof-city"></div>
+              <div class="form-group"><label>State</label><input type="text" id="prof-state"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="max-width:200px;"><label>ZIP</label><input type="text" id="prof-zip"></div>
+              <div class="form-group"><label>Directions URL</label><input type="url" id="prof-directions-url" placeholder="Google Maps link"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>🔗 Booking & Reservations</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Booking URL</label><input type="url" id="prof-booking-url" placeholder="https://..."></div>
+              <div class="form-group"><label>Reservation URL</label><input type="url" id="prof-reservation-url" placeholder="https://..."></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>✅ Amenities & Features</h3></div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-outdoor-seating"> Outdoor Seating</label>
+                            <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-delivery"> Delivery</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-dine-in"> Dine-In</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-takeout"> Takeout</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-good-for-groups"> Good for Groups</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-good-for-children"> Kid Friendly</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-wheelchair"> Wheelchair Accessible</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-parking"> Parking</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-serves-beer"> Beer</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-serves-wine"> Wine</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" id="prof-serves-cocktails"> Cocktails</label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Business Hours</h3></div>
+            <div id="hours-editor"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>🍺 Happy Hour Schedule</h3></div>
+            <p style="font-size:13px;color:var(--text-muted);margin:0 0 12px;">Set when happy hour is active — a "NOW" badge appears on the QR menu during those hours.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="hh-day-btns">
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Mon" onclick="hhToggleDay(this)">Mon</button>
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Tue" onclick="hhToggleDay(this)">Tue</button>
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Wed" onclick="hhToggleDay(this)">Wed</button>
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Thu" onclick="hhToggleDay(this)">Thu</button>
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Fri" onclick="hhToggleDay(this)">Fri</button>
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Sat" onclick="hhToggleDay(this)">Sat</button>
+              <button type="button" class="btn btn-sm hh-day-btn" data-day="Sun" onclick="hhToggleDay(this)">Sun</button>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+              <div class="form-group" style="margin:0;"><label>Start Time</label><input type="text" id="hh-start" placeholder="4:00 PM" style="width:120px;"></div>
+              <div class="form-group" style="margin:0;"><label>End Time</label><input type="text" id="hh-end" placeholder="7:00 PM" style="width:120px;"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Social Links</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Facebook</label><input type="url" id="prof-social-facebook" placeholder="https://facebook.com/..."></div>
+              <div class="form-group"><label>Instagram</label><input type="url" id="prof-social-instagram" placeholder="https://instagram.com/..."></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>TikTok</label><input type="url" id="prof-social-tiktok" placeholder="https://tiktok.com/@..."></div>
+              <div class="form-group"><label>Yelp</label><input type="url" id="prof-social-yelp" placeholder="https://yelp.com/biz/..."></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Google Business</label><input type="url" id="prof-social-google" placeholder="https://g.page/..."></div>
+              <div class="form-group"><label>Twitter / X</label><input type="url" id="prof-social-twitter" placeholder="https://x.com/..."></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary" onclick="saveProfile()">💾 Save Profile</button>
+            <button class="btn btn-outline" onclick="window.open('/wavegent/' + (USER_CONFIG.business_id || ''), 'website-preview')">🔍 View Live Website</button>
+          </div>
+          <div style="margin-top:16px;padding:12px;background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--card-border);text-align:center;color:var(--text-muted);font-size:13px;">
+            ✏️ <strong>Live Editing Enabled:</strong> Changes appear on the website when you save. Click "View Live Website" to see updates in a new window.
+          </div>
+        </div>
+
+        <!-- MEDIA LIBRARY -->
+        <div class="page-section" id="page-media">
+          <div class="card">
+            <div class="card-header">
+              <h3>Media Library</h3>
+              <button class="btn btn-primary btn-sm" onclick="document.getElementById('media-upload-input').click()">Upload Files</button>
+            </div>
+            <input type="file" id="media-upload-input" multiple accept="image/*,video/*,.pdf" style="display:none" onchange="uploadMedia(this.files)">
+            <div class="upload-zone" id="media-drop-zone">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>Drag & drop files here or click to upload</p>
+            </div>
+            <div class="grid-4" id="media-grid" style="margin-top:20px;"></div>
+          </div>
+        </div>
+
+        <!-- PAGES -->
+        <div class="page-section" id="page-pages">
+          <div class="card">
+            <div class="card-header"><h3>Pages</h3><button class="btn btn-primary btn-sm" onclick="openPageModal()">Add Page</button></div>
+            <div id="pages-list"></div>
+            <div class="empty-state" id="pages-empty"><h3>No pages yet</h3><p>Add pages like About, FAQ, Safety to your site.</p><button class="btn btn-primary" onclick="openPageModal()">Add First Page</button></div>
+          </div>
+        </div>
+
+        <!-- STAFF -->
+        <div class="page-section" id="page-staff">
+          <div class="card">
+            <div class="card-header"><h3>Team Members</h3><button class="btn btn-primary btn-sm" onclick="openStaffModal()">Add Member</button></div>
+            <div class="grid-3" id="staff-grid"></div>
+            <div class="empty-state" id="staff-empty"><h3>No team members</h3><p>Add your staff with photos and bios.</p><button class="btn btn-primary" onclick="openStaffModal()">Add First Member</button></div>
+          </div>
+        </div>
+
+        <!-- INVENTORY (Fleet) -->
+        <!-- QR CODES -->
+        <div class="page-section" id="page-qr-codes">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;" class="qrc-stats-row">
+            <div class="card" style="margin:0;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--primary)" id="qrc-stat-total">—</div><div style="font-size:12px;color:var(--text-muted);">Total Codes</div></div>
+            <div class="card" style="margin:0;text-align:center;"><div style="font-size:24px;font-weight:700;color:#4ade80" id="qrc-stat-scans">—</div><div style="font-size:12px;color:var(--text-muted);">Total Scans</div></div>
+            <div class="card" style="margin:0;text-align:center;"><div style="font-size:24px;font-weight:700;color:#f59e0b" id="qrc-stat-active">—</div><div style="font-size:12px;color:var(--text-muted);">Active</div></div>
+            <div class="card" style="margin:0;text-align:center;"><div style="font-size:24px;font-weight:700;color:#a78bfa" id="qrc-stat-leads">—</div><div style="font-size:12px;color:var(--text-muted);">Phone Leads</div></div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><h3>Generate QR Code</h3></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" class="qrc-gen-row">
+              <div class="form-group" style="margin:0;"><label>Label</label><input type="text" id="qrc-label" placeholder="e.g. Dock Sign, Business Card"></div>
+              <div class="form-group" style="margin:0;"><label>Type</label><select id="qrc-type" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;"><option value="general">General</option><option value="card">Business Card</option><option value="location">Location</option><option value="ad">Advertisement</option></select></div>
+              <div class="form-group" style="margin:0;"><label>Destination URL <span style="color:var(--text-muted);font-weight:400;">(leave blank for CyberCheck page)</span></label><input type="text" id="qrc-dest" placeholder="https://..."></div>
+              <div class="form-group" style="margin:0;"><label>Placement</label><select id="qrc-placement" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;"><option value="fixed">Fixed</option><option value="portable">Portable</option></select></div>
+              <div class="form-group" style="margin:0;grid-column:1/-1;"><label>Location / Notes</label><input type="text" id="qrc-notes" placeholder="e.g. Dock entrance, Table 4"></div>
+            </div>
+            <div style="margin-top:12px;"><button class="btn btn-primary btn-sm" onclick="QRC.generate()">Generate Code</button></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>My Codes</h3><div style="display:flex;gap:8px;align-items:center;"><input type="text" id="qrc-search" placeholder="Search..." style="padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;width:180px;" oninput="QRC.filter()"><button class="btn btn-outline btn-sm" onclick="QRC.exportCSV()">Export CSV</button></div></div>
+            <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="border-bottom:1px solid var(--border);"><th style="padding:10px 8px;text-align:left;color:var(--text-muted);font-weight:500;">#</th><th style="padding:10px 8px;text-align:left;color:var(--text-muted);font-weight:500;">Label</th><th style="padding:10px 8px;text-align:left;color:var(--text-muted);font-weight:500;">Type</th><th style="padding:10px 8px;text-align:left;color:var(--text-muted);font-weight:500;">Scans</th><th style="padding:10px 8px;text-align:left;color:var(--text-muted);font-weight:500;">Status</th><th style="padding:10px 8px;text-align:left;color:var(--text-muted);font-weight:500;">Actions</th></tr></thead><tbody id="qrc-table-body"><tr><td colspan="6" style="padding:24px;text-align:center;color:var(--text-muted);">Loading...</td></tr></tbody></table></div>
+          </div>
+        </div>
+
+        <div class="page-section" id="page-inventory">
+          <div class="card">
+            <div class="card-header"><h3>Circle Boat Fleet</h3><button class="btn btn-primary btn-sm" onclick="openInventoryModal()">Add Boat</button></div>
+            <div class="grid-3" id="inventory-grid"></div>
+            <div class="empty-state" id="inventory-empty"><h3>No fleet items</h3><p>Add your circle boats with pricing and photos.</p><button class="btn btn-primary" onclick="openInventoryModal()">Add First Boat</button></div>
+          </div>
+        </div>
+
+        <!-- AVAILABILITY -->
+        <div class="page-section" id="page-availability">
+          <div class="card">
+            <div class="card-header">
+              <h3>Availability Calendar</h3>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <select id="avail-item-select" style="padding:8px 12px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;" onchange="loadAvailability()"><option value="">Select boat...</option></select>
+                <button class="btn btn-outline btn-sm" onclick="prevMonth()">&lt;</button>
+                <span id="avail-month-label" style="min-width:140px;text-align:center;font-weight:600;"></span>
+                <button class="btn btn-outline btn-sm" onclick="nextMonth()">&gt;</button>
+              </div>
+            </div>
+            <div class="calendar-grid" id="availability-calendar"></div>
+            <div style="display:flex;gap:16px;margin-top:16px;">
+              <span class="badge badge-success">Available</span>
+              <span class="badge badge-danger">Booked</span>
+              <span class="badge badge-info">Blocked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLACKOUT DATES -->
+        <div class="page-section" id="page-blackout-dates">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Blackout Dates</h3>
+                <p style="margin:4px 0 0;font-size:13px;color:var(--text-muted);">Block dates when no bookings can be made — holidays, maintenance, weather closures.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openBlackoutModal()">+ Add Blackout</button>
+            </div>
+            <div id="blackout-list"></div>
+            <div class="empty-state" id="blackout-empty">
+              <h3>No blackout dates</h3>
+              <p>Add a blackout period to prevent customers from booking on those days.</p>
+              <button class="btn btn-primary" onclick="openBlackoutModal()">Add First Blackout</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Blackout Calendar Preview</h3>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <button class="btn btn-outline btn-sm" onclick="blackoutPrevMonth()">&lt;</button>
+                <span id="blackout-month-label" style="min-width:140px;text-align:center;font-weight:600;"></span>
+                <button class="btn btn-outline btn-sm" onclick="blackoutNextMonth()">&gt;</button>
+              </div>
+            </div>
+            <div class="calendar-grid" id="blackout-calendar"></div>
+            <div style="display:flex;gap:16px;margin-top:16px;">
+              <span class="badge badge-success">Open</span>
+              <span class="badge badge-info">Blacked Out</span>
+            </div>
+          </div>
+
+          <!-- Add Blackout Modal -->
+          <div id="blackout-modal" style="display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;background:rgba(0,0,0,.5);">
+            <div class="card" style="width:100%;max-width:420px;margin:0 16px;padding:24px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <h3 style="margin:0;">Add Blackout Period</h3>
+                <button class="btn btn-outline btn-sm" onclick="closeBlackoutModal()">✕</button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div>
+                  <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Label <span style="color:var(--text-muted);font-weight:400;">(optional — e.g. "Holiday", "Maintenance")</span></label>
+                  <input id="blackout-label" type="text" class="form-input" placeholder="e.g. July 4th Holiday" maxlength="80" style="width:100%;">
+                </div>
+                <div style="display:flex;gap:12px;">
+                  <div style="flex:1;">
+                    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Start Date</label>
+                    <input id="blackout-from" type="date" class="form-input" style="width:100%;">
+                  </div>
+                  <div style="flex:1;">
+                    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">End Date</label>
+                    <input id="blackout-to" type="date" class="form-input" style="width:100%;">
+                  </div>
+                </div>
+                <p style="font-size:12px;color:var(--text-muted);margin:0;">Customers will not be able to book on any day within this range.</p>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
+                <button class="btn btn-outline" onclick="closeBlackoutModal()">Cancel</button>
+                <button id="blackout-save-btn" class="btn btn-primary" onclick="saveBlackoutDate()">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADD-ONS & DOCKS -->
+        <div class="page-section" id="page-addons">
+          <div class="card">
+            <div class="card-header"><h3>Docks & Add-ons</h3><button class="btn btn-primary btn-sm" onclick="openAddonModal()">Add Item</button></div>
+            <div id="addons-list"></div>
+            <div class="empty-state" id="addons-empty"><h3>No add-ons</h3><p>Add towable docks, cooler packs, speakers, and more.</p><button class="btn btn-primary" onclick="openAddonModal()">Add First Item</button></div>
+          </div>
+
+          <!-- DOCKS EDITOR -->
+          <div class="card">
+            <div class="card-header"><h3>🚪 Edit Docks</h3><p style="margin:0;font-size:12px;color:var(--text-muted);">Edit dock details, pricing, and upload images</p></div>
+            <div id="docks-editor-container"></div>
+          </div>
+
+          <!-- FEATURES EDITOR -->
+          <div class="card">
+            <div class="card-header"><h3>✨ Edit Features</h3><p style="margin:0;font-size:12px;color:var(--text-muted);">Edit feature titles, descriptions, and icons</p></div>
+            <div id="features-editor-container"></div>
+          </div>
+
+          <!-- STEPS EDITOR -->
+          <div class="card">
+            <div class="card-header"><h3>📸 Edit Steps</h3><p style="margin:0;font-size:12px;color:var(--text-muted);">Edit "On the Water in 4 Steps" titles and descriptions</p></div>
+            <div id="steps-editor-container"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>Rental Policies</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Deposit (%)</label><input type="number" id="policy-deposit" min="0" max="100"></div>
+              <div class="form-group"><label>Cancellation Window (hours)</label><input type="number" id="policy-cancel-hours" min="0"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Cancellation Fee ($)</label><input type="number" id="policy-cancel-fee" min="0" step="0.01"></div>
+              <div class="form-group"><label>Late Fee ($/hour)</label><input type="number" id="policy-late-fee" min="0" step="0.01"></div>
+            </div>
+            <div class="form-group"><label>Rental Agreement Text</label><textarea id="policy-agreement" rows="6" placeholder="Enter your rental agreement terms..."></textarea></div>
+            <button class="btn btn-primary" onclick="savePolicies()">Save Policies</button>
+          </div>
+        </div>
+
+        <!-- LOCATIONS -->
+        <div class="page-section" id="page-locations">
+          <div class="card">
+            <div class="card-header"><h3>Pickup / Launch Locations</h3><button class="btn btn-primary btn-sm" onclick="openLocationModal()">Add Location</button></div>
+            <div id="locations-list"></div>
+            <div class="empty-state" id="locations-empty"><h3>No locations</h3><p>Add launch points for your circle boats.</p><button class="btn btn-primary" onclick="openLocationModal()">Add First Location</button></div>
+          </div>
+        </div>
+
+        <!-- THEME & DESIGN -->
+        <div class="page-section" id="page-theme">
+          <div class="card">
+            <div class="card-header"><h3>Colors</h3></div>
+            <div class="color-row"><label>Primary</label><input type="color" id="theme-primary" value="#00ada8"><input type="text" id="theme-primary-hex" value="#00ada8" style="width:100px;padding:8px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;"></div>
+            <div class="color-row"><label>Secondary</label><input type="color" id="theme-secondary" value="#009590"><input type="text" id="theme-secondary-hex" value="#009590" style="width:100px;padding:8px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;"></div>
+            <div class="color-row"><label>Background</label><input type="color" id="theme-bg" value="#ffffff"><input type="text" id="theme-bg-hex" value="#ffffff" style="width:100px;padding:8px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;"></div>
+            <div class="color-row"><label>Text</label><input type="color" id="theme-text" value="#1a1a1a"><input type="text" id="theme-text-hex" value="#1a1a1a" style="width:100px;padding:8px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;"></div>
+            <div class="color-row"><label>Accent</label><input type="color" id="theme-accent" value="#f59e0b"><input type="text" id="theme-accent-hex" value="#f59e0b" style="width:100px;padding:8px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Typography</h3></div>
+            <div class="form-row">
+              <div class="form-group"><label>Heading Font</label><select id="theme-heading-font"><option>Titillium Web</option><option>Inter</option><option>Playfair Display</option><option>Montserrat</option><option>Poppins</option><option>Raleway</option><option>Roboto</option><option>Lora</option><option>Oswald</option></select></div>
+              <div class="form-group"><label>Body Font</label><select id="theme-body-font"><option>Inter</option><option>Open Sans</option><option>Roboto</option><option>Lato</option><option>Source Sans Pro</option><option>Nunito</option></select></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Layout</h3></div>
+            <div class="form-group"><label>Style</label><select id="theme-layout"><option value="modern">Modern</option><option value="classic">Classic</option><option value="minimal">Minimal</option><option value="bold">Bold</option></select></div>
+          </div>
+          <button class="btn btn-primary" onclick="saveTheme()">Save Theme</button>
+        </div>
+
+        <!-- CONNECTIONS -->
+        <!-- APP STORE -->
+        <div class="page-section" id="page-app-store">
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;gap:12px;">
+              <h3 style="margin:0;">App Store</h3>
+              <div style="flex:1;"></div>
+              <input type="text" id="app-store-search" placeholder="Search apps..." oninput="filterAppStore()" style="padding:8px 12px;background:var(--bg);border:1px solid var(--card-border);border-radius:6px;color:var(--text);font-size:13px;width:220px;">
+            </div>
+            <div id="app-store-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;"></div>
+            <div id="app-store-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;"></div>
+          </div>
+        </div>
+
+        <div class="page-section" id="page-connections">
+          <div class="card">
+            <div class="card-header"><h3>Stripe Connect — Get Paid</h3></div>
+            <div id="stripe-settings"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Other Payment Providers</h3></div>
+            <div class="oauth-grid" id="payment-connections"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Google Services</h3></div>
+            <div class="oauth-grid" id="google-connections"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Messaging</h3></div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Connect WhatsApp Business to receive booking notifications instantly.</p>
+            <div class="oauth-grid" id="whatsapp-oauth-card"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Social Media Accounts</h3></div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Connect your social accounts to auto-post updates, share photos, and engage with customers.</p>
+            <div class="oauth-grid" id="social-connections"></div>
+          </div>
+        </div>
+
+        <!-- BOOKINGS -->
+        <div class="page-section" id="page-bookings">
+          <div class="card" style="padding:0;overflow:visible;">
+            <div id="bookings-stats" style="padding:20px 24px 0;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;gap:12px;">
+              <h3 style="margin:0;">Bookings</h3>
+              <div style="flex:1;"></div>
+              <div id="bookings-refresh-bar"></div>
+            </div>
+            <div id="bookings-filters" style="margin-bottom:16px;"></div>
+            <div id="bookings-table"></div>
+            <div id="declined-bookings-section" style="display:none;padding:0 24px 24px;"></div>
+          </div>
+        </div>
+
+        <!-- MESSAGING & NOTIFICATIONS -->
+        <div class="page-section" id="page-messaging">
+          <!-- Phone Numbers -->
+          <div class="card">
+            <div class="card-header"><h3>Assigned Phone Numbers</h3></div>
+            <div id="phone-numbers-section"></div>
+          </div>
+
+          <!-- Notification Toggles -->
+          <div class="card">
+            <div class="card-header"><h3>Notification Settings</h3></div>
+            <div id="notification-toggles"></div>
+          </div>
+
+          <!-- Customer Booking Message Template -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Customer Booking Confirmation</h3>
+              <button class="btn btn-outline btn-sm" onclick="insertTemplateToken('customer-template-editor')">Insert Token</button>
+            </div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Customize the text message customers receive when they complete a booking. Use <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px;">{{tokens}}</code> for dynamic data.</p>
+            <div id="token-popup" style="display:none;margin-bottom:12px;padding:12px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);"></div>
+            <textarea id="customer-template-editor" rows="10" style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:'SF Mono','Fira Code',monospace;resize:vertical;line-height:1.6;"></textarea>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+              <button class="btn btn-primary btn-sm" onclick="updateCustomerTemplate()">Save Template</button>
+              <span style="font-size:11px;color:var(--text-dim);">Available tokens: {{customer_name}}, {{date}}, {{time_slot}}, {{boat_count}}, {{boat_type}}, {{addons}}, {{total}}, {{location}}</span>
+            </div>
+          </div>
+
+          <!-- SMS Preview -->
+          <div class="card">
+            <div class="card-header"><h3>SMS Preview</h3></div>
+            <div id="template-preview"></div>
+          </div>
+
+          <!-- Owner Notification Template -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Owner Booking Notification</h3>
+              <button class="btn btn-outline btn-sm" onclick="insertTemplateToken('owner-template-editor')">Insert Token</button>
+            </div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">This is the text YOU receive when someone books. Includes all the details you need.</p>
+            <textarea id="owner-template-editor" rows="10" style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--card-border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:'SF Mono','Fira Code',monospace;resize:vertical;line-height:1.6;"></textarea>
+            <div style="margin-top:12px;">
+              <button class="btn btn-primary btn-sm" onclick="updateOwnerTemplate()">Save Template</button>
+            </div>
+          </div>
+
+          <!-- Photo to Gallery -->
+          <div class="card">
+            <div class="card-header"><h3>Photo Upload via Text</h3></div>
+            <div id="photo-gallery-sms"></div>
+          </div>
+
+          <!-- Voice AI / Dashboard Control -->
+          <div class="card">
+            <div class="card-header"><h3>Voice & Text Dashboard Control</h3></div>
+            <div id="voice-ai-section"></div>
+          </div>
+
+          <!-- WhatsApp Notifications -->
+          <div class="card">
+            <div class="card-header"><h3>WhatsApp Notifications</h3></div>
+            <div id="whatsapp-section"></div>
+          </div>
+        </div>
+
+        <!-- REVIEWS & FEEDBACK -->
+        <div class="page-section" id="page-reviews">
+          <!-- Stats -->
+          <div class="card" style="padding:0;overflow:visible;">
+            <div id="review-stats" style="padding:20px 24px 0;"></div>
+          </div>
+
+          <!-- Review Settings -->
+          <div class="card">
+            <div class="card-header"><h3>Review Settings</h3></div>
+            <div id="review-settings"></div>
+          </div>
+
+          <!-- Custom Questions -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Custom Review Questions</h3>
+            </div>
+            <div id="review-questions-editor"></div>
+          </div>
+
+          <!-- Reviews List -->
+          <div class="card">
+            <div class="card-header"><h3>Customer Reviews</h3></div>
+            <div id="review-filters" style="margin-bottom:16px;"></div>
+            <div id="reviews-list"></div>
+          </div>
+        </div>
+
+        <!-- CUSTOMERS (CRM) -->
+        <div class="page-section" id="page-customers">
+          <div class="card" style="padding:0;overflow:visible;">
+            <div id="customer-stats" style="padding:20px 24px 0;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Customer Database</h3></div>
+            <div id="customer-filters" style="margin-bottom:16px;"></div>
+            <div id="customer-list"></div>
+          </div>
+        </div>
+
+        <!-- COUPONS & PROMOS -->
+        <div class="page-section" id="page-coupons">
+          <div class="card" style="padding:0;overflow:visible;">
+            <div id="coupon-stats" style="padding:20px 24px 0;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Coupons & Promo Codes</h3></div>
+            <div id="coupon-filters" style="margin-bottom:16px;"></div>
+            <div id="coupon-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Website Promo Banner</h3></div>
+            <div id="coupon-embed"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>SMS Marketing Campaigns</h3></div>
+            <div id="sms-campaigns"></div>
+          </div>
+        </div>
+
+        <!-- WAIVERS -->
+        <div class="page-section" id="page-waivers">
+          <div class="card" style="padding:0;overflow:visible;">
+            <div id="waiver-stats" style="padding:20px 24px 0;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Waiver Settings</h3></div>
+            <div id="waiver-settings"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Waiver Templates</h3></div>
+            <div id="waiver-templates"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Signed Waivers</h3></div>
+            <div id="signed-waivers"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>3rd Party E-Signature Providers</h3></div>
+            <div id="waiver-integrations"></div>
+          </div>
+        </div>
+
+        <!-- WAITLIST -->
+        <div class="page-section" id="page-waitlist">
+          <div class="card" style="padding:0;overflow:visible;">
+            <div id="waitlist-stats" style="padding:20px 24px 0;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Waitlist Settings</h3></div>
+            <div id="waitlist-settings"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Waitlist</h3></div>
+            <div id="waitlist-entries"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Waitlist Notification SMS</h3></div>
+            <div id="waitlist-sms-template"></div>
+          </div>
+        </div>
+
+        <!-- BILLING -->
+        <div class="page-section" id="page-billing">
+          <div class="card">
+            <div class="card-header"><h3>Current Plan</h3></div>
+            <div id="billing-current-plan"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Usage This Month</h3></div>
+            <div id="billing-usage"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Available Plans</h3></div>
+            <div id="billing-plans"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Payment Method</h3></div>
+            <div id="billing-payment"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Invoice History</h3></div>
+            <div id="billing-invoices"></div>
+          </div>
+        </div>
+
+        <!-- SITE EDITOR -->
+        <div class="page-section" id="page-site-editor">
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;gap:12px;">
+              <h3 style="margin:0;">Site Editor</h3>
+              <div style="flex:1;"></div>
+              <span style="font-size:12px;color:var(--text-muted);">🌐 Live Preview updates in real-time</span>
+            </div>
+            <div id="cms-sidebar"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>📝 Edit Content</h3></div>
+            <div id="cms-editor">
+              <p style="color:var(--text-muted);text-align:center;padding:40px;">👈 Select an item above to edit</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+              <h3 style="margin:0;">🌐 Live Preview</h3>
+              <span style="font-size:12px;color:var(--text-muted);">Updates in real-time</span>
+            </div>
+            <div id="cms-preview" style="width:100%;min-height:400px;"></div>
+          </div>
+        </div>
+
+        <!-- DOMAIN -->
+        <div class="page-section" id="page-domain">
+          <!-- Free subdomain -->
+          <div class="card">
+            <div class="card-header"><h3>Your CyberCheck Subdomain</h3></div>
+            <div id="subdomain-section"></div>
+          </div>
+          <!-- Custom domain -->
+          <div class="card">
+            <div class="card-header"><h3>Custom Domain</h3></div>
+            <div id="custom-domain-section"></div>
+          </div>
+          <!-- DNS Instructions -->
+          <div class="card" id="dns-instructions-card" style="display:none;">
+            <div class="card-header"><h3>DNS Setup Instructions</h3></div>
+            <div id="dns-instructions"></div>
+          </div>
+          <!-- SSL Status -->
+          <div class="card" id="ssl-status-card" style="display:none;">
+            <div class="card-header"><h3>SSL Certificate</h3></div>
+            <div id="ssl-status"></div>
+          </div>
+        </div>
+
+        <!-- PUBLISH -->
+        <div class="page-section" id="page-publish">
+          <div class="card">
+            <div class="card-header"><h3>Site Status</h3></div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+              <span id="publish-status-badge" class="badge badge-warning">Draft</span>
+              <span id="publish-last-updated" style="font-size:13px;color:var(--text-muted);"></span>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-outline" onclick="previewSite()">Preview</button>
+              <button class="btn btn-success" onclick="publishSite()">Publish</button>
+              <button class="btn btn-danger btn-sm" onclick="unpublishSite()" id="btn-unpublish" style="display:none;">Unpublish</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Revision History</h3></div>
+            <div id="revisions-list"></div>
+            <div class="empty-state" id="revisions-empty"><h3>No revisions</h3><p>Revisions are saved each time you publish.</p></div>
+          </div>
+        </div>
+
+        <!-- WEBSITE CONTENT EDITOR -->
+        <div class="page-section" id="page-website-content" style="padding:0;">
+          <div style="display:flex;height:calc(100vh - 68px);overflow:hidden;">
+            <!-- Section nav -->
+            <div id="wc-nav" style="width:200px;flex-shrink:0;border-right:1px solid var(--card-border);overflow-y:auto;padding:16px 0;background:var(--sidebar-bg,#fafafa);"></div>
+            <!-- Editor panel -->
+            <div id="wc-panel" style="flex:1;overflow-y:auto;padding:32px 40px;max-width:800px;"></div>
+          </div>
+          <style>
+            @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+            .wc-nav-item{padding:10px 20px;font-size:13px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;color:var(--text-muted);}
+            .wc-nav-item:hover{background:var(--sidebar-hover);color:var(--text);}
+            .wc-nav-item.active{border-left-color:var(--primary);background:var(--teal-light,rgba(0,173,168,.07));color:var(--primary);font-weight:600;}
+            .wc-title{font-size:22px;font-weight:700;margin:0 0 24px;padding-bottom:16px;border-bottom:1px solid var(--card-border);}
+            .wc-card{background:var(--card-bg,#fff);border:1px solid var(--card-border);border-radius:10px;padding:20px 24px;margin-bottom:16px;}
+            @media(max-width:768px){
+              #page-website-content>div{flex-direction:column;height:auto;overflow:visible;}
+              #wc-nav{width:100%!important;border-right:none!important;border-bottom:1px solid var(--card-border);overflow-x:auto;overflow-y:hidden;display:flex;padding:4px 0!important;white-space:nowrap;flex-shrink:0;}
+              .wc-nav-item{display:inline-block;border-left:none!important;border-bottom:3px solid transparent;padding:10px 14px!important;white-space:nowrap;flex-shrink:0;}
+              .wc-nav-item.active{border-bottom-color:var(--primary)!important;background:var(--teal-light,rgba(0,173,168,.07));}
+              #wc-panel{padding:20px 16px!important;max-width:100%!important;}
+              .wc-title{font-size:18px!important;}
+              .wc-card{padding:14px 16px!important;}
+            }
+            .hh-day-btn,.sp-day-btn{background:var(--card-bg);border:1px solid var(--card-border);color:var(--text-muted);border-radius:999px;transition:all .15s;}
+            .hh-day-btn.active,.sp-day-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600;}
+          </style>
+        </div>
+
+        <!-- ANALYTICS -->
+        <div class="page-section" id="page-analytics">
+          <div class="stats-row">
+            <div class="stat-card"><div class="stat-label">Visitors Today</div><div class="stat-value" id="analytics-today-visitors">0</div></div>
+            <div class="stat-card"><div class="stat-label">Page Views</div><div class="stat-value" id="analytics-today-pageviews">0</div></div>
+            <div class="stat-card"><div class="stat-label">Conversions</div><div class="stat-value" id="analytics-today-conversions">0</div></div>
+            <div class="stat-card"><div class="stat-label">Revenue Today</div><div class="stat-value" id="analytics-today-revenue">$0.00</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Traffic Overview</h3>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-outline btn-sm period-btn active" onclick="changeAnalyticsPeriod('today')">Today</button>
+                <button class="btn btn-outline btn-sm period-btn" onclick="changeAnalyticsPeriod('week')">Week</button>
+                <button class="btn btn-outline btn-sm period-btn" onclick="changeAnalyticsPeriod('month')">Month</button>
+                <button class="btn btn-outline btn-sm" onclick="exportAnalytics()">Export</button>
+              </div>
+            </div>
+            <div id="revenue-chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Top Pages</h3></div>
+            <div id="top-pages-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Traffic Sources</h3></div>
+            <div id="traffic-sources-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Conversion Funnel</h3></div>
+            <div id="conversion-funnel"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+            <div class="card">
+              <div class="card-header"><h3>Booking Funnel Steps</h3><span style="font-size:12px;color:var(--text-muted);">Last 30 days</span></div>
+              <div id="booking-funnel-steps"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Devices</h3><span style="font-size:12px;color:var(--text-muted);">Last 30 days</span></div>
+              <div id="device-breakdown-chart"></div>
+            </div>
+          </div>
+          <div class="card" id="fb-ads-card">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:32px;height:32px;background:#1877f2;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:15px;">f</div>
+                <div><h3 style="margin:0;">Facebook Ads Campaigns</h3><div style="font-size:12px;color:var(--text-muted);">Connect your Meta Business account to see spend, clicks & ROAS</div></div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="navigateTo('connections')">Connect Facebook Ads</button>
+            </div>
+            <div id="fb-ads-data" style="padding:24px;text-align:center;color:var(--text-muted);">
+              <div style="font-size:40px;margin-bottom:12px;">📊</div>
+              <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Not connected yet</div>
+              <div style="font-size:13px;">Once connected, your campaign impressions, clicks, spend, and ROAS will appear here.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO MANAGER -->
+        <div class="page-section" id="page-seo">
+          <div class="card">
+            <div class="card-header">
+              <h3>SEO Pages</h3>
+              <button class="btn btn-primary btn-sm" onclick="openSEOPageModal()">+ Add Page</button>
+            </div>
+            <div id="seo-pages-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Sitemap Configuration</h3></div>
+            <div class="form-group" style="display:flex;align-items:center;gap:12px;">
+              <label style="margin:0;">Auto-generate sitemap</label>
+              <label class="toggle"><input type="checkbox" id="sitemap-auto-generate" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="form-group" style="display:flex;align-items:center;gap:12px;">
+              <label style="margin:0;">Include all pages</label>
+              <label class="toggle"><input type="checkbox" id="sitemap-include-pages" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Change Frequency</label>
+                <select id="sitemap-frequency">
+                  <option value="daily">Daily</option>
+                  <option value="weekly" selected>Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Priority</label>
+                <select id="sitemap-priority">
+                  <option value="1.0">1.0 (Highest)</option>
+                  <option value="0.8">0.8</option>
+                  <option value="0.5" selected>0.5 (Medium)</option>
+                  <option value="0.3">0.3</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-primary" onclick="saveSitemapConfig()">Save Config</button>
+              <button class="btn btn-outline" onclick="generateSitemap()">Generate Sitemap</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Robots.txt</h3></div>
+            <div class="form-group">
+              <textarea id="robots-txt" rows="8" placeholder="User-agent: *&#10;Allow: /"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="saveRobotsTxt()">Save robots.txt</button>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Schema.org Structured Data</h3></div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Add LocalBusiness schema to help search engines understand your business.</p>
+            <button class="btn btn-outline" onclick="previewSchema()">Preview Schema JSON-LD</button>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Analytics & Pixel Tracking</h3></div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">Enter your tracking IDs to activate Google Analytics and Facebook retargeting on your site.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Google Analytics 4 Measurement ID</label>
+                <input type="text" id="tracking-ga4-id" placeholder="G-XXXXXXXXXX">
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Found in Google Analytics → Admin → Data Streams</div>
+              </div>
+              <div class="form-group">
+                <label>Facebook Pixel ID</label>
+                <input type="text" id="tracking-pixel-id" placeholder="1234567890123456">
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Found in Meta Business Suite → Events Manager</div>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveTrackingSettings()">Save Tracking IDs</button>
+            <div id="tracking-save-status" style="margin-top:10px;font-size:13px;"></div>
+          </div>
+        </div>
+
+        <!-- SOCIAL MEDIA -->
+        <!-- FAQ MANAGER -->
+        <div class="page-section" id="page-faq">
+          <div class="card">
+            <div class="card-header">
+              <h3>FAQ Manager</h3>
+              <button class="btn btn-primary btn-sm" onclick="openFAQModal()">+ Add Question</button>
+            </div>
+            <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px;">These appear in the FAQ section on your public booking site. Drag to reorder.</p>
+            <div id="faq-list"><p style="color:var(--text-dim);">Loading...</p></div>
+          </div>
+        </div>
+
+        <div class="page-section" id="page-social">
+          <div class="card">
+            <div class="card-header"><h3>Connected Accounts</h3></div>
+            <div id="social-accounts-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;"></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Posts</h3>
+              <button class="btn btn-primary btn-sm" onclick="openPostComposer()">+ New Post</button>
+            </div>
+            <div id="social-posts-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Social Media Analytics</h3></div>
+            <div id="social-analytics-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;"></div>
+          </div>
+        </div>
+  <!-- MODALS -->
+
+  <!-- Page Modal -->
+  <div class="modal-overlay" id="modal-page"><div class="modal">
+    <div class="modal-header"><h3 id="page-modal-title">Add Page</h3><button class="modal-close" onclick="closeModal('modal-page')">&times;</button></div>
+    <div class="form-group"><label>Page Title</label><input type="text" id="page-form-title" placeholder="About Us"></div>
+    <div class="form-group"><label>URL Slug</label><input type="text" id="page-form-slug" placeholder="about-us"></div>
+    <div class="form-group"><label>Content</label><textarea id="page-form-content" rows="8" placeholder="Page content..."></textarea></div>
+    <div class="form-row"><div class="form-group"><label>SEO Title</label><input type="text" id="page-form-seo-title"></div><div class="form-group"><label>SEO Description</label><input type="text" id="page-form-seo-desc"></div></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-page')">Cancel</button><button class="btn btn-primary" onclick="savePage()">Save Page</button></div>
+    <input type="hidden" id="page-form-id">
+  </div></div>
+
+  <!-- Staff Modal -->
+  <div class="modal-overlay" id="modal-staff"><div class="modal">
+    <div class="modal-header"><h3 id="staff-modal-title">Add Team Member</h3><button class="modal-close" onclick="closeModal('modal-staff')">&times;</button></div>
+    <div class="form-group"><label>Name</label><input type="text" id="staff-form-name"></div>
+    <div class="form-group"><label>Role / Title</label><input type="text" id="staff-form-role" placeholder="Dock Manager"></div>
+    <div class="form-group"><label>Bio</label><textarea id="staff-form-bio" rows="3"></textarea></div>
+    <div class="form-group"><label>Photo</label><input type="file" id="staff-form-photo" accept="image/*"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-staff')">Cancel</button><button class="btn btn-primary" onclick="saveStaff()">Save</button></div>
+    <input type="hidden" id="staff-form-id">
+  </div></div>
+
+  <!-- Inventory Modal (Circle Boats) -->
+  <div class="modal-overlay" id="modal-inventory"><div class="modal">
+    <div class="modal-header"><h3 id="inv-modal-title">Add Fleet Item</h3><button class="modal-close" onclick="closeModal('modal-inventory')">&times;</button></div>
+    <div class="form-group"><label>Boat Name</label><input type="text" id="inv-form-name" placeholder="Single Seater Circle Boat"></div>
+    <div class="form-group"><label>Description</label><textarea id="inv-form-desc" rows="2" placeholder="Solo cruiser, fits one adult..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Half Day AM ($)</label><input type="number" id="inv-form-half-am" min="0" step="0.01" placeholder="150"></div>
+      <div class="form-group"><label>Half Day PM ($)</label><input type="number" id="inv-form-half-pm" min="0" step="0.01" placeholder="150"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>All Day ($)</label><input type="number" id="inv-form-allday" min="0" step="0.01" placeholder="225"></div>
+      <div class="form-group"><label>Deposit ($)</label><input type="number" id="inv-form-deposit" min="0" step="0.01" placeholder="0"></div>
+    </div>
+    <div class="form-group"><label>Quantity Available</label><input type="number" id="inv-form-qty" min="1" value="1"></div>
+    <div class="form-group"><label>Specs</label><input type="text" id="inv-form-specs" placeholder='70" diameter | 57 lbs | 35lb motor'></div>
+    <div class="form-group"><label>Photos</label><input type="file" id="inv-form-photos" accept="image/*" multiple></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-inventory')">Cancel</button><button class="btn btn-primary" onclick="saveInventoryItem()">Save</button></div>
+    <input type="hidden" id="inv-form-id">
+  </div></div>
+
+  <!-- Addon Modal -->
+  <div class="modal-overlay" id="modal-addon"><div class="modal">
+    <div class="modal-header"><h3>Add Add-on / Dock</h3><button class="modal-close" onclick="closeModal('modal-addon')">&times;</button></div>
+    <div class="form-group"><label>Name</label><input type="text" id="addon-form-name" placeholder="Mini Dock"></div>
+    <div class="form-group"><label>Description</label><textarea id="addon-form-desc" rows="2"></textarea></div>
+    <div class="form-group"><label>Price ($)</label><input type="number" id="addon-form-price" min="0" step="0.01"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-addon')">Cancel</button><button class="btn btn-primary" onclick="saveAddon()">Save</button></div>
+    <input type="hidden" id="addon-form-id">
+  </div></div>
+
+  <!-- Location Modal -->
+  <div class="modal-overlay" id="modal-location"><div class="modal">
+    <div class="modal-header"><h3>Add Location</h3><button class="modal-close" onclick="closeModal('modal-location')">&times;</button></div>
+    <div class="form-group"><label>Location Name</label><input type="text" id="loc-form-name" placeholder="Main Launch Point"></div>
+    <div class="form-group"><label>Address</label><input type="text" id="loc-form-address"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-location')">Cancel</button><button class="btn btn-primary" onclick="saveLocation()">Save</button></div>
+    <input type="hidden" id="loc-form-id">
+  </div></div>
+
+  <!-- Media Detail Modal -->
+  <div class="modal-overlay" id="modal-media-detail"><div class="modal">
+    <div class="modal-header"><h3>Media Details</h3><button class="modal-close" onclick="closeModal('modal-media-detail')">&times;</button></div>
+    <img id="media-detail-img" src="" style="width:100%;border-radius:8px;margin-bottom:16px;">
+    <div class="form-group"><label>File URL (click to copy)</label><input type="text" id="media-detail-url" readonly onclick="this.select();navigator.clipboard.writeText(this.value);toast('URL copied!')"></div>
+    <p style="font-size:12px;color:var(--text-muted);" id="media-detail-info"></p>
+    <div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteMedia()">Delete</button><button class="btn btn-outline" onclick="closeModal('modal-media-detail')">Close</button></div>
+    <input type="hidden" id="media-detail-id">
+  </div></div>
+
+  <!-- Booking Detail Modal -->
+  <div class="modal-overlay" id="modal-booking"><div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3 id="booking-modal-title">Booking Details</h3><button class="modal-close" onclick="closeModal('modal-booking')">&times;</button></div>
+    <div id="booking-detail-body"></div>
+  </div></div>
+
+  <!-- Customer Detail Modal -->
+  <div class="modal-overlay" id="modal-customer"><div class="modal" style="max-width:700px;">
+    <div class="modal-header"><h3 id="customer-modal-title">Customer Details</h3><button class="modal-close" onclick="closeModal('modal-customer')">&times;</button></div>
+    <div id="customer-detail-body"></div>
+  </div></div>
+
+  <!-- Coupon Modal -->
+  <div class="modal-overlay" id="modal-coupon"><div class="modal" style="max-width:560px;">
+    <div class="modal-header"><h3 id="coupon-modal-title">Create Coupon</h3><button class="modal-close" onclick="closeModal('modal-coupon')">&times;</button></div>
+    <div id="coupon-modal-body"></div>
+  </div></div>
+
+  <!-- Waiver Modal -->
+  <div class="modal-overlay" id="modal-waiver"><div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3 id="waiver-modal-title">Waiver</h3><button class="modal-close" onclick="closeModal('modal-waiver')">&times;</button></div>
+    <div id="waiver-modal-body"></div>
+  </div></div>
+
+  <!-- Payment Method Modal -->
+  <div class="modal-overlay" id="modal-payment"><div class="modal" style="max-width:480px;">
+    <div class="modal-header"><h3>Add Payment Method</h3><button class="modal-close" onclick="closeModal('modal-payment')">&times;</button></div>
+    <div style="padding:4px 0 20px;">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Enter your card details. Processed securely by Stripe.</p>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px;">Card Number</label>
+        <div id="stripe-card-number" style="position:relative;padding:12px 14px;background:var(--bg);border:1px solid var(--card-border);border-radius:8px;height:46px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px;">Expiry</label>
+          <div id="stripe-card-expiry" style="position:relative;padding:12px 14px;background:var(--bg);border:1px solid var(--card-border);border-radius:8px;height:46px;"></div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px;">CVC</label>
+          <div id="stripe-card-cvc" style="position:relative;padding:12px 14px;background:var(--bg);border:1px solid var(--card-border);border-radius:8px;height:46px;"></div>
+        </div>
+      </div>
+      <div id="stripe-card-error" style="color:#ef4444;font-size:12px;margin-bottom:12px;display:none;"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="closeModal('modal-payment')">Cancel</button>
+        <button class="btn btn-primary" id="stripe-save-btn" onclick="savePaymentMethod()">Save Card</button>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- Insert Data Token Modal -->
+  <div class="modal-overlay" id="modal-insert-data"><div class="modal">
+    <div class="modal-header"><h3>Insert Data Token</h3><button class="modal-close" onclick="closeModal('modal-insert-data')">&times;</button></div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Click a token to insert it into your HTML. Tokens are replaced with real data when published.</p>
+    <div id="data-tokens-list"></div>
+  </div></div>
+
+  <!-- SEO Page Modal -->
+  <div class="modal-overlay" id="modal-seo-page"><div class="modal" style="max-width:700px;">
+    <div class="modal-header"><h3>SEO Settings</h3><button class="modal-close" onclick="closeModal('modal-seo-page')">&times;</button></div>
+    <div class="form-group"><label>Page Slug</label><input type="text" id="seo-page-slug" placeholder="/about"></div>
+    <div class="form-group"><label>Page Title (60 chars max)</label><input type="text" id="seo-page-title" maxlength="60" placeholder="About Us | Business Name"></div>
+    <div class="form-group"><label>Meta Description (160 chars max)</label><textarea id="seo-meta-description" rows="3" maxlength="160" placeholder="Describe your page for search engines..."></textarea></div>
+    <div class="form-group"><label>Meta Keywords (optional)</label><input type="text" id="seo-meta-keywords" placeholder="boat rental, orange beach, circle boats"></div>
+    <div style="border-top:1px solid var(--card-border);margin:20px 0;padding-top:20px;">
+      <h4 style="margin-bottom:12px;">Open Graph (Facebook)</h4>
+      <div class="form-group"><label>OG Title</label><input type="text" id="seo-og-title" placeholder="Leave blank to use Page Title"></div>
+      <div class="form-group"><label>OG Description</label><textarea id="seo-og-description" rows="2" placeholder="Leave blank to use Meta Description"></textarea></div>
+      <div class="form-group"><label>OG Image URL</label><input type="text" id="seo-og-image" placeholder="https://yoursite.com/og-image.jpg"></div>
+    </div>
+    <div style="border-top:1px solid var(--card-border);margin:20px 0;padding-top:20px;">
+      <h4 style="margin-bottom:12px;">Twitter Card</h4>
+      <div class="form-group">
+        <label>Card Type</label>
+        <select id="seo-twitter-card">
+          <option value="summary">Summary</option>
+          <option value="summary_large_image" selected>Summary Large Image</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Canonical URL</label><input type="text" id="seo-canonical-url" placeholder="https://yoursite.com/about"></div>
+      <div class="form-group">
+        <label>Robots</label>
+        <select id="seo-robots">
+          <option value="index, follow" selected>Index, Follow</option>
+          <option value="noindex, follow">No Index, Follow</option>
+          <option value="index, nofollow">Index, No Follow</option>
+          <option value="noindex, nofollow">No Index, No Follow</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-seo-page')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSEOPage()">Save SEO Settings</button>
+    </div>
+    <input type="hidden" id="seo-page-id">
+  </div></div>
+
+  <!-- Schema Preview Modal -->
+  <div class="modal-overlay" id="modal-schema-preview"><div class="modal">
+    <div class="modal-header"><h3>Schema.org JSON-LD</h3><button class="modal-close" onclick="closeModal('modal-schema-preview')">&times;</button></div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Copy this JSON-LD and paste it in the &lt;head&gt; section of your website.</p>
+    <div class="form-group"><textarea id="schema-preview" rows="12" readonly style="font-family:monospace;font-size:12px;"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="copySchema()">Copy to Clipboard</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-schema-preview')">Close</button>
+    </div>
+  </div></div>
+
+  <!-- Post Composer Modal -->
+  <div class="modal-overlay" id="modal-post-composer"><div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3>Create Social Media Post</h3><button class="modal-close" onclick="closeModal('modal-post-composer')">&times;</button></div>
+    <div class="form-group">
+      <label>Post Text</label>
+      <textarea id="post-text" rows="5" placeholder="What's happening?" oninput="updateCharCount()"></textarea>
+      <div style="font-size:12px;color:var(--text-muted);text-align:right;margin-top:4px;" id="char-count">0 / 280</div>
+    </div>
+    <div class="form-group">
+      <label>Media URLs (one per line, optional)</label>
+      <textarea id="post-media-urls" rows="3" placeholder="https://yoursite.com/image1.jpg&#10;https://yoursite.com/image2.jpg"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Post To:</label>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" class="platform-checkbox" id="platform-facebook" value="facebook">
+          <span>Facebook</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" class="platform-checkbox" id="platform-instagram" value="instagram">
+          <span>Instagram</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" class="platform-checkbox" id="platform-twitter" value="twitter">
+          <span>Twitter</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" class="platform-checkbox" id="platform-tiktok" value="tiktok">
+          <span>TikTok</span>
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>When to Post:</label>
+      <select id="post-schedule-type" onchange="toggleScheduleDateTime()">
+        <option value="now">Post Now</option>
+        <option value="schedule">Schedule for Later</option>
+      </select>
+    </div>
+    <div class="form-group" style="display:none;">
+      <label>Schedule Date & Time</label>
+      <input type="datetime-local" id="post-schedule-datetime">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-post-composer')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePost()">Post</button>
+    </div>
+    <input type="hidden" id="post-id">
+  </div></div>
+
+  <!-- Post Stats Modal -->
+  <div class="modal-overlay" id="modal-post-stats"><div class="modal">
+    <div class="modal-header"><h3>Post Engagement</h3><button class="modal-close" onclick="closeModal('modal-post-stats')">&times;</button></div>
+    <div id="post-stats-content"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-post-stats')">Close</button></div>
+  </div></div>
+
+  <!-- FAQ Modal -->
+  <div class="modal-overlay" id="modal-faq"><div class="modal" style="max-width:560px;">
+    <div class="modal-header"><h3 id="modal-faq-title">Add Question</h3><button class="modal-close" onclick="closeModal('modal-faq')">&times;</button></div>
+    <div class="form-group"><label>Question</label><input type="text" id="faq-question" placeholder="e.g. Do you offer group rates?"></div>
+    <div class="form-group"><label>Answer</label><textarea id="faq-answer" rows="4" placeholder="Your answer here..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-faq')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFAQ()">Save FAQ</button>
+    </div>
+  </div></div>
+
+  <!-- Menu: Category Modal -->
+  <div class="modal-overlay" id="modal-category"><div class="modal" style="max-width:420px;">
+    <div class="modal-header"><h3>Menu Category</h3><button class="modal-close" onclick="closeModal('modal-category')">&times;</button></div>
+    <div class="form-group"><label>Category Name</label><input type="text" id="cat-form-name" placeholder="e.g. Appetizers, Entrees, Drinks"></div>
+    <input type="hidden" id="cat-form-id">
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-category')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCategory()">Save</button>
+    </div>
+  </div></div>
+
+  <!-- Menu: Item Modal -->
+  <div class="modal-overlay" id="modal-menu-item"><div class="modal" style="max-width:560px;">
+    <div class="modal-header"><h3 id="menu-item-modal-title">Add Menu Item</h3><button class="modal-close" onclick="closeModal('modal-menu-item')">&times;</button></div>
+    <div class="form-row">
+      <div class="form-group"><label>Item Name</label><input type="text" id="mi-form-name" placeholder="e.g. Margherita Pizza"></div>
+      <div class="form-group"><label>Price ($)</label><input type="number" id="mi-form-price" placeholder="0.00" step="0.01" min="0"></div>
+    </div>
+    <div class="form-group"><label>Category</label><select id="mi-form-category"></select></div>
+    <div class="form-group"><label>Description</label><textarea id="mi-form-desc" rows="2" placeholder="Brief description..."></textarea></div>
+    <div class="form-group"><label>Tags (comma-separated)</label><input type="text" id="mi-form-tags" placeholder="vegetarian, gluten-free, popular"></div>
+    <div class="form-group"><label>Modifiers (one per line: Name | Price)</label><textarea id="mi-form-modifiers" rows="3" placeholder="Add Cheese | 1.50&#10;Extra Sauce | 0.75"></textarea></div>
+    <input type="hidden" id="mi-form-id">
+    <input type="hidden" id="mi-form-type" value="food">
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-menu-item')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMenuItem()">Save Item</button>
+    </div>
+  </div></div>
+
+  <!-- Menu: AI Extract Modal -->
+  <div class="modal-overlay" id="modal-menu-extract"><div class="modal" style="max-width:680px;">
+    <div class="modal-header"><h3>AI Menu Scanner</h3><button class="modal-close" onclick="closeModal('modal-menu-extract')">&times;</button></div>
+    <div id="extract-step-upload">
+      <div class="upload-zone" id="extract-drop-zone" onclick="document.getElementById('extract-file-input').click()" style="cursor:pointer;margin-bottom:12px;">
+        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p style="margin:8px 0 4px;font-weight:500;">Drop menu photo here or click to upload</p>
+        <p style="font-size:12px;color:var(--text-muted);">Works with printed menus, chalkboards, handwritten menus, any restaurant menu format</p>
+      </div>
+      <input type="file" id="extract-file-input" accept="image/*" style="display:none" onchange="handleExtractFile(this)">
+      <div id="extract-preview-wrap" style="display:none;text-align:center;margin-bottom:12px;">
+        <img id="extract-preview-img" style="max-height:240px;max-width:100%;border-radius:8px;border:1px solid var(--card-border);">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;">
+        <label for="extract-provider" style="color:var(--text-muted);white-space:nowrap;">AI model:</label>
+        <select id="extract-provider" style="flex:1;padding:6px 8px;border:1px solid var(--card-border);border-radius:6px;background:var(--bg);color:var(--text);">
+          <option value="">Auto (default)</option>
+        </select>
+      </div>
+    </div>
+    <div id="extract-step-results" style="display:none;max-height:360px;overflow-y:auto;border:1px solid var(--card-border);border-radius:8px;padding:12px;">
+      <div id="extract-results-content"></div>
+    </div>
+    <div id="extract-status" style="color:var(--text-muted);font-size:13px;margin-top:10px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-menu-extract')">Cancel</button>
+      <button class="btn btn-primary" id="extract-scan-btn" onclick="runMenuExtraction()" style="display:none;">Scan Menu</button>
+      <button class="btn btn-success" id="extract-import-btn" onclick="importExtractedItems()" style="display:none;">Import to Menu</button>
+    </div>
+  </div></div>
+
+  <!-- Special Modal -->
+  <div class="modal-overlay" id="modal-special"><div class="modal" style="max-width:500px;">
+    <div class="modal-header"><h3>Add / Edit Special</h3><button class="modal-close" onclick="closeModal('modal-special')">&times;</button></div>
+    <input type="hidden" id="sp-form-id">
+    <div class="form-group"><label>Special Name *</label><input type="text" id="sp-form-name" placeholder="e.g. $5 Burger Night, Half-Off Wings"></div>
+    <div class="form-group"><label>Deal / Discount</label><input type="text" id="sp-form-deal" placeholder="e.g. $5, Half off, 2-for-1"></div>
+    <div class="form-group"><label>Description</label><input type="text" id="sp-form-desc" placeholder="Extra details (optional)"></div>
+    <div class="form-group">
+      <label>Days</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;" id="sp-day-btns">
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Mon" onclick="spToggleDay(this,'Mon')">Mon</button>
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Tue" onclick="spToggleDay(this,'Tue')">Tue</button>
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Wed" onclick="spToggleDay(this,'Wed')">Wed</button>
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Thu" onclick="spToggleDay(this,'Thu')">Thu</button>
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Fri" onclick="spToggleDay(this,'Fri')">Fri</button>
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Sat" onclick="spToggleDay(this,'Sat')">Sat</button>
+        <button type="button" class="btn btn-sm sp-day-btn" data-day="Sun" onclick="spToggleDay(this,'Sun')">Sun</button>
+      </div>
+      <input type="text" id="sp-form-days" placeholder="e.g. Mon-Fri, Every Day, Tuesday" style="font-size:12px;">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label>Start Time</label><input type="text" id="sp-form-start" placeholder="4:00 PM"></div>
+      <div class="form-group"><label>End Time</label><input type="text" id="sp-form-end" placeholder="7:00 PM"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-special')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSpecial()">Save Special</button>
+    </div>
+  </div></div>
+
+  <!-- Event Modal -->
+  <div class="modal-overlay" id="modal-event"><div class="modal" style="max-width:500px;">
+    <div class="modal-header"><h3>Event / Live Music</h3><button class="modal-close" onclick="closeModal('modal-event')">&times;</button></div>
+    <input type="hidden" id="ev-form-id">
+    <div class="form-group"><label>Event Name / Performer *</label><input type="text" id="ev-form-name" placeholder="e.g. Basch Jernigan – Live Music"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label>Date</label><input type="date" id="ev-form-date"></div>
+      <div class="form-group"><label>Cover Charge</label><input type="text" id="ev-form-cover" placeholder="e.g. $10, Free"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group"><label>Start Time</label><input type="text" id="ev-form-start" placeholder="5:30 PM"></div>
+      <div class="form-group"><label>End Time</label><input type="text" id="ev-form-end" placeholder="9:00 PM"></div>
+    </div>
+    <div class="form-group"><label>Description / Note</label><input type="text" id="ev-form-desc" placeholder="e.g. Every Monday, weather permitting"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-event')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEvent()">Save Event</button>
+    </div>
+  </div></div>
+
+  <!-- QR Code Scan Detail Modal -->
+  <div class="modal-overlay" id="modal-qrc-scans"><div class="modal" style="max-width:640px;">
+    <div class="modal-header">
+      <h3 id="qrc-scan-modal-title">Scan History</h3>
+      <button class="modal-close" onclick="closeModal('modal-qrc-scans')">&times;</button>
+    </div>
+    <div id="qrc-scan-modal-body" style="max-height:520px;overflow-y:auto;"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-qrc-scans')">Close</button></div>
+  </div></div>
+
+  <!-- QR Edit Modal -->
+  <div class="modal-overlay" id="modal-qrc-edit"><div class="modal" style="max-width:480px;">
+    <div class="modal-header"><h3>Edit QR Code</h3><button class="modal-close" onclick="closeModal('modal-qrc-edit')">&times;</button></div>
+    <div class="form-group"><label>Label</label><input type="text" id="qrce-label"></div>
+    <div class="form-group"><label>Destination URL</label><input type="text" id="qrce-dest" placeholder="https://..."></div>
+    <div class="form-group"><label>Location / Notes</label><input type="text" id="qrce-notes"></div>
+    <div class="form-group"><label>Placement</label>
+      <select id="qrce-placement" style="width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;">
+        <option value="fixed">Fixed</option><option value="portable">Portable</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-qrc-edit')">Cancel</button>
+      <button class="btn btn-primary" onclick="QRC.saveEdit()">Save</button>
+    </div>
+    <input type="hidden" id="qrce-id">
+  </div></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts (v5 = unified auth) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    // Backend API base URL — auto-detects when served by backend, falls back to localhost
+    window.CC_API_BASE = 'https://cybercheck-api-database.vercel.app';
+    window.CC_STRIPE_PUBLISHABLE_KEY = 'pk_test_51SmhDo0pR4BTjK5e8Dzz6VUlW7q8osjZilWVuh3nBESdyT0pdNMyH7rXXfxjx07wY8tU4LSt8hwDFsiTjSuXm74u00JReWlp2Q';
+    // Meta App ID for WhatsApp Business OAuth — set your Meta App ID here
+    window.META_APP_ID = '';
+    // Optional: Meta WhatsApp Embedded Signup Config ID (from Meta Business settings)
+    window.META_WHATSAPP_CONFIG_ID = '';
+  </script>
+  <script>
+    // Auth guard — checks localStorage directly before any client loads
+    (function() {
+      var sbToken = localStorage.getItem('sb-mhafixflyffflwjhcgfn-auth-token');
+      var legacyToken = localStorage.getItem('cc_token') || sessionStorage.getItem('cc_token');
+      if (!sbToken && !legacyToken) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
+  <script src="js/supabase-client.js?v=5"></script>
+  <script src="js/cc.js?v=5"></script>
+  <script src="js/upload.js?v=4"></script>
+  <script src="shared-data.js?v=4"></script>
+  <script src="config.js?v=4"></script>
+  <script src="js/auth.js?v=4"></script>
+  <script src="js/router.js?v=4"></script>
+  <script src="js/profile.js?v=4"></script>
+  <script src="js/media.js?v=4"></script>
+  <script src="js/inventory.js?v=4"></script>
+  <script src="js/availability.js?v=4"></script>
+  <script src="js/blackout-dates.js?v=1"></script>
+  <script src="js/addons.js?v=4"></script>
+  <script src="js/locations.js?v=4"></script>
+  <script src="js/pages.js?v=4"></script>
+  <script src="js/seo.js?v=4"></script>
+  <script src="js/staff.js?v=4"></script>
+  <script src="js/theme.js?v=4"></script>
+  <script src="js/oauth.js?v=4"></script>
+  <script src="js/social.js?v=4"></script>
+  <script src="js/bookings.js?v=5"></script>
+  <script src="js/reviews.js?v=4"></script>
+  <script src="js/messaging.js?v=4"></script>
+  <script src="js/customers.js?v=4"></script>
+  <script src="js/coupons.js?v=4"></script>
+  <script src="js/waivers.js?v=4"></script>
+  <script src="js/waitlist.js?v=4"></script>
+  <script src="js/billing.js?v=4"></script>
+  <script src="js/calendar-view.js?v=4"></script>
+  <script src="js/analytics.js?v=4"></script>
+  <script src="js/domain.js?v=4"></script>
+  <script src="js/site-editor.js?v=4"></script>
+  <script src="js/page-builder-enhanced.js?v=1"></script>
+  <script src="js/media-accessories.js?v=1"></script>
+  <script src="js/publish.js?v=4"></script>
+  <script src="js/website-content.js?v=3"></script>
+  <script src="js/faq.js?v=1"></script>
+  <script src="js/menu.js?v=1"></script>
+  <script src="js/qr-codes.js?v=1"></script>
+  <script src="js/specials.js?v=2"></script>
+  <script src="js/events.js?v=1"></script>
+  <script>
+    var _business = null;
+
+    function loadSetupChecklist() {
+      var card = document.getElementById('setup-checklist-card');
+      var itemsEl = document.getElementById('setup-checklist-items');
+      var barEl = document.getElementById('setup-progress-bar');
+      var pctEl = document.getElementById('setup-checklist-pct');
+      if (!card || !itemsEl) return;
+
+      CC.dashboard.getOnboarding().then(function(data) {
+        if (!data) return;
+        // Hide checklist once fully complete
+        if (data.completed_at) { card.style.display = 'none'; return; }
+
+        var steps = [
+          { key: 'step1_done', label: 'Choose your business type', page: null },
+          { key: 'step2_done', label: 'Fill in your business profile', page: 'profile' },
+          { key: 'step3_done', label: 'Add your fleet / services', page: 'inventory' },
+          { key: 'step4_done', label: 'Connect Stripe payments', page: 'connections' },
+          { key: 'step5_done', label: 'Configure your site modules', page: 'site-editor' },
+          { key: 'step6_done', label: 'Publish your booking site', page: 'publish' }
+        ];
+
+        var done = steps.filter(function(s) { return data[s.key]; }).length;
+        var pct = Math.round((done / steps.length) * 100);
+
+        if (pct === 100) { card.style.display = 'none'; return; }
+
+        card.style.display = '';
+        if (barEl) barEl.style.width = pct + '%';
+        if (pctEl) pctEl.textContent = done + ' / ' + steps.length + ' complete';
+
+        itemsEl.innerHTML = steps.map(function(s) {
+          var checked = !!data[s.key];
+          var icon = checked
+            ? '<span style="color:var(--success,#10b981);font-size:16px;">&#10003;</span>'
+            : '<span style="color:var(--text-dim);font-size:16px;">&#9675;</span>';
+          var label = checked
+            ? '<span style="text-decoration:line-through;color:var(--text-dim);">' + s.label + '</span>'
+            : (s.page
+                ? '<a href="#" onclick="navigateTo(\'' + s.page + '\');return false;" style="color:var(--primary);text-decoration:none;">' + s.label + '</a>'
+                : '<span>' + s.label + '</span>');
+          return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--card-border);">' + icon + label + '</div>';
+        }).join('');
+      }).catch(function() {
+        card.style.display = 'none';
+      });
+    }
+
+    function viewLiveSite() {
+      window.open('/wavegent/' + (USER_CONFIG.business_id || ''), '_blank');
+    }
+
+    async function logout() {
+      if (confirm('Log out?')) {
+        try { if (supabase) await supabase.auth.signOut(); } catch(e) {}
+        if (typeof CC !== 'undefined' && CC.clearToken) CC.clearToken();
+        if (typeof clearSupabaseCache === 'function') clearSupabaseCache();
+        window.location.href = 'login.html';
+      }
+    }
+
+    (async function() {
+      // Auth guard — redirect to login if not authenticated
+      var session = await CC.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Load real session from API (falls back to hardcoded config if offline)
+      await initConfig();
+
+      // Force _siteId to match the business from config (URL parameter takes priority)
+      if (USER_CONFIG.business_id) {
+        _siteId = USER_CONFIG.business_id;
+        _business = null; // Clear cache so it reloads with correct site_id
+      }
+
+      // Rewrite URL to include username if not already there
+      var params = new URLSearchParams(window.location.search);
+      if (!params.has('user') && session.business && session.business.subdomain) {
+        var newUrl = window.location.pathname + '?user=' + encodeURIComponent(session.business.subdomain) + window.location.hash;
+        window.history.replaceState(null, '', newUrl);
+      }
+
+      _business = {
+        id: USER_CONFIG.business_id,
+        type: USER_CONFIG.business_type,
+        name: USER_CONFIG.business_name,
+        status: USER_CONFIG._fromApi ? 'active' : 'draft'
+      };
+
+      document.getElementById('sidebar-biz-name').textContent = _business.name;
+      document.getElementById('sidebar-biz-type').textContent =
+        _business.type.charAt(0).toUpperCase() + _business.type.slice(1);
+
+      initRouter();
+      startInactivityWatch();
+
+      // Load all modules
+      loadProfile();
+      loadMedia();
+      loadPages();
+      loadStaff();
+      loadTheme();
+      loadAppStore();
+      loadConnections();
+      loadBookings();
+      loadReviews();
+      loadMessaging();
+      loadCustomers();
+      loadCoupons();
+      loadWaivers();
+      loadWaitlist();
+      loadBilling();
+      loadDomain();
+      loadWebsiteContent();
+      loadPublishStatus();
+      loadInventory();
+      loadAvailabilityItems();
+      loadAddons();
+      loadLocations();
+      loadAnalytics();
+      loadSEO();
+      loadSocial();
+      loadFAQ();
+      loadSetupChecklist();
+
+      // Update overview stats with real data
+      (async function() {
+        var bookings = await CC.dashboard.getBookings().catch(function() { return []; });
+        var customers = await CC.dashboard.getCustomers().catch(function() { return []; });
+        // Use local date (not UTC) so "today" matches the user's timezone
+        var _now = new Date();
+        var today = _now.getFullYear() + '-' + String(_now.getMonth()+1).padStart(2,'0') + '-' + String(_now.getDate()).padStart(2,'0');
+        var thisMonth = today.slice(0, 7); // 'YYYY-MM'
+
+        var monthRevenue = bookings
+          .filter(function(b) { return b.status !== 'cancelled' && (b.booking_date || '').slice(0, 7) === thisMonth; })
+          .reduce(function(sum, b) { return sum + (parseFloat(b.total) || 0); }, 0);
+
+        var todayCount = bookings.filter(function(b) { return b.booking_date === today && b.status !== 'cancelled'; }).length;
+        var pendingCount = bookings.filter(function(b) { return b.status === 'pending'; }).length;
+
+        document.getElementById('stat-revenue').textContent = '$' + monthRevenue.toFixed(2);
+        document.getElementById('stat-today').textContent = todayCount;
+        document.getElementById('stat-customers').textContent = customers.length || 0;
+        document.getElementById('stat-pending').textContent = pendingCount;
+      })();
+    })();
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    document.querySelectorAll('.modal-overlay').forEach(function(o) {
+      o.addEventListener('click', function(e) { if (e.target === o) o.classList.remove('open'); });
+    });
+
+    // ── APP STORE ──────────────────────────────────────────
+    var _storeApps = [];
+    var _storeCat = 'all';
+
+    async function loadAppStore() {
+      var token = CC.getToken();
+      if (!token) return;
+      try {
+        var r = await fetch(window.CC_API_BASE + '/api/apps', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!r.ok) return;
+        _storeApps = await r.json();
+        renderAppStoreFilters();
+        renderAppStoreGrid();
+      } catch(e) { console.warn('App store load failed:', e); }
+    }
+
+    function renderAppStoreFilters() {
+      var cats = ['all'];
+      _storeApps.forEach(function(a) { if (a.category && cats.indexOf(a.category) === -1) cats.push(a.category); });
+      document.getElementById('app-store-filters').innerHTML = cats.map(function(c) {
+        return '<button onclick="setStoreCat(\'' + c + '\',this)" style="padding:6px 14px;border:1px solid ' + (c==='all'?'var(--primary)':'var(--card-border)') + ';border-radius:20px;background:transparent;color:' + (c==='all'?'var(--primary)':'var(--text-muted)') + ';font-size:13px;font-weight:600;cursor:pointer;">' + (c.charAt(0).toUpperCase()+c.slice(1)) + '</button>';
+      }).join('');
+    }
+
+    function setStoreCat(cat, btn) {
+      _storeCat = cat;
+      document.querySelectorAll('#app-store-filters button').forEach(function(b){ b.style.borderColor='var(--card-border)'; b.style.color='var(--text-muted)'; });
+      btn.style.borderColor = 'var(--primary)'; btn.style.color = 'var(--primary)';
+      renderAppStoreGrid();
+    }
+
+    function filterAppStore() {
+      renderAppStoreGrid();
+    }
+
+    function renderAppStoreGrid() {
+      var search = (document.getElementById('app-store-search').value || '').toLowerCase();
+      var list = _storeApps.filter(function(a) {
+        var matchCat = _storeCat === 'all' || a.category === _storeCat;
+        var matchSearch = !search || (a.name||'').toLowerCase().includes(search) || (a.description||'').toLowerCase().includes(search);
+        return matchCat && matchSearch;
+      });
+      var grid = document.getElementById('app-store-grid');
+      if (!list.length) { grid.innerHTML = '<div style="color:var(--text-muted);padding:40px;text-align:center;grid-column:1/-1;">No apps found.</div>'; return; }
+      grid.innerHTML = list.map(function(a) {
+        var price = a.monthly_price > 0 ? '$' + Number(a.monthly_price).toFixed(0) + '/mo' : 'Free';
+        var btn = a.installed
+          ? '<button onclick="uninstallApp(\'' + a.app_id + '\',this)" class="btn btn-outline btn-sm" style="color:var(--danger);border-color:var(--danger);">Remove</button>'
+          : '<button onclick="installApp(\'' + a.app_id + '\',this)" class="btn btn-primary btn-sm">Add</button>';
+        return '<div style="background:var(--bg);border:1px solid ' + (a.installed?'var(--primary)':'var(--card-border)') + ';border-radius:10px;padding:16px;">' +
+          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
+            '<span style="font-size:28px;">' + (a.icon||'📦') + '</span>' +
+            '<div><div style="font-size:14px;font-weight:600;">' + esc(a.name) + '</div>' +
+            '<div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">' + esc(a.category||'') + '</div></div>' +
+            '<div style="margin-left:auto;">' + (a.installed ? '<span style="font-size:11px;color:var(--primary);font-weight:700;">✓ Installed</span>' : '') + '</div>' +
+          '</div>' +
+          '<div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.4;">' + esc(a.description||'') + '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+            '<span style="font-size:12px;color:var(--text-muted);">' + price + '</span>' + btn +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    async function installApp(appId, btn) {
+      btn.disabled = true; btn.textContent = 'Adding...';
+      var token = CC.getToken();
+      try {
+        var r = await fetch(window.CC_API_BASE + '/api/apps/install', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ app_id: appId })
+        });
+        var d = await r.json();
+        if (d.error) { toast(d.error, 'error'); btn.disabled = false; btn.textContent = 'Add'; return; }
+        var app = _storeApps.find(function(a){ return a.app_id === appId; });
+        if (app) app.installed = true;
+        toast((app ? app.name : 'App') + ' added — reload to see in sidebar', 'success');
+        renderAppStoreGrid();
+      } catch(e) { toast('Failed to add app', 'error'); btn.disabled = false; btn.textContent = 'Add'; }
+    }
+
+    async function uninstallApp(appId, btn) {
+      if (!confirm('Remove this app?')) return;
+      btn.disabled = true; btn.textContent = 'Removing...';
+      var token = CC.getToken();
+      try {
+        var r = await fetch(window.CC_API_BASE + '/api/apps/uninstall/' + appId, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        var d = await r.json();
+        if (d.error) { toast(d.error, 'error'); btn.disabled = false; btn.textContent = 'Remove'; return; }
+        var app = _storeApps.find(function(a){ return a.app_id === appId; });
+        if (app) app.installed = false;
+        toast((app ? app.name : 'App') + ' removed — reload to update sidebar', 'success');
+        renderAppStoreGrid();
+      } catch(e) { toast('Failed to remove app', 'error'); btn.disabled = false; btn.textContent = 'Remove'; }
+    }
+
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  </script>
+
+<!-- AI Assistant -->
+<input type="file" id="ai-file-input" accept="image/*" style="display:none"
+  onchange="if(this.files[0]) window.dashboardAI.handleFileSelect(this.files[0])">
+
+<button id="ai-toggle-btn" onclick="window.dashboardAI.toggle()">🤖</button>
+<div id="ai-assistant"
+  ondragover="event.preventDefault()"
+  ondrop="event.preventDefault();const f=event.dataTransfer.files[0];if(f)window.dashboardAI.handleFileSelect(f)">
+  <div class="ai-assistant-header">
+    <div class="ai-assistant-title">
+      <span class="ai-icon">🤖</span>
+      <span>AI Assistant</span>
+    </div>
+    <div class="ai-assistant-controls">
+      <button class="ai-control-btn" title="New chat" onclick="window.dashboardAI.clearChat()">✏️</button>
+      <button class="ai-control-btn" onclick="window.dashboardAI.toggle()">✕</button>
+    </div>
+  </div>
+  <div class="ai-chat-container" id="ai-chat-messages"></div>
+  <div id="ai-image-preview"></div>
+  <div class="ai-input-container">
+    <button id="ai-attach-btn" class="ai-input-btn" title="Attach image" onclick="window.dashboardAI.attachImage()">📎</button>
+    <div class="ai-input-wrapper">
+      <textarea id="ai-input"
+        placeholder="Ask anything, paste a URL, or attach an image…&#10;Enter to send · Shift+Enter for new line"
+        rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();window.dashboardAI.handleTextInput();}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,140)+'px'"></textarea>
+    </div>
+    <button id="ai-mic-btn"  class="ai-input-btn" onclick="window.dashboardAI.toggleVoice()">🎤</button>
+    <button id="ai-send-btn" class="ai-input-btn" onclick="window.dashboardAI.handleTextInput()">➤</button>
+  </div>
+</div>
+<script src="js/ai-assistant.js"></script>
+</body>
+</html>

@@ -4,6 +4,11 @@
   "installCommand": null,
   "framework": null,
   "outputDirectory": ".",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" }
+  ],
   "headers": [
     {
       "source": "/(.*).html",
