@@ -1,0 +1,279 @@
+/* ============================================
+   Analytics, SEO, Social Media - Additional Styles
+   ============================================ */
+
+/* Analytics Charts */
+.funnel-step {
+  margin-bottom: 12px;
+}
+
+.funnel-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.funnel-bar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.period-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.period-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Social Media Account Cards */
+.social-account-card {
+  padding: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.social-account-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.social-stats-card {
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+}
+
+/* SEO Page Status Badges */
+.seo-status-good {
+  background: var(--success);
+  color: white;
+}
+
+.seo-status-fair {
+  background: var(--warning);
+  color: white;
+}
+
+.seo-status-poor {
+  background: var(--danger);
+  color: white;
+}
+
+/* Platform Checkboxes */
+.platform-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Chart Colors */
+:root {
+  --chart-primary: #3b82f6;
+  --chart-success: #10b981;
+  --chart-warning: #f59e0b;
+  --chart-danger: #ef4444;
+  --chart-info: #06b6d4;
+}
+
+/* Analytics Stats Enhancements */
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Grid for Social/Analytics */
+@media (max-width: 768px) {
+  #social-accounts-grid,
+  #social-analytics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .funnel-bar {
+    font-size: 12px;
+    height: 32px;
+  }
+
+  .period-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+
+/* Loading States */
+.loading-skeleton {
+  background: linear-gradient(90deg, var(--card-bg) 25%, var(--bg) 50%, var(--card-bg) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Empty States */
+.empty-state-analytics {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state-analytics svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
+
+/* SEO Score Indicator */
+.seo-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.seo-score-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.seo-score-good { background: var(--success); color: white; }
+.seo-score-fair { background: var(--warning); color: white; }
+.seo-score-poor { background: var(--danger); color: white; }
+
+/* Social Post Status */
+.post-status-draft { background: var(--bg); }
+.post-status-scheduled { background: var(--info); color: white; }
+.post-status-published { background: var(--success); color: white; }
+.post-status-failed { background: var(--danger); color: white; }
+
+/* Character Counter */
+#char-count {
+  font-family: monospace;
+}
+
+/* Schema Preview */
+#schema-preview {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Courier New', monospace;
+}
+
+/* Toggle Switches (if not already defined) */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggle input:checked + .toggle-slider {
+  background-color: var(--primary);
+}
+
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Analytics Table Enhancements */
+.analytics-table tr:hover {
+  background: var(--bg);
+}
+
+.traffic-source-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+/* Revenue Chart Bars */
+.revenue-bar {
+  background: linear-gradient(180deg, var(--success) 0%, var(--chart-success) 100%);
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+
+.revenue-bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+/* Conversion Rate Badge */
+.conversion-rate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.conversion-rate-high { background: #d1fae5; color: #065f46; }
+.conversion-rate-medium { background: #fef3c7; color: #92400e; }
+.conversion-rate-low { background: #fee2e2; color: #991b1b; }
