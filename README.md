@@ -1,58 +1,57 @@
-# Beachside Circle Boats - Customer Website
+# circle-boats-main-
 
-**Professional boat rental website** with booking system, reviews, and gallery.
+Website and owner dashboard for Beachside Circle Boats, an electric circle-boat rental in Orange Beach, Alabama.
 
-## Features
+## What it is
 
-- 🎨 **Modern Design** - Clean, professional layout
-- 📅 **Live Booking System** - Real-time availability calendar
-- 🛒 **Shopping Cart** - Add boats, select time slots, add-ons
-- 💳 **Stripe Checkout** - Secure online payments
-- ⭐ **Review System** - Display customer testimonials
-- 📱 **Mobile Responsive** - Works on all devices
-- 🔌 **API Integration** - Connects to backend for live data
-- 📊 **Analytics Tracking** - Built-in page view and conversion tracking
+A static site with three parts: a public marketing page with booking and checkout, small customer pages (confirmation, review, waiver form, link-in-bio), and a large owner back office for bookings, calendar, customers, marketing, menus and site editing. It is a real customer's site. Live data, availability and payments all come from external services; this repo is only the front end.
 
-## Pages
+![Public home page](docs/screenshot.png)
 
-- **index.html** - Main website with hero, fleet showcase, booking
-- **links.html** - Linktree-style links page (Beachside Circle Boats)
-- **tracking.js** - Analytics tracking script
+The screenshot was taken offline, so the hero video area shows black.
 
-## Tech Stack
+## How it works
 
-- Pure HTML/CSS/JavaScript (no build process needed)
-- Stripe.js for payments
-- Fetch API for backend integration
-- Responsive CSS Grid/Flexbox
+- No build step and no `package.json`. `vercel.json` serves the repo root as-is, turns on clean URLs, and rewrites `/login` and `/dashboard` to `login.html` and `dashboard.html`.
+- Public pages: `index.html` (main page), `booking.html` (picks a slot and places a hold via `/api/public/hold`), `checkout.html` (payment config, waiver, then `/api/square/create-payment`), `confirmation.html`, `review.html`, `waiver-form.html`, `links.html`, `privacy.html`, `terms.html`, `404.html`. `index-no-video.html` and `index-v1-backup.html` are older variants.
+- `tracking.js`: page-view and conversion tracking; sends events tagged with the subdomain `beachside-circle-boats`.
+- `config.js`: multi-tenant config; maps the subdomain `beachside-circle-boats` to a business id and loads the business profile.
+- Owner side: `login.html` and `dashboard.html` load about 90 scripts from `js/` (bookings, calendar, customers, coupons, waivers, inventory, SMS automations, voice notes, page builder, site editor, billing, menu manager, AI assistant, admin views, and more). `js/module-loader.js` and `js/module-registry.js` wire the modules; `js/api-client.js` is a small fetch wrapper whose default base is a local backend.
+- Most calls go to `https://cybercheck-api-database.vercel.app` (`/api/public/...`, `/api/dashboard/...`, `/api/auth/...`). Some dashboard scripts also use a Supabase client directly.
+- Checkout text says "Stripe", but the payment call in `checkout.html` goes to a Square endpoint on the API.
+- `css/`, `images/`, `uploads/` hold styles and media.
 
-## Setup
+## Run it
 
-1. Update `tracking.js` with your subdomain
-2. Configure Stripe publishable key
-3. Point API_BASE to your backend URL
-4. Upload to web hosting or serve via backend
+No install and no required environment variables. Serve the folder with any static server:
 
-## API Integration
+```bash
+python3 -m http.server 8000   # then open http://localhost:8000/index.html
+```
 
-Website calls these backend endpoints:
-- `GET /api/public/profile` - Business info
-- `GET /api/public/fleet` - Boats and pricing
-- `GET /api/public/reviews` - Customer reviews
-- `GET /api/public/availability` - Booking calendar
-- `POST /api/public/bookings` - Create booking
-- `POST /api/public/contact` - Contact form
+Pages render locally, but availability, booking, checkout, login and the dashboard need the external API (and the Supabase project the dashboard uses) to be reachable. Behind `localhost`, `booking.html` and `tracking.js` point at local backends that are not part of this repo.
 
-## Customization
+## Status
 
-All branding tokens can be replaced:
-- Business name, phone, email, address
-- Colors (CSS variables)
-- Images (in /images/ folder)
-- Pricing (loaded from API)
+In use: a live customer's site plus back office, last committed May 2026; it depends entirely on external services that were not checked for liveness.
 
-## Demo
+## Where it fits
 
-Business: Beachside Circle Boats
-Location: Orange Beach, AL
-Type: Electric circle boat rentals
+```mermaid
+flowchart LR
+    guest([Guest]) --> site["circle-boats-main-<br/>index / booking / checkout"]
+    owner([Owner]) --> dash["login + dashboard<br/>js/*"]
+    site --> api["cybercheck-api-database<br/>.vercel.app"]
+    dash --> api
+    dash -. "direct client" .-> sb["Supabase project"]
+    site -- "links, legal pages" --> links["cybercheck-links /<br/>cybercheck-login .vercel.app"]
+    api --> pay["Square payments"]
+```
+
+## Related repos
+
+- cybercheck-api-database: the API host used for profile, fleet, bookings, hold, waivers and tracking.
+- cybercheck-links- and cybercheck-login: host the shared link pages and legal pages this site links to.
+- gar-profiles-: holds the same business as a data file (`data/beachside-circle-boats.js`).
+- cybercheck-saas and trip-swipe-live: use the same API host.
+- Admin-dashboard-main and Dashboards-users-: other dashboard repos in the estate; not compared.
